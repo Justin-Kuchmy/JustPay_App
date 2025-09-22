@@ -36,7 +36,6 @@ parser::parser()
     json j;
     file >> j;
 
-    //std::cout << j["menus"].items() << std::endl;
     for (auto& [menuKey, menuVal] : j["menus"].items()) 
     {
         Menu m;
