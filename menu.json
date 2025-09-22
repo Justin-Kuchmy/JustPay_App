@@ -1,0 +1,37 @@
+{
+    "menus": {
+        "main": {
+            "title": "Main Menu",
+            "options": [
+                {
+                    "label": "Employee Management Module",
+                    "submenu": "emp-man_menu"
+                },
+                {
+                    "label": "Attendance Tracking Module",
+                    "submenu": "att-trk_menu"
+                },
+                {
+                    "label": "Payroll Computation Module",
+                    "submenu": "pay-comp_menu"
+                },
+                {
+                    "label": "Payslip Generation Module",
+                    "submenu": "pay-gen_menu"
+                },
+                {
+                    "label": "Reports & Logs Module",
+                    "submenu": "rep-logs_menu"
+                },
+                {
+                    "label": "Admin Settings Module",
+                    "submenu": "adm-set_menu"
+                },
+                {
+                    "label": "Exit",
+                    "action": "exit"
+                }
+            ]
+        }
+    }
+}
