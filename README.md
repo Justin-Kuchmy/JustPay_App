@@ -47,17 +47,17 @@ Employee ID format depends on department:
 
 ### 6. Status
 
-| Employment Status | Description                                      | Sick Leave | Vacation Leave | Medical Insurance / HMO | SSS                                     | PHIC                                  | HDMF                           | Tax Notes |
-|-------------------|--------------------------------------------------|------------|----------------|--------------------------|-----------------------------------------|--------------------------------------|--------------------------------|-----------|
-| Regular           | Full-time, permanent employee                    | 10 days/yr (non-cumulative) | 10 days/yr (cumulative) | Yes | Employee: 2.5% of basic salary<br>Employer: 2.5% | Employee: ₱200<br>Employer: ₱200 | see formula below | Detailed tax formula included |
-| Probationary      | Trial up to 6 months → becomes regular            | Not entitled | Not entitled | No | Same as Regular | Same as Regular | Same as Regular | — |
-| Contractual       | Hired for specific duration or project            | Not entitled | Not entitled | Not entitled | Optional | Optional | Optional | N/A |
-| Project-Based     | Ends when project concludes                       | Not entitled | Not entitled | Not entitled | Optional | Optional | Optional | N/A |
-| Seasonal          | Hired only during specific seasons                | Not entitled | Not entitled | Not entitled | Optional | Optional | Optional | N/A |
-| Casual            | Short-term, non-core tasks                        | Not entitled | Not entitled | Not entitled | Optional | Optional | Optional | N/A |
-| Part-Time         | Works less than full workweek                     | Not entitled | Not entitled | Not entitled | N/A | N/A | N/A | N/A |
-| Intern/OJT        | Student trainee                                   | Not entitled | Not entitled | Not entitled | N/A | N/A | N/A | N/A |
-| Consultant        | Specialized expertise                             | Not entitled | Not entitled | Optional | N/A | N/A | N/A | 5–10% of professional fees (depending on VAT threshold) |
+| Employment Status | Description                                      | Sick Leave                  | Vacation Leave          | Medical Insurance / HMO  | SSS           | PHIC                                  | HDMF                           | Tax Notes |
+|-------------------|--------------------------------------------------|------------                 |----------------         |--------------------------|---------------|--------------------------------------|--------------------------------|-----------|
+| Regular           | Full-time, permanent employee                    | 10 days/yr (non-cumulative) | 10 days/yr (cumulative) | Yes                      | Refer to table| Employee: 2.5% of basic salary<br>Employer: 2.5% | Employee: ₱200<br>Employer: ₱200 | see formula below |
+| Probationary      | Trial up to 6 months → becomes regular            | Not entitled               | Not entitled            | No until regular         | Refer to table| Employee: 2.5% of basic salary<br>Employer: 2.5%  |  Employee: ₱200<br>Employer: ₱200  | see formula below |
+| Contractual       | Hired for specific duration or project            | Not entitled               | Not entitled            | Not entitled             | Optional      | Optional | Optional | N/A |
+| Project-Based     | Ends when project concludes                       | Not entitled               | Not entitled            | Not entitled             | Optional      | Optional | Optional | N/A |
+| Seasonal          | Hired only during specific seasons                | Not entitled               | Not entitled            | Not entitled             | Optional      | Optional | Optional | N/A |
+| Casual            | Short-term, non-core tasks                        | Not entitled               | Not entitled            | Not entitled             | Optional      | Optional | Optional | N/A |
+| Part-Time         | Works less than full workweek                     | Not entitled               | Not entitled            | Not entitled             | N/A           | N/A | N/A | N/A |
+| Intern/OJT        | Student trainee                                   | Not entitled               | Not entitled            | Not entitled             | N/A           | N/A | N/A | N/A |
+| Consultant        | Specialized expertise                             | Not entitled               | Not entitled            | Optional                 | N/A           | N/A | N/A | If the gross income for the current year did not exceed ₱ 3M = 5% of the professional fees. if gross income is more than ₱ 3M or VAT registered regardless of amount = 10% of the professional fees |                        
 
 > **Tax Formula for Regular Employees**  
 > ```
@@ -180,10 +180,10 @@ Company: JustPay, Inc.
 Payroll Period: **August 1–15, 2025 (1st Half)**  
 Date Processed: **August 12, 2025**
 
-| Employee No. | Employee Name          | Department | Basic Salary | Allowance | Overtime Pay | Adjustments | Gross Income | SSS Premium | PHIC Premium | HDMF Premium | Loans | Withholding Taxes | Total Deductions | Net Pay   | Taxable Income |
-|--------------|------------------------|------------|--------------|-----------|--------------|-------------|--------------|-------------|--------------|--------------|-------|------------------|------------------|----------|----------------|
-| 02-0001      | Doe, John  D.| Finance    | 60,000.00    | 10,000.00 | 5,732.48     | -           | 75,732.48    | 1,750.00    | -            | -            | -     | 11,933.07        | 13,683.07        | 62,049.41 | 63,982.48      |
-| 02-0002      | Doe, Jane F.| Finance | 40,000.00    | 2,500.00  | -            | -           | 42,500.00    | 1,750.00    | -            | -            | -     | 5,499.95         | 7,249.95         | 35,250.05 | 38,250.00      |
+| Employee No. | Employee Name          | Department | Basic Salary | Allowance | Overtime Pay | Adjustments | Gross Income | SSS Premium | PHIC Premium | HDMF Premium | Loans | Withholding Taxes | Total Deductions | Net Pay   | 
+|--------------|------------------------|------------|--------------|-----------|--------------|-------------|--------------|-------------|--------------|--------------|-------|------------------|------------------|----------|
+| 02-0001      | Doe, John  D.| Finance    | 60,000.00    | 10,000.00 | 5,732.48     | -           | 75,732.48    | 1,750.00    | -            | -            | -     | 11,933.07        | 13,683.07        | 62,049.41 |
+| 02-0002      | Doe, Jane F.| Finance | 40,000.00    | 2,500.00  | -            | -           | 42,500.00    | 1,750.00    | -            | -            | -     | 5,499.95         | 7,249.95         | 35,250.05 | 
 
 ---
 
@@ -192,10 +192,10 @@ Company: JustPay, Inc.
 Payroll Period: **August 16–31, 2025 (2nd Half)**  
 Date Processed: **August 27, 2025**
 
-| Employee No. | Employee Name          | Department | Basic Salary | Allowance | Overtime Pay | Adjustments | Gross Income | SSS Premium | PHIC Premium | HDMF Premium | Loans | Withholding Taxes | Total Deductions | Net Pay   | Taxable Income |
-|--------------|------------------------|------------|--------------|-----------|--------------|-------------|--------------|-------------|--------------|--------------|-------|------------------|------------------|----------|----------------|
-| 02-0001      | Doe, John D.| Finance    | 60,000.00    | 10,000.00 | 9,171.97     | -           | 79,171.97    | -           | 2,500.00     | 200.00       | -     | 12,555.44        | 15,255.44        | 63,916.53 | 66,471.97      |
-| 02-0002      | Doe, Jane F.| Finance | 40,000.00    | 2,500.00  | -            | -           | 42,500.00    | -           | 2,000.00     | 200.00       | -     | 5,387.45         | 7,587.45         | 34,912.55 | 37,800.00      |
+| Employee No. | Employee Name          | Department | Basic Salary | Allowance | Overtime Pay | Adjustments | Gross Income | SSS Premium | PHIC Premium | HDMF Premium | Loans | Withholding Taxes | Total Deductions | Net Pay   |
+|--------------|------------------------|------------|--------------|-----------|--------------|-------------|--------------|-------------|--------------|--------------|-------|------------------|------------------|----------|
+| 02-0001      | Doe, John D.| Finance    | 60,000.00    | 10,000.00 | 9,171.97     | -           | 79,171.97    | -           | 2,500.00     | 200.00       | -     | 12,555.44        | 15,255.44        | 63,916.53 | 
+| 02-0002      | Doe, Jane F.| Finance | 40,000.00    | 2,500.00  | -            | -           | 42,500.00    | -           | 2,000.00     | 200.00       | -     | 5,387.45         | 7,587.45         | 34,912.55 | 
 
 ---
 
