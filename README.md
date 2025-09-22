@@ -1,2 +1,2 @@
-# JustPay_Console
-console program for the "justpay" application
+## 📑 Full Blueprint
+For the complete detailed blueprint, check the [Blueprint PDF](./docs/Project%20JustPay.pdf).
