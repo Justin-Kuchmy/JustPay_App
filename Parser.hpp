@@ -17,15 +17,15 @@ struct Menu {
     std::vector<Option> options;
 };
 
-class parser
+class Parser
 {
     public:
-        parser();
-        ~parser();
+        Parser();
+        ~Parser();
         std::unordered_map<std::string, Menu> menuMap;
 };
 
-parser::parser()
+Parser::Parser()
 {
     std::ifstream file("menu.json");
     if(!file.is_open())
@@ -62,7 +62,7 @@ parser::parser()
 };
 
 
-parser::~parser()
+Parser::~Parser()
 {
 
 };
