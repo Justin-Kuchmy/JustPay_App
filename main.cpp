@@ -2,6 +2,6 @@
 
 int main()
 {
-	std::cout << "__main__" << std::endl;
+	ActionDispatcher dispatcher;
 	return 0;
 }
