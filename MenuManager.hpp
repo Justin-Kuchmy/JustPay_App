@@ -111,7 +111,7 @@ inline int MenuManager::getUserChoice(int maxOption)
     int choice = 0;
     while(true)
     {
-        std::cout << "Pick an Option: " << std::endl;
+        std::cout << "Pick an Option: ";
         if(std::cin >> choice && choice >= 1 && choice <= maxOption)
         {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
