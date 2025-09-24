@@ -6,6 +6,13 @@ ReportsLogsModule::ReportsLogsModule()
 {
     std::cout << "ReportsLogsModule created\n";
 }
+ReportsLogsModule::ReportsLogsModule(ActionDispatcher& dispatcher) 
+{
+    std::cout << "ReportsLogsModule created\n";
+    dispatcher.regAction("reports-logs", "view-payroll_registers",  std::bind(&ReportsLogsModule::viewPayrollRegisters, this));
+    dispatcher.regAction("reports-logs", "view-payroll_journals", std::bind(&ReportsLogsModule::viewPayrollJournalEntries, this));
+    dispatcher.regAction("reports-logs", "view-budget_reports", std::bind(&ReportsLogsModule::generateBudgetUtilizationReport, this));
+}
 ReportsLogsModule::~ReportsLogsModule() 
 {
     std::cout << "ReportsLogsModule destroyed\n";
@@ -28,6 +35,16 @@ void ReportsLogsModule::generateBudgetUtilizationReport()
 GovernmentReports::GovernmentReports() 
 {
     std::cout << "GovernmentRemittanceReport created\n";
+}
+GovernmentReports::GovernmentReports(ActionDispatcher& dispatcher) 
+{
+    std::cout << "GovernmentRemittanceReport created\n";
+    dispatcher.regAction("gov-remittance", "sss_premium",  std::bind(&GovernmentReports::generateSSSPremiumReport , this));
+    dispatcher.regAction("gov-remittance", "phic_premium",  std::bind(&GovernmentReports::generatePHICPremiumReport , this));
+    dispatcher.regAction("gov-remittance", "hdmf_premium",  std::bind(&GovernmentReports::generateHDMFPremiumReport , this));
+    dispatcher.regAction("gov-remittance", "sss_loans",  std::bind(&GovernmentReports::generateSSSLoanReport , this));
+    dispatcher.regAction("gov-remittance", "hdmf_loans", std::bind(&GovernmentReports::generateHDMFLoanReport , this));
+    dispatcher.regAction("gov-remittance", "withholding_taxes", std::bind(&GovernmentReports::generateWithholdingTaxReport , this));
 }
 GovernmentReports::~GovernmentReports() 
 {
@@ -62,6 +79,12 @@ void GovernmentReports::generateWithholdingTaxReport()
 YearEndBenefitsCalculator::YearEndBenefitsCalculator() 
 {
     std::cout << "YearEndBenefits created\n";
+}
+YearEndBenefitsCalculator::YearEndBenefitsCalculator(ActionDispatcher& dispatcher) 
+{
+    std::cout << "YearEndBenefits created\n";
+    dispatcher.regAction("yearend-benefits", "compute_13th_month",  std::bind(&YearEndBenefitsCalculator::calculateThirteenthMonthPay, this));
+    dispatcher.regAction("yearend-benefits", "monetized_leave", std::bind(&YearEndBenefitsCalculator::calculateMonetizedVacationLeaveCredits , this));
 }
 YearEndBenefitsCalculator::~YearEndBenefitsCalculator() 
 {

@@ -1,9 +1,11 @@
 #pragma once
 #include <iostream>
+#include "../ActionDispatcher.hpp"
 
 class AttendanceTrackingModule {
 public:
     AttendanceTrackingModule();
+    AttendanceTrackingModule(ActionDispatcher& dispatcher);
     ~AttendanceTrackingModule();
     void uploadTimeLogsFromCSV();
     void uploadTimeLogsFromAPI();

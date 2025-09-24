@@ -1,9 +1,11 @@
 #pragma once
 #include <iostream>
+#include "../ActionDispatcher.hpp"
 
 class AdminSettingsModule {
 public:
     AdminSettingsModule();
+    AdminSettingsModule(ActionDispatcher& dispatcher);
     ~AdminSettingsModule();
     void configureLoginSecurity();
 };
@@ -11,6 +13,7 @@ public:
 class UserRoleManager {
 public:
     UserRoleManager();
+    UserRoleManager(ActionDispatcher& dispatcher);
     ~UserRoleManager();
     void configureAdminRole();
     void configureHRStaffRole();
@@ -19,6 +22,7 @@ public:
 class ContributionTable {
 public:
     ContributionTable();
+    ContributionTable(ActionDispatcher& dispatcher);
     ~ContributionTable();
     void editSSSRates();
     void editPHICRates();

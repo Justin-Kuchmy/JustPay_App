@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "../ActionDispatcher.hpp"
 
 class EmployeeManagementModule {
 public:
     EmployeeManagementModule();
+    EmployeeManagementModule(ActionDispatcher& dispatcher);
     ~EmployeeManagementModule();
     void addEmployee();
     void editEmployee();
@@ -16,6 +18,7 @@ public:
 class LoanLedger {
 public:
     LoanLedger();
+    LoanLedger(ActionDispatcher& dispatcher);
     ~LoanLedger();
     void recordHDMFSalaryLoan();
     void recordHDMFHousingLoan();
@@ -29,6 +32,7 @@ public:
 class EmployeeAttendance {
 public:
     EmployeeAttendance();
+    EmployeeAttendance(ActionDispatcher& dispatcher);
     ~EmployeeAttendance();
     void uploadTimeLogsFromCSV();
     void uploadTimeLogsFromAPI();
