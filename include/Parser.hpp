@@ -4,6 +4,7 @@
 #include <optional>   
 #include <unordered_map>
 #include <vector>
+
 using json = nlohmann::json;
 
 struct Option {
@@ -27,7 +28,7 @@ class Parser
 
 Parser::Parser()
 {
-    std::ifstream file("menu.json");
+    std::ifstream file("./data/menu.json");
     if(!file.is_open())
     {
         std::cerr << "Error: could not open menu.json\n";

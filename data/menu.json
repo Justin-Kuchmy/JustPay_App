@@ -1,0 +1,407 @@
+{
+    "menus": {
+        "main": {
+            "title": "Main Menu",
+            "options": [
+                {
+                    "label": "Employee Management Module",
+                    "submenu": "employee-managment_menu"
+                },
+                {
+                    "label": "Attendance Tracking Module",
+                    "submenu": "attendance-tracking_menu"
+                },
+                {
+                    "label": "Payroll Computation Module",
+                    "submenu": "payroll_compute_menu"
+                },
+                {
+                    "label": "Payslip Generation Module",
+                    "submenu": "payslip-generation_menu"
+                },
+                {
+                    "label": "Reports & Logs Module",
+                    "submenu": "reports-logs_menu"
+                },
+                {
+                    "label": "Admin Settings Module",
+                    "submenu": "admin_settings_menu"
+                },
+                {
+                    "label": "Exit",
+                    "action": "exit"
+                }
+            ]
+        },
+        "employee-managment_menu": {
+            "title": "Employee Management Module",
+            "options": [
+                {
+                    "label": "Add Employee",
+                    "action": "add_employee"
+                },
+                {
+                    "label": "Edit Employee",
+                    "action": "edit_employee"
+                },
+                {
+                    "label": "Delete Employee",
+                    "action": "delete_employee"
+                },
+                {
+                    "label": "Manage Employee Status (Active/Inactive)",
+                    "action": "toggle_status"
+                },
+                {
+                    "label": "Manage Emergency Contacts",
+                    "action": "manage_emergency"
+                },
+                {
+                    "label": "Loan Ledger",
+                    "submenu": "loan-ledger_menu"
+                },
+                {
+                    "label": "Attendance Tracking",
+                    "submenu": "employee-attendance_menu"
+                }
+            ]
+        },
+        "loan-ledger_menu": {
+            "title": "Loan Ledger",
+            "options": [
+                {
+                    "label": "HDMF Salary Loan",
+                    "action": "hdmf_salary_loan"
+                },
+                {
+                    "label": "HDMF Housing Loan",
+                    "action": "hdmf_housing_loan"
+                },
+                {
+                    "label": "HDMF Calamity Loan",
+                    "action": "hdmf_calamity_loan"
+                },
+                {
+                    "label": "SSS Salary Loan",
+                    "action": "sss_salary_loan"
+                },
+                {
+                    "label": "SSS Calamity Loan",
+                    "action": "sss_calamity_loan"
+                },
+                {
+                    "label": "Personal Cash Advance",
+                    "action": "cash_advance"
+                },
+                {
+                    "label": "Others",
+                    "action": "other_loans"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "employee-attendance_menu": {
+            "title": "Employee Attendance Menu",
+            "options": [
+                {
+                    "label": "Upload Time Logs (CSV/API)",
+                    "action": "upload_time_logs"
+                },
+                {
+                    "label": "Edit Overtime",
+                    "action": "edit_overtime"
+                },
+                {
+                    "label": "Edit Tardiness",
+                    "action": "edit_tardiness"
+                },
+                {
+                    "label": "Edit Absences",
+                    "action": "edit_absences"
+                },
+                {
+                    "label": "Edit Undertime",
+                    "action": "edit_undertime"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "attendance-tracking_menu": {
+            "title": "Attendance Tracking Module",
+            "options": [
+                {
+                    "label": "Upload Time Logs (CSV/API)",
+                    "action": "upload_time_logs"
+                },
+                {
+                    "label": "View Raw Logs",
+                    "action": "view_raw_logs"
+                },
+                {
+                    "label": "Compute Overtime",
+                    "action": "compute_overtime"
+                },
+                {
+                    "label": "Compute Tardiness",
+                    "action": "compute_tardiness"
+                },
+                {
+                    "label": "Compute Absences",
+                    "action": "compute_absences"
+                },
+                {
+                    "label": "Compute Undertime",
+                    "action": "compute_undertime"
+                },
+                {
+                    "label": "Manually Edit Attendance",
+                    "action": "manual_edit_attendance"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "payroll_compute_menu": {
+            "title": "Payroll Computation Module",
+            "options": [
+                {
+                    "label": "Set Payroll Period",
+                    "action": "set_period"
+                },
+                {
+                    "label": "Define Payroll Formula",
+                    "submenu": "payroll-formula_menu"
+                },
+                {
+                    "label": "Compute Payroll",
+                    "action": "compute_payroll"
+                },
+                {
+                    "label": "Review Computed Payroll",
+                    "action": "review_payroll"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "payroll-formula_menu": {
+            "title": "Payroll Formula Settings",
+            "options": [
+                {
+                    "label": "Overtime Pay Rates",
+                    "action": "set_ot_rates"
+                },
+                {
+                    "label": "Tardiness/Absence/Undertime Deductions",
+                    "action": "set_deductions"
+                },
+                {
+                    "label": "Taxable Income Formula",
+                    "action": "set_taxable_formula"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "payslip-generation_menu": {
+            "title": "Payslip Generation Module",
+            "options": [
+                {
+                    "label": "Select Payroll Period",
+                    "action": "select-payroll-period"
+                },
+                {
+                    "label": "Select Employee (or All)",
+                    "action": "select-employee"
+                },
+                {
+                    "label": "Generate Payslips",
+                    "submenu": "generate-payslips_menu"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "generate-payslips_menu": {
+            "title": "Generate Payslips",
+            "options": [
+                {
+                    "label": "Preview Payslip(s)",
+                    "action": "preview-payslips"
+                },
+                {
+                    "label": "Export to PDF",
+                    "action": "export-pdf"
+                },
+                {
+                    "label": "Export to Excel",
+                    "action": "export-excel"
+                },
+                {
+                    "label": "Email Payslip(s)",
+                    "action": "email-payslips"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "reports-logs_menu": {
+            "title": "Reports & Logs Module",
+            "options": [
+                {
+                    "label": "View Payroll Registers",
+                    "action": "view-payroll-registers"
+                },
+                {
+                    "label": "View Payroll Journal Entries",
+                    "action": "view-payroll-journals"
+                },
+                {
+                    "label": "Government Remittance Reports",
+                    "submenu": "gov-remittance_menu"
+                },
+                {
+                    "label": "Budget Utilization Reports",
+                    "action": "view-budget-reports"
+                },
+                {
+                    "label": "Year-end Benefits Computation",
+                    "submenu": "yearend-benefits_menu"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "gov-remittance_menu": {
+            "title": "Government Remittance Reports",
+            "options": [
+                {
+                    "label": "SSS Premium",
+                    "action": "sss-premium"
+                },
+                {
+                    "label": "PHIC Premium",
+                    "action": "phic-premium"
+                },
+                {
+                    "label": "HDMF Premium",
+                    "action": "hdmf-premium"
+                },
+                {
+                    "label": "SSS Loans",
+                    "action": "sss-loans"
+                },
+                {
+                    "label": "HDMF Loans",
+                    "action": "hdmf-loans"
+                },
+                {
+                    "label": "Withholding Taxes",
+                    "action": "withholding-taxes"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "yearend-benefits_menu": {
+            "title": "Year-end Benefits Computation",
+            "options": [
+                {
+                    "label": "13th Month Pay",
+                    "action": "compute-13th-month"
+                },
+                {
+                    "label": "Monetized Vacation Leave Credits",
+                    "action": "monetized-leave"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "admin_settings_menu": {
+            "title": "Admin Settings Module",
+            "options": [
+                {
+                    "label": "Manage Log-in Security",
+                    "action": "manage-login-security"
+                },
+                {
+                    "label": "Manage User Roles",
+                    "submenu": "manage_roles_menu"
+                },
+                {
+                    "label": "Contribution Tables (Edit Rates)",
+                    "submenu": "contrib_tables_menu"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "manage_roles_menu": {
+            "title": "Manage User Roles",
+            "options": [
+                {
+                    "label": "Admin Role Settings",
+                    "action": "role-admin"
+                },
+                {
+                    "label": "HR Staff Role Settings",
+                    "action": "role-hr"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        },
+        "contrib_tables_menu": {
+            "title": "Contribution Tables",
+            "options": [
+                {
+                    "label": "Edit SSS Rates",
+                    "action": "edit-sss-rates"
+                },
+                {
+                    "label": "Edit PHIC Rates",
+                    "action": "edit-phic-rates"
+                },
+                {
+                    "label": "Edit HDMF Rates",
+                    "action": "edit-hdmf-rates"
+                },
+                {
+                    "label": "Edit Withholding Tax Table",
+                    "action": "edit-tax-table"
+                },
+                {
+                    "label": "Back",
+                    "action": "back"
+                }
+            ]
+        }
+    }
+}
