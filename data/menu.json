@@ -13,7 +13,7 @@
                 },
                 {
                     "label": "Payroll Computation Module",
-                    "submenu": "payroll_compute_menu"
+                    "submenu": "payroll-compute_menu"
                 },
                 {
                     "label": "Payslip Generation Module",
@@ -25,7 +25,7 @@
                 },
                 {
                     "label": "Admin Settings Module",
-                    "submenu": "admin_settings_menu"
+                    "submenu": "admin-settings_menu"
                 },
                 {
                     "label": "Exit",
@@ -173,7 +173,7 @@
                 }
             ]
         },
-        "payroll_compute_menu": {
+        "payroll-compute_menu": {
             "title": "Payroll Computation Module",
             "options": [
                 {
@@ -224,11 +224,11 @@
             "options": [
                 {
                     "label": "Select Payroll Period",
-                    "action": "select-payroll-period"
+                    "action": "select_payroll_period"
                 },
                 {
                     "label": "Select Employee (or All)",
-                    "action": "select-employee"
+                    "action": "select_employee"
                 },
                 {
                     "label": "Generate Payslips",
@@ -245,19 +245,19 @@
             "options": [
                 {
                     "label": "Preview Payslip(s)",
-                    "action": "preview-payslips"
+                    "action": "preview_payslips"
                 },
                 {
                     "label": "Export to PDF",
-                    "action": "export-pdf"
+                    "action": "export_pdf"
                 },
                 {
                     "label": "Export to Excel",
-                    "action": "export-excel"
+                    "action": "export_excel"
                 },
                 {
                     "label": "Email Payslip(s)",
-                    "action": "email-payslips"
+                    "action": "email_payslips"
                 },
                 {
                     "label": "Back",
@@ -270,11 +270,11 @@
             "options": [
                 {
                     "label": "View Payroll Registers",
-                    "action": "view-payroll-registers"
+                    "action": "view_payroll_registers"
                 },
                 {
                     "label": "View Payroll Journal Entries",
-                    "action": "view-payroll-journals"
+                    "action": "view_payroll_journals"
                 },
                 {
                     "label": "Government Remittance Reports",
@@ -282,7 +282,7 @@
                 },
                 {
                     "label": "Budget Utilization Reports",
-                    "action": "view-budget-reports"
+                    "action": "view_budget_reports"
                 },
                 {
                     "label": "Year-end Benefits Computation",
@@ -299,27 +299,27 @@
             "options": [
                 {
                     "label": "SSS Premium",
-                    "action": "sss-premium"
+                    "action": "sss_premium"
                 },
                 {
                     "label": "PHIC Premium",
-                    "action": "phic-premium"
+                    "action": "phic_premium"
                 },
                 {
                     "label": "HDMF Premium",
-                    "action": "hdmf-premium"
+                    "action": "hdmf_premium"
                 },
                 {
                     "label": "SSS Loans",
-                    "action": "sss-loans"
+                    "action": "sss_loans"
                 },
                 {
                     "label": "HDMF Loans",
-                    "action": "hdmf-loans"
+                    "action": "hdmf_loans"
                 },
                 {
                     "label": "Withholding Taxes",
-                    "action": "withholding-taxes"
+                    "action": "withholding_taxes"
                 },
                 {
                     "label": "Back",
@@ -332,11 +332,11 @@
             "options": [
                 {
                     "label": "13th Month Pay",
-                    "action": "compute-13th-month"
+                    "action": "compute_13th_month"
                 },
                 {
                     "label": "Monetized Vacation Leave Credits",
-                    "action": "monetized-leave"
+                    "action": "monetized_leave"
                 },
                 {
                     "label": "Back",
@@ -344,20 +344,20 @@
                 }
             ]
         },
-        "admin_settings_menu": {
+        "admin-settings_menu": {
             "title": "Admin Settings Module",
             "options": [
                 {
                     "label": "Manage Log-in Security",
-                    "action": "manage-login-security"
+                    "action": "manage_login_security"
                 },
                 {
                     "label": "Manage User Roles",
-                    "submenu": "manage_roles_menu"
+                    "submenu": "manage-roles_menu"
                 },
                 {
                     "label": "Contribution Tables (Edit Rates)",
-                    "submenu": "contrib_tables_menu"
+                    "submenu": "contrib-tables_menu"
                 },
                 {
                     "label": "Back",
@@ -365,16 +365,16 @@
                 }
             ]
         },
-        "manage_roles_menu": {
+        "manage-roles_menu": {
             "title": "Manage User Roles",
             "options": [
                 {
                     "label": "Admin Role Settings",
-                    "action": "role-admin"
+                    "action": "role_admin"
                 },
                 {
                     "label": "HR Staff Role Settings",
-                    "action": "role-hr"
+                    "action": "role_hr"
                 },
                 {
                     "label": "Back",
@@ -382,24 +382,24 @@
                 }
             ]
         },
-        "contrib_tables_menu": {
+        "contrib-tables_menu": {
             "title": "Contribution Tables",
             "options": [
                 {
                     "label": "Edit SSS Rates",
-                    "action": "edit-sss-rates"
+                    "action": "edit_sss_rates"
                 },
                 {
                     "label": "Edit PHIC Rates",
-                    "action": "edit-phic-rates"
+                    "action": "edit_phic_rates"
                 },
                 {
                     "label": "Edit HDMF Rates",
-                    "action": "edit-hdmf-rates"
+                    "action": "edit_hdmf_rates"
                 },
                 {
                     "label": "Edit Withholding Tax Table",
-                    "action": "edit-tax-table"
+                    "action": "edit_tax_table"
                 },
                 {
                     "label": "Back",

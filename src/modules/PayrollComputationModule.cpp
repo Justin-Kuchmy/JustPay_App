@@ -9,9 +9,9 @@ PayrollComputationModule::PayrollComputationModule()
 PayrollComputationModule::PayrollComputationModule(ActionDispatcher& dispatcher) 
 {
     std::cout << "PayrollComputationModule created\n";
-    dispatcher.regAction("payroll_compute", "set_period", std::bind(&PayrollComputationModule::setPayrollPeriod, this));
-    dispatcher.regAction("payroll_compute", "compute_payroll",  std::bind(&PayrollComputationModule::computePayroll, this));
-    dispatcher.regAction("payroll_compute", "review_payroll", std::bind(&PayrollComputationModule::reviewComputedPayroll, this));
+    dispatcher.regAction("payroll-compute", "set_period", std::bind(&PayrollComputationModule::setPayrollPeriod, this));
+    dispatcher.regAction("payroll-compute", "compute_payroll",  std::bind(&PayrollComputationModule::computePayroll, this));
+    dispatcher.regAction("payroll-compute", "review_payroll", std::bind(&PayrollComputationModule::reviewComputedPayroll, this));
 }
 PayrollComputationModule::~PayrollComputationModule() 
 {

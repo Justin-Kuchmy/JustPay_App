@@ -7,7 +7,7 @@ AdminSettingsModule::AdminSettingsModule() {
 }
 AdminSettingsModule::AdminSettingsModule(ActionDispatcher& dispatcher) {
     std::cout << "AdminSettingsModule created\n";
-    dispatcher.regAction("admin_settings", "manage_login_security", std::bind(&AdminSettingsModule::configureLoginSecurity , this));
+    dispatcher.regAction("admin-settings", "manage_login_security", std::bind(&AdminSettingsModule::configureLoginSecurity , this));
 }
 AdminSettingsModule::~AdminSettingsModule() {
     std::cout << "AdminSettingsModule destroyed\n";
@@ -23,8 +23,8 @@ UserRoleManager::UserRoleManager() {
 }
 UserRoleManager::UserRoleManager(ActionDispatcher& dispatcher) {
     std::cout << "UserRoleManager created\n";
-    dispatcher.regAction("manage_roles", "role_admin",  std::bind(&UserRoleManager::configureAdminRole , this));
-    dispatcher.regAction("manage_roles", "role_hr", std::bind(&UserRoleManager::configureHRStaffRole , this));
+    dispatcher.regAction("manage-roles", "role_admin",  std::bind(&UserRoleManager::configureAdminRole , this));
+    dispatcher.regAction("manage-roles", "role_hr", std::bind(&UserRoleManager::configureHRStaffRole , this));
 
 }
 UserRoleManager::~UserRoleManager() {
@@ -45,10 +45,10 @@ ContributionTable::ContributionTable() {
 }
 ContributionTable::ContributionTable(ActionDispatcher& dispatcher) {
     std::cout << "ContributionTable created\n";
-    dispatcher.regAction("contrib_tables", "edit_sss_rates", std::bind(&ContributionTable::editSSSRates , this));
-    dispatcher.regAction("contrib_tables", "edit_phic_rates",std::bind(&ContributionTable::editPHICRates, this));
-    dispatcher.regAction("contrib_tables", "edit_hdmf_rates",std::bind(&ContributionTable::editHDMFRates , this));
-    dispatcher.regAction("contrib_tables", "edit_tax_table", std::bind(&ContributionTable::editWithholdingTaxTable, this));
+    dispatcher.regAction("contrib-tables", "edit_sss_rates", std::bind(&ContributionTable::editSSSRates , this));
+    dispatcher.regAction("contrib-tables", "edit_phic_rates",std::bind(&ContributionTable::editPHICRates, this));
+    dispatcher.regAction("contrib-tables", "edit_hdmf_rates",std::bind(&ContributionTable::editHDMFRates , this));
+    dispatcher.regAction("contrib-tables", "edit_tax_table", std::bind(&ContributionTable::editWithholdingTaxTable, this));
 }
 ContributionTable::~ContributionTable() {
     std::cout << "ContributionTable destroyed\n";

@@ -9,9 +9,9 @@ ReportsLogsModule::ReportsLogsModule()
 ReportsLogsModule::ReportsLogsModule(ActionDispatcher& dispatcher) 
 {
     std::cout << "ReportsLogsModule created\n";
-    dispatcher.regAction("reports-logs", "view-payroll_registers",  std::bind(&ReportsLogsModule::viewPayrollRegisters, this));
-    dispatcher.regAction("reports-logs", "view-payroll_journals", std::bind(&ReportsLogsModule::viewPayrollJournalEntries, this));
-    dispatcher.regAction("reports-logs", "view-budget_reports", std::bind(&ReportsLogsModule::generateBudgetUtilizationReport, this));
+    dispatcher.regAction("reports-logs", "view_payroll_registers",  std::bind(&ReportsLogsModule::viewPayrollRegisters, this));
+    dispatcher.regAction("reports-logs", "view_payroll_journals", std::bind(&ReportsLogsModule::viewPayrollJournalEntries, this));
+    dispatcher.regAction("reports-logs", "view_budget_reports", std::bind(&ReportsLogsModule::generateBudgetUtilizationReport, this));
 }
 ReportsLogsModule::~ReportsLogsModule() 
 {
