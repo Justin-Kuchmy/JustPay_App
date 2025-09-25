@@ -3,9 +3,7 @@
 
 int main()
 {
-	Parser p;
-	ActionDispatcher dispatcher;
-	MenuManager menu(p, dispatcher);
+	MenuManager menu;
     menu.run();
 	return 0;
 }
