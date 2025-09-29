@@ -80,6 +80,7 @@ Employee ID format depends on department:
 - **SSS No.**  
 - **PhilHealth No.**  
 - **HDMF No.**  
+- **TIN**
 - **Monthly Basic Salary**  
 - **Monthly Allowances**  
 - **Personal Email Address**  
