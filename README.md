@@ -79,7 +79,8 @@ Employee ID format depends on department:
 - **Date of Separation** (if resigned/terminated/retired)  
 - **SSS No.**  
 - **PhilHealth No.**  
-- **HDMF No.**  
+- **HDMF No.**
+- **TIN**
 - **Monthly Basic Salary**  
 - **Monthly Allowances**  
 - **Personal Email Address**  
