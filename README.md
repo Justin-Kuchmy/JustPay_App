@@ -84,6 +84,7 @@ Employee ID format depends on department:
 - **Monthly Basic Salary**  
 - **Monthly Allowances**  
 - **Personal Email Address**  
+- **Personal Mobile Number**  
 - **Active/Inactive toggle button** (determines payroll inclusion)  
 - **Emergency Contact**:  
   - Name  
@@ -111,7 +112,11 @@ Additional fields:
 - No. of Amortizations  
 - Deduction per Payroll = `Principal / No. of Amortizations`  
 - Check button for deduction timing (**1st half and/or 2nd half payroll**)  
-- Button to indicate **Process/Unprocess**  
+- Button to indicate **Process/Unprocess** 
+
+### 18. File Attachment
+- Employee Contracts
+- Offer sheets
 
 # 📅 Attendance Tracking Module
 
