@@ -90,7 +90,11 @@ Employee ID format depends on department:
   - Name  
   - Relation  
   - Contact Address  
-  - Contact No.  
+  - Contact No.
+  **Dependent for HMO**:
+  - Name
+  - Relation
+  - Birthday
 
 ---
 
@@ -245,9 +249,10 @@ Date Processed: **August 27, 2025**
   - HDMF Loans  
   - Withholding Taxes  
 - Budget Utilization Reports (monitor payroll costs per department)  
+- Annualized Withholding Tax Reconciliation Report
 - Year-end Benefits Computation:  
   - 13th Month Pay (Net Basic Salary ÷ 12 months)  
-  - Monetized Vacation Leave Credits  
+  - Monetized Vacation Leave Credits
 
 ---
 
