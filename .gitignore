@@ -39,3 +39,10 @@
 
 # debug information files
 *.dwo
+
+# data files
+*.sql
+*.db
+
+# others
+.vscode/
