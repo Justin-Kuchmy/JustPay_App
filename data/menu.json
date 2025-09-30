@@ -74,36 +74,20 @@
             "title": "Loan Ledger",
             "options": [
                 {
-                    "label": "HDMF Salary Loan",
-                    "action": "hdmf_salary_loan"
+                "label": "Upload Loan Ledger (CSV/Excel)",
+                "action": "upload_loan_ledger"
                 },
                 {
-                    "label": "HDMF Housing Loan",
-                    "action": "hdmf_housing_loan"
+                "label": "View Loan Ledgers by Employee",
+                "action": "view_loan_ledgers_employee"
                 },
                 {
-                    "label": "HDMF Calamity Loan",
-                    "action": "hdmf_calamity_loan"
+                "label": "View Loan Ledgers by Type",
+                "action": "view_loan_ledgers_type"
                 },
                 {
-                    "label": "SSS Salary Loan",
-                    "action": "sss_salary_loan"
-                },
-                {
-                    "label": "SSS Calamity Loan",
-                    "action": "sss_calamity_loan"
-                },
-                {
-                    "label": "Personal Cash Advance",
-                    "action": "cash_advance"
-                },
-                {
-                    "label": "Others",
-                    "action": "other_loans"
-                },
-                {
-                    "label": "Back",
-                    "action": "back"
+                "label": "Back",
+                "action": "back"
                 }
             ]
         },
