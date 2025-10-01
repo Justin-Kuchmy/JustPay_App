@@ -42,8 +42,6 @@ Parser::Parser()
     {
         Menu m;
         m.title = menuVal["title"].get<std::string>();
-        std::cout << m.title << std::endl;
-
         for (auto& optVal : menuVal["options"]) 
         {
             Option opt;

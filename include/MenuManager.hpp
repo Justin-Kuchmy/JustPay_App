@@ -99,7 +99,6 @@ inline std::ostream& operator<<(std::ostream& os, Menu menu)
 
 inline MenuManager::MenuManager()
 {
-    //std::cout << "___________MenuManager  Created___________" << std::endl;
     menuStack.push("main");
     currMenu = &p.menuMap["main"];
 };

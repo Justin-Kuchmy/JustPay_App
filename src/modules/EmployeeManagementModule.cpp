@@ -1,14 +1,17 @@
 #include "../../include/modules/EmployeeManagementModule.hpp"
 #include <iostream>
+#include "../../Services/EmployeeService.cpp"
 
 // EmployeeManagementModule
 EmployeeManagementModule::EmployeeManagementModule() 
 {
-    std::cout << "EmployeeManagementModule created\n";
+
 }
 EmployeeManagementModule::EmployeeManagementModule(ActionDispatcher& dispatcher) 
 {
-    std::cout << "EmployeeManagementModule created\n";
+    EmployeeRepository* pRepo = new EmployeeRepository();
+    EmployeeService employeeService(pRepo);
+    pRepo->createTable();
     dispatcher.regAction("employee-managment", "add_employee",  std::bind(&EmployeeManagementModule::addEmployee, this));
     dispatcher.regAction("employee-managment", "edit_employee", std::bind(&EmployeeManagementModule::editEmployee, this));
     dispatcher.regAction("employee-managment", "delete_employee", std::bind(&EmployeeManagementModule::deleteEmployee, this));
@@ -43,11 +46,9 @@ void EmployeeManagementModule::updateEmergencyContact()
 // LoanLedger
 LoanLedger::LoanLedger() 
 {
-    std::cout << "LoanLedger created\n";
 }
 LoanLedger::LoanLedger(ActionDispatcher& dispatcher) 
 {
-    std::cout << "LoanLedger created\n";
     dispatcher.regAction("loan-ledger", "upload_loan_ledger", std::bind(&LoanLedger::uploadLoanLedger, this));
     dispatcher.regAction("loan-ledger", "view_loan_ledgers_employee",  std::bind(&LoanLedger::viewLoanLedgersEmployee, this));
     dispatcher.regAction("loan-ledger", "view_loan_ledgers_type", std::bind(&LoanLedger::viewLoanLedgersType, this));
@@ -73,11 +74,9 @@ void LoanLedger::viewLoanLedgersType()
 // EmployeeAttendance
 EmployeeAttendance::EmployeeAttendance() 
 {
-    std::cout << "EmployeeAttendance created\n";
 }
 EmployeeAttendance::EmployeeAttendance(ActionDispatcher& dispatcher) 
 {
-    std::cout << "EmployeeAttendance created\n";
     dispatcher.regAction("employee-attendance", "upload_time_logs", std::bind(&EmployeeAttendance::uploadTimeLogsFromCSV , this));
     dispatcher.regAction("employee-attendance", "upload_time_logs", std::bind(&EmployeeAttendance::uploadTimeLogsFromAPI, this));
     dispatcher.regAction("employee-attendance", "edit_overtime",  std::bind(&EmployeeAttendance::editOvertime, this));
