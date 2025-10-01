@@ -91,7 +91,7 @@ Employee ID format depends on department:
   - Relation  
   - Contact Address  
   - Contact No.
-  **Dependent for HMO**:
+- **Dependent for HMO**:
   - Name
   - Relation
   - Birthday

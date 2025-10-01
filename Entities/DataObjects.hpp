@@ -45,6 +45,12 @@ struct Date {
     int month{};
     int year{};
 };
+struct Dependent
+{
+    std::string name;
+    std::string relation;
+    Date birthday{};
+};
 struct Employee 
 {
     std::string fullName;
@@ -63,6 +69,7 @@ struct Employee
     std::string personalEmail;
     bool isActive{true};
     Contact emergencyContact{};
+    Dependent dependant{};
 
 
 };
