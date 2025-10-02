@@ -1,3 +1,6 @@
+#ifndef DATAOBJECTS_HPP
+#define DATAOBJECTS_HPP
+
 #include <string>
 enum Department
 {
@@ -73,3 +76,50 @@ struct Employee
 
 
 };
+
+#include <string>
+#include <cstdio>   // for snprintf, sscanf
+
+// =========================
+// CONVERSION HELPERS
+// =========================
+
+// --- Department ---
+inline int to_int(Department d) {
+    return static_cast<int>(d);
+}
+inline Department to_department(int i) {
+    return static_cast<Department>(i);
+}
+
+// --- JobLevel ---
+inline int to_int(JobLevel j) {
+    return static_cast<int>(j);
+}
+inline JobLevel to_jobLevel(int i) {
+    return static_cast<JobLevel>(i);
+}
+
+// --- EmploymentStatus ---
+inline int to_int(EmploymentStatus s) {
+    return static_cast<int>(s);
+}
+inline EmploymentStatus to_status(int i) {
+    return static_cast<EmploymentStatus>(i);
+}
+
+// --- Date <-> String ---
+inline std::string to_string(const Date& d) {
+    char buffer[11]; // YYYY-MM-DD\0
+    std::snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d", d.year, d.month, d.day);
+    return std::string(buffer);
+}
+
+inline Date from_string(const std::string& s) {
+    Date d{};
+    std::sscanf(s.c_str(), "%d-%d-%d", &d.year, &d.month, &d.day);
+    return d;
+}
+
+
+#endif // DATAOBJECTS_HPP
