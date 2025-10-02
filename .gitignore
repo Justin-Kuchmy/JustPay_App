@@ -47,3 +47,7 @@
 
 # others
 .vscode/
+
+#tests
+tests/TestRunner.cpp
+tests/*.out
