@@ -43,6 +43,7 @@
 # data files
 *.sql
 *.db
+*.db-journal
 
 # others
 .vscode/
