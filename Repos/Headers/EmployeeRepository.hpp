@@ -13,7 +13,7 @@ class EmployeeRepository: public BaseRepository {
         bool insertEmployee(const Employee& Employee);
 
         // READ
-        std::optional<Employee> getById(int id);             // Find one by ID
+        std::optional<Employee> getById(std::string id);             // Find one by ID
         std::vector<Employee> getAll();                      // Return all
         std::vector<Employee> findByName(const std::string& name); // Simple search
 
@@ -21,7 +21,7 @@ class EmployeeRepository: public BaseRepository {
         bool updateEmployee(const Employee& emp); // Update all fields by ID
 
         // DELETE
-        bool deleteEmployee(int id);          // Delete by ID
+        bool deleteEmployee(std::string id);          // Delete by ID
         bool deleteAll();                   // Truncate table
 };
 
