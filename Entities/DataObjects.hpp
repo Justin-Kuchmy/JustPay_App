@@ -48,9 +48,9 @@ struct Contact
     std::string contactNo;
 };
 struct Date {
-    int day{};
-    int month{};
     int year{};
+    int month{};
+    int day{};
 };
 struct Dependent
 {
