@@ -195,20 +195,107 @@
         std::vector<Employee> EmployeeRepository::getAll()
         {
             std::string sql = std::format("select * from employees;");
-            return {};
+            auto results = EmployeeRepository::query<Employee>(
+            sql,
+            [](sqlite3_stmt* stmt) -> Employee {
+                Employee e;
+                e.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+                e.fullName =   reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+                e.department = to_department(sqlite3_column_int(stmt, 3));  
+                e.position = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+                e.jobLevel =  to_jobLevel(sqlite3_column_int(stmt, 5));  
+                e.status =     to_status(sqlite3_column_int(stmt, 6));     
+                e.dateHired =    from_string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
+
+                const unsigned char* text = sqlite3_column_text(stmt, 8);
+                if (text) {
+                    e.dateSeparation = from_string(reinterpret_cast<const char*>(text));
+                } else {
+                    e.dateSeparation = Date{1900,1,1};
+                }
+                e.sssNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9));
+                e.philHealthNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 10));
+                e.hdmfNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 11));
+                e.monthlyBasicSalary = sqlite3_column_double(stmt, 12);
+                e.monthlyAllowances =  sqlite3_column_double(stmt, 13);
+                e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 14));
+                e.isActive =  sqlite3_column_int(stmt, 15);
+                return e;
+            });
+
+            if(results.size() > 0)
+            {
+                return results;
+            }
+            else
+            {
+                std::cout << "failed to get anything from the db: ";
+                return {};
+            }
         };// Return all
 
         std::vector<Employee> EmployeeRepository::findByName(const std::string& name)
         {
-            std::string sql = std::format("select * from employeee where fullName = '{}';", name);
-            return {};
+            std::string sql = std::format("select * from employees where fullName = '{}';", name);
+            auto results = EmployeeRepository::query<Employee>(
+            sql,
+            [](sqlite3_stmt* stmt) -> Employee {
+                Employee e;
+                e.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+                e.fullName =   reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+                e.department = to_department(sqlite3_column_int(stmt, 3));  
+                e.position = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+                e.jobLevel =  to_jobLevel(sqlite3_column_int(stmt, 5));  
+                e.status =     to_status(sqlite3_column_int(stmt, 6));     
+                e.dateHired =    from_string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
+
+                const unsigned char* text = sqlite3_column_text(stmt, 8);
+                if (text) {
+                    e.dateSeparation = from_string(reinterpret_cast<const char*>(text));
+                } else {
+                    e.dateSeparation = Date{1900,1,1};
+                }
+                e.sssNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9));
+                e.philHealthNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 10));
+                e.hdmfNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 11));
+                e.monthlyBasicSalary = sqlite3_column_double(stmt, 12);
+                e.monthlyAllowances =  sqlite3_column_double(stmt, 13);
+                e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 14));
+                e.isActive =  sqlite3_column_int(stmt, 15);
+                return e;
+            });
+
+            if(results.size() > 0)
+            {
+                return results;
+            }
+            else
+            {
+                std::cout << "failed to get anything from the db: ";
+                return {};
+            }
         }; // Simple search
 
         // UPDATE
-        bool EmployeeRepository::updateEmployee(const Employee& emp)
-        {
-            std::string sql = std::format("SELECT * from employeee where employeeId = '{}'", emp.employeeId);
-            return false;
+        bool EmployeeRepository::updateEmployee(const Employee& e)
+        {            
+            std::string sql = std::format("update employees set fullName='{}', department={}, position='{}', jobLevel={}, status={}, dateHired='{}', dateSeparation='{}', sssNumber='{}', philHealthNumber='{}', hdmfNumber='{}', monthlyBasicSalary={}, monthlyAllowances={}, personalEmail='{}', isActive=1 where employeeId = '{}'",
+                e.fullName,
+                to_int(e.department),       
+                e.position,
+                to_int(e.jobLevel),         
+                to_int(e.status),           
+                to_string(e.dateHired),     
+                to_string(e.dateSeparation),
+                e.sssNumber,
+                e.philHealthNumber,
+                e.hdmfNumber,
+                e.monthlyBasicSalary,
+                e.monthlyAllowances,
+                e.personalEmail,
+                e.employeeId
+                );
+            return EmployeeRepository::execute(sql);
         }; // Update all fields by ID
 
         // DELETE
@@ -222,3 +309,4 @@
         {
             return false;
         };// Truncate table
+    //     std::cout << emp;
