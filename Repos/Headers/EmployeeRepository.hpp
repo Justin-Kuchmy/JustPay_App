@@ -22,7 +22,9 @@ class EmployeeRepository: public BaseRepository {
 
         // DELETE
         bool deleteEmployee(std::string id);          // Delete by ID
-        bool deleteAll();                   // Truncate table
+        bool deleteAll();
+        std::string getLastEmployeeId();
+        // Truncate table
 };
 
 #endif
