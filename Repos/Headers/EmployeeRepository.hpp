@@ -5,7 +5,9 @@
 #include <sqlite3.h>
 
 class EmployeeRepository: public BaseRepository {
+        static Employee mapEmployee(sqlite3_stmt* stmt);
     public: 
+
         explicit EmployeeRepository();
         
         //CREATE
