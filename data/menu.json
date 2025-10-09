@@ -5,7 +5,7 @@
             "options": [
                 {
                     "label": "Employee Management Module",
-                    "submenu": "employee-managment_menu"
+                    "submenu": "employee-management_menu"
                 },
                 {
                     "label": "Attendance Tracking Module",
@@ -33,7 +33,7 @@
                 }
             ]
         },
-        "employee-managment_menu": {
+        "employee-management_menu": {
             "title": "Employee Management Module",
             "options": [
                 {
@@ -41,12 +41,26 @@
                     "action": "add_employee"
                 },
                 {
-                    "label": "Edit Employee",
-                    "action": "edit_employee"
-                },
-                {
                     "label": "Delete Employee",
                     "action": "delete_employee"
+                },
+                {
+                    "label": "Select Employee",
+                    "submenu": "employee-details_menu"
+                },
+                                {
+                "label": "Back",
+                "action": "back"
+                }
+            ]
+        },
+
+        "employee-details_menu": {
+            "title": "Employee Details & Management",
+            "options": [
+                {
+                    "label": "Edit Employee",
+                    "action": "edit_employee"
                 },
                 {
                     "label": "Manage Employee Status (Active/Inactive)",
@@ -64,9 +78,9 @@
                     "label": "Attendance Tracking",
                     "submenu": "employee-attendance_menu"
                 },
-                {
-                    "label": "Back",
-                    "action": "back"
+                                {
+                "label": "Back",
+                "action": "back"
                 }
             ]
         },
@@ -74,36 +88,20 @@
             "title": "Loan Ledger",
             "options": [
                 {
-                    "label": "HDMF Salary Loan",
-                    "action": "hdmf_salary_loan"
+                "label": "Upload Loan Ledger (CSV/Excel)",
+                "action": "upload_loan_ledger"
                 },
                 {
-                    "label": "HDMF Housing Loan",
-                    "action": "hdmf_housing_loan"
+                "label": "View Loan Ledgers by Employee",
+                "action": "view_loan_ledgers_employee"
                 },
                 {
-                    "label": "HDMF Calamity Loan",
-                    "action": "hdmf_calamity_loan"
+                "label": "View Loan Ledgers by Type",
+                "action": "view_loan_ledgers_type"
                 },
                 {
-                    "label": "SSS Salary Loan",
-                    "action": "sss_salary_loan"
-                },
-                {
-                    "label": "SSS Calamity Loan",
-                    "action": "sss_calamity_loan"
-                },
-                {
-                    "label": "Personal Cash Advance",
-                    "action": "cash_advance"
-                },
-                {
-                    "label": "Others",
-                    "action": "other_loans"
-                },
-                {
-                    "label": "Back",
-                    "action": "back"
+                "label": "Back",
+                "action": "back"
                 }
             ]
         },

@@ -3,10 +3,9 @@
 
 // AdminSettingsModule
 AdminSettingsModule::AdminSettingsModule() {
-    std::cout << "AdminSettingsModule created\n";
+    
 }
 AdminSettingsModule::AdminSettingsModule(ActionDispatcher& dispatcher) {
-    std::cout << "AdminSettingsModule created\n";
     dispatcher.regAction("admin-settings", "manage_login_security", std::bind(&AdminSettingsModule::configureLoginSecurity , this));
 }
 AdminSettingsModule::~AdminSettingsModule() {
@@ -19,10 +18,8 @@ void AdminSettingsModule::configureLoginSecurity()
 
 // UserRoleManager
 UserRoleManager::UserRoleManager() {
-    std::cout << "UserRoleManager created\n";
 }
 UserRoleManager::UserRoleManager(ActionDispatcher& dispatcher) {
-    std::cout << "UserRoleManager created\n";
     dispatcher.regAction("manage-roles", "role_admin",  std::bind(&UserRoleManager::configureAdminRole , this));
     dispatcher.regAction("manage-roles", "role_hr", std::bind(&UserRoleManager::configureHRStaffRole , this));
 
@@ -41,10 +38,8 @@ void UserRoleManager::configureHRStaffRole()
 
 // ContributionTable
 ContributionTable::ContributionTable() {
-    std::cout << "ContributionTable created\n";
 }
 ContributionTable::ContributionTable(ActionDispatcher& dispatcher) {
-    std::cout << "ContributionTable created\n";
     dispatcher.regAction("contrib-tables", "edit_sss_rates", std::bind(&ContributionTable::editSSSRates , this));
     dispatcher.regAction("contrib-tables", "edit_phic_rates",std::bind(&ContributionTable::editPHICRates, this));
     dispatcher.regAction("contrib-tables", "edit_hdmf_rates",std::bind(&ContributionTable::editHDMFRates , this));

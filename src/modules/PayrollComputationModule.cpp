@@ -4,11 +4,9 @@
 // PayrollComputationModule
 PayrollComputationModule::PayrollComputationModule() 
 {
-    std::cout << "PayrollComputationModule created\n";
 }
 PayrollComputationModule::PayrollComputationModule(ActionDispatcher& dispatcher) 
 {
-    std::cout << "PayrollComputationModule created\n";
     dispatcher.regAction("payroll-compute", "set_period", std::bind(&PayrollComputationModule::setPayrollPeriod, this));
     dispatcher.regAction("payroll-compute", "compute_payroll",  std::bind(&PayrollComputationModule::computePayroll, this));
     dispatcher.regAction("payroll-compute", "review_payroll", std::bind(&PayrollComputationModule::reviewComputedPayroll, this));
@@ -33,11 +31,9 @@ void PayrollComputationModule::reviewComputedPayroll()
 // Payroll
 PayrollCalculator::PayrollCalculator() 
 {
-    std::cout << "Payroll created\n";
 }
 PayrollCalculator::PayrollCalculator(ActionDispatcher& dispatcher) 
 {
-    std::cout << "Payroll created\n";
     dispatcher.regAction("payroll-formula", "set_ot_rates",  std::bind(&PayrollCalculator::calculateOvertimePay , this));
     dispatcher.regAction("payroll-formula", "set_deductions", std::bind(&PayrollCalculator::applyAttendanceDeductions , this));
     dispatcher.regAction("payroll-formula", "set_taxable_formula",  std::bind(&PayrollCalculator::calculateTaxableIncome , this));

@@ -20,13 +20,9 @@ public:
     LoanLedger();
     LoanLedger(ActionDispatcher& dispatcher);
     ~LoanLedger();
-    void recordHDMFSalaryLoan();
-    void recordHDMFHousingLoan();
-    void recordHDMFCalamityLoan();
-    void recordSSSSalaryLoan();
-    void recordSSSCalamityLoan();
-    void recordPersonalCashAdvance();
-    void recordOtherLoan();
+    void uploadLoanLedger();
+    void viewLoanLedgersEmployee();
+    void viewLoanLedgersType();
 };
 
 class EmployeeAttendance {

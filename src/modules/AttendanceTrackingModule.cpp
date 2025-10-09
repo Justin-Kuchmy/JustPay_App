@@ -3,11 +3,9 @@
 
 AttendanceTrackingModule::AttendanceTrackingModule() 
 {
-    std::cout << "AttendanceTrackingModule created\n";
 }
 AttendanceTrackingModule::AttendanceTrackingModule(ActionDispatcher& dispatcher) 
-{
-    std::cout << "AttendanceTrackingModule created\n";
+{;
     dispatcher.regAction("attendance-tracking", "upload_time_logs", std::bind(&AttendanceTrackingModule::uploadTimeLogsFromCSV, this));
     dispatcher.regAction("attendance-tracking", "upload_time_logs", std::bind(&AttendanceTrackingModule::uploadTimeLogsFromAPI, this));
     dispatcher.regAction("attendance-tracking", "view_raw_logs",  std::bind(&AttendanceTrackingModule::viewRawLogs, this));

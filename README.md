@@ -79,18 +79,22 @@ Employee ID format depends on department:
 - **Date of Separation** (if resigned/terminated/retired)  
 - **SSS No.**  
 - **PhilHealth No.**  
-- **HDMF No.**  
+- **HDMF No.**
 - **TIN**
 - **Monthly Basic Salary**  
 - **Monthly Allowances**  
-- **Personal Email Address**  
+- **Personal Email Address**
 - **Personal Mobile Number**  
 - **Active/Inactive toggle button** (determines payroll inclusion)  
 - **Emergency Contact**:  
   - Name  
   - Relation  
   - Contact Address  
-  - Contact No.  
+  - Contact No.
+- **Dependent for HMO**:
+  - Name
+  - Relation
+  - Birthday
 
 ---
 
@@ -112,7 +116,7 @@ Additional fields:
 - No. of Amortizations  
 - Deduction per Payroll = `Principal / No. of Amortizations`  
 - Check button for deduction timing (**1st half and/or 2nd half payroll**)  
-- Button to indicate **Process/Unprocess** 
+- Button to indicate **Process/Unprocess**  
 
 ### 18. File Attachment
 - Employee Contracts
@@ -245,9 +249,10 @@ Date Processed: **August 27, 2025**
   - HDMF Loans  
   - Withholding Taxes  
 - Budget Utilization Reports (monitor payroll costs per department)  
+- Annualized Withholding Tax Reconciliation Report
 - Year-end Benefits Computation:  
   - 13th Month Pay (Net Basic Salary ÷ 12 months)  
-  - Monetized Vacation Leave Credits  
+  - Monetized Vacation Leave Credits
 
 ---
 

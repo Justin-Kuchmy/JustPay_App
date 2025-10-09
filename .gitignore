@@ -39,3 +39,15 @@
 
 # debug information files
 *.dwo
+
+# data files
+*.sql
+*.db
+*.db-journal
+
+# others
+.vscode/
+
+#tests
+tests/TestRunner.cpp
+tests/*.out

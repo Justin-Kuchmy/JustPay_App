@@ -1,19 +1,22 @@
 #include "../../include/modules/EmployeeManagementModule.hpp"
 #include <iostream>
+#include "../../Services/EmployeeService.cpp"
 
 // EmployeeManagementModule
 EmployeeManagementModule::EmployeeManagementModule() 
 {
-    std::cout << "EmployeeManagementModule created\n";
+
 }
 EmployeeManagementModule::EmployeeManagementModule(ActionDispatcher& dispatcher) 
 {
-    std::cout << "EmployeeManagementModule created\n";
-    dispatcher.regAction("employee-managment", "add_employee",  std::bind(&EmployeeManagementModule::addEmployee, this));
-    dispatcher.regAction("employee-managment", "edit_employee", std::bind(&EmployeeManagementModule::editEmployee, this));
-    dispatcher.regAction("employee-managment", "delete_employee", std::bind(&EmployeeManagementModule::deleteEmployee, this));
-    dispatcher.regAction("employee-managment", "toggle_status", std::bind(&EmployeeManagementModule::updateEmployeeStatus, this));
-    dispatcher.regAction("employee-managment", "manage_emergency",  std::bind(&EmployeeManagementModule::updateEmergencyContact, this));
+    EmployeeRepository* pRepo = new EmployeeRepository();
+    EmployeeService employeeService(pRepo);
+    pRepo->createTable();
+    dispatcher.regAction("employee-management", "add_employee",  std::bind(&EmployeeManagementModule::addEmployee, this));
+    dispatcher.regAction("employee-management", "edit_employee", std::bind(&EmployeeManagementModule::editEmployee, this));
+    dispatcher.regAction("employee-management", "delete_employee", std::bind(&EmployeeManagementModule::deleteEmployee, this));
+    dispatcher.regAction("employee-management", "toggle_status", std::bind(&EmployeeManagementModule::updateEmployeeStatus, this));
+    dispatcher.regAction("employee-management", "manage_emergency",  std::bind(&EmployeeManagementModule::updateEmergencyContact, this));
 }
 EmployeeManagementModule::~EmployeeManagementModule() 
 {
@@ -43,60 +46,37 @@ void EmployeeManagementModule::updateEmergencyContact()
 // LoanLedger
 LoanLedger::LoanLedger() 
 {
-    std::cout << "LoanLedger created\n";
 }
 LoanLedger::LoanLedger(ActionDispatcher& dispatcher) 
 {
-    std::cout << "LoanLedger created\n";
-    dispatcher.regAction("loan-ledger", "hdmf_salary_loan", std::bind(&LoanLedger::recordHDMFSalaryLoan, this));
-    dispatcher.regAction("loan-ledger", "hdmf_housing_loan",  std::bind(&LoanLedger::recordHDMFHousingLoan, this));
-    dispatcher.regAction("loan-ledger", "hdmf_calamity_loan", std::bind(&LoanLedger::recordHDMFCalamityLoan, this));
-    dispatcher.regAction("loan-ledger", "sss_salary_loan",  std::bind(&LoanLedger::recordSSSSalaryLoan, this));
-    dispatcher.regAction("loan-ledger", "sss_calamity_loan",  std::bind(&LoanLedger::recordSSSCalamityLoan, this));
-    dispatcher.regAction("loan-ledger", "cash_advance", std::bind(&LoanLedger::recordPersonalCashAdvance, this));
-    dispatcher.regAction("loan-ledger", "other_loans", std::bind(&LoanLedger::recordOtherLoan, this));
+    dispatcher.regAction("loan-ledger", "upload_loan_ledger", std::bind(&LoanLedger::uploadLoanLedger, this));
+    dispatcher.regAction("loan-ledger", "view_loan_ledgers_employee",  std::bind(&LoanLedger::viewLoanLedgersEmployee, this));
+    dispatcher.regAction("loan-ledger", "view_loan_ledgers_type", std::bind(&LoanLedger::viewLoanLedgersType, this));
 }
 LoanLedger::~LoanLedger() 
 {
     std::cout << "LoanLedger destroyed\n";
 }
-void LoanLedger::recordHDMFSalaryLoan()
+void LoanLedger::uploadLoanLedger()
 {
-    std::cout << "LoanLedger::recordHDMFSalaryLoan()" << std::endl;
+    std::cout << "LoanLedger::uploadLoanLedger()" << std::endl;
 };
-void LoanLedger::recordHDMFHousingLoan()
+void LoanLedger::viewLoanLedgersEmployee()
 {
-    std::cout << "LoanLedger::recordHDMFHousingLoan()" << std::endl;
+    std::cout << "LoanLedger::viewLoanLedgersEmployee()" << std::endl;
 };
-void LoanLedger::recordHDMFCalamityLoan()
+void LoanLedger::viewLoanLedgersType()
 {
-    std::cout << "LoanLedger::recordHDMFCalamityLoan()" << std::endl;
+    std::cout << "LoanLedger::viewLoanLedgersType()" << std::endl;
 };
-void LoanLedger::recordSSSSalaryLoan()
-{
-    std::cout << "LoanLedger::recordSSSSalaryLoan()" << std::endl;
-};
-void LoanLedger::recordSSSCalamityLoan()
-{
-    std::cout << "LoanLedger::recordSSSCalamityLoan()" << std::endl;
-};
-void LoanLedger::recordPersonalCashAdvance()
-{
-    std::cout << "LoanLedger::recordPersonalCashAdvance()" << std::endl;
-};
-void LoanLedger::recordOtherLoan()
-{
-    std::cout << "LoanLedger::recordOtherLoan()" << std::endl;
-};
+
 
 // EmployeeAttendance
 EmployeeAttendance::EmployeeAttendance() 
 {
-    std::cout << "EmployeeAttendance created\n";
 }
 EmployeeAttendance::EmployeeAttendance(ActionDispatcher& dispatcher) 
 {
-    std::cout << "EmployeeAttendance created\n";
     dispatcher.regAction("employee-attendance", "upload_time_logs", std::bind(&EmployeeAttendance::uploadTimeLogsFromCSV , this));
     dispatcher.regAction("employee-attendance", "upload_time_logs", std::bind(&EmployeeAttendance::uploadTimeLogsFromAPI, this));
     dispatcher.regAction("employee-attendance", "edit_overtime",  std::bind(&EmployeeAttendance::editOvertime, this));
