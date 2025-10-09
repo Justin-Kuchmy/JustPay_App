@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-#include "../../include/Services/EmployeeService.hpp"
-
-
-//CREATE
-void EmployeeService::addEmployee(){};
-
-//READ
-void EmployeeService::getEmployeeByID(){};
-
-void EmployeeService::getAllEmployees(){};
-
-//UPDATE
-void EmployeeService::updateEmployee(){};
-
-//DELETE
-void EmployeeService::fireEmployee(){};
-=======
 #include "../Repos/Headers/EmployeeRepository.hpp"
 
 class EmployeeService
@@ -54,4 +36,3 @@ class EmployeeService
 
         };
 };
->>>>>>> d7759d0d93835309818ad6eaf9cc093283cd1650

@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 //#include "./Headers/BaseRepository.hpp"
 #include "../../include/Repos/Headers/BaseRepository.hpp"
 #include "../../include/Entities/DataObjects.hpp"
-=======
-#include "./Headers/BaseRepository.hpp"
-#include "../Entities/DataObjects.hpp"
->>>>>>> d7759d0d93835309818ad6eaf9cc093283cd1650
 
 BaseRepository::BaseRepository(const std::string& dbName) {
     if (sqlite3_open(dbName.c_str(), &db) != SQLITE_OK) {
