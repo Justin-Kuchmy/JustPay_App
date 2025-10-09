@@ -12,11 +12,11 @@ EmployeeManagementModule::EmployeeManagementModule(ActionDispatcher& dispatcher)
     EmployeeRepository* pRepo = new EmployeeRepository();
     EmployeeService employeeService(pRepo);
     pRepo->createTable();
-    dispatcher.regAction("employee-managment", "add_employee",  std::bind(&EmployeeManagementModule::addEmployee, this));
-    dispatcher.regAction("employee-managment", "edit_employee", std::bind(&EmployeeManagementModule::editEmployee, this));
-    dispatcher.regAction("employee-managment", "delete_employee", std::bind(&EmployeeManagementModule::deleteEmployee, this));
-    dispatcher.regAction("employee-managment", "toggle_status", std::bind(&EmployeeManagementModule::updateEmployeeStatus, this));
-    dispatcher.regAction("employee-managment", "manage_emergency",  std::bind(&EmployeeManagementModule::updateEmergencyContact, this));
+    dispatcher.regAction("employee-management", "add_employee",  std::bind(&EmployeeManagementModule::addEmployee, this));
+    dispatcher.regAction("employee-management", "edit_employee", std::bind(&EmployeeManagementModule::editEmployee, this));
+    dispatcher.regAction("employee-management", "delete_employee", std::bind(&EmployeeManagementModule::deleteEmployee, this));
+    dispatcher.regAction("employee-management", "toggle_status", std::bind(&EmployeeManagementModule::updateEmployeeStatus, this));
+    dispatcher.regAction("employee-management", "manage_emergency",  std::bind(&EmployeeManagementModule::updateEmergencyContact, this));
 }
 EmployeeManagementModule::~EmployeeManagementModule() 
 {
