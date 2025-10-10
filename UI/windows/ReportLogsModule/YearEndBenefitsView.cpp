@@ -1,4 +1,4 @@
-#include "../../../include/UI/Headers/YearEndBenefitsView.h"
+#include "../../../include/UI/ReportLogs/YearEndBenefitsView.h"
 #include <QApplication>
 #include <QScreen>
 

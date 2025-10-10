@@ -1,4 +1,4 @@
-#include "../../../include/UI/Headers/ContributionTablesView.h"
+#include "../../../include/UI/AdminSettings/ContributionTablesView.h"
 #include <QApplication>
 #include <QScreen>
 

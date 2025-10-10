@@ -1,4 +1,4 @@
-#include "../../include/modules/PayrollComputationModule.hpp"
+#include "../../include/modules/PayrollComputationModule.h"
 #include <iostream>
 
 // PayrollComputationModule

@@ -1,4 +1,4 @@
-#include "../../include/modules/AdminSettingsModule.hpp"
+#include "../../include/modules/AdminSettingsModule.h"
 #include <iostream>
 
 // AdminSettingsModule

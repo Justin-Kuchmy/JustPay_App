@@ -1,4 +1,4 @@
-#include "../../include/modules/PayslipGenerationModule.hpp"
+#include "../../include/modules/PayslipGenerationModule.h"
 #include <iostream>
 
 // PayslipGenerationModule

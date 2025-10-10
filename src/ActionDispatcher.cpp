@@ -1,4 +1,4 @@
-#include "ActionDispatcher.hpp"
+#include "../include/ActionDispatcher.h"
 
 ActionDispatcher::ActionDispatcher(){};
 ActionDispatcher::~ActionDispatcher(){};

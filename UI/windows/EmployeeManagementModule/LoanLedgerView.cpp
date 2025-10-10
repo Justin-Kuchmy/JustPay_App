@@ -1,8 +1,8 @@
-#include "../../../include/UI/Headers/LoanLedgerView.h"
+#include "../../../include/UI/EmployeeManagement/LoanLedgerView.h"
 #include <QApplication>
 #include <QScreen>
 
-LoanLedger::LoanLedgerView(QWidget *parent): BaseView(parent)
+LoanLedgerView::LoanLedgerView(QWidget *parent): BaseView(parent)
 {
 
 }

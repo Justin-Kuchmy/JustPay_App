@@ -1,8 +1,8 @@
-#include "../../../include/UI/Headers/AttendanceTracking.h"
+#include "../../../include/UI/AttendanceTracking/AttendanceTrackingView.h"
 #include <QApplication>
 #include <QScreen>
 
-AttendanceTracking::AttendanceTracking(QWidget *parent)
+AttendanceTrackingView::AttendanceTrackingView(QWidget *parent)
     : BaseView(parent)
 {
     

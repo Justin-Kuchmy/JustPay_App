@@ -1,4 +1,4 @@
-#include "../../include/modules/ReportsLogsModule.hpp"
+#include "../../include/modules/ReportsLogsModule.h"
 #include <iostream>
 
 // ReportsLogsModule
