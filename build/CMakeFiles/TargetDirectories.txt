@@ -1,5 +1,0 @@
-/home/juku/Desktop/Code/c++/JustPay_Console/build/CMakeFiles/JustPay.dir
-/home/juku/Desktop/Code/c++/JustPay_Console/build/CMakeFiles/edit_cache.dir
-/home/juku/Desktop/Code/c++/JustPay_Console/build/CMakeFiles/rebuild_cache.dir
-/home/juku/Desktop/Code/c++/JustPay_Console/build/CMakeFiles/JustPay_autogen_timestamp_deps.dir
-/home/juku/Desktop/Code/c++/JustPay_Console/build/CMakeFiles/JustPay_autogen.dir
