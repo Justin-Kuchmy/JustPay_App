@@ -51,3 +51,15 @@
 #tests
 tests/TestRunner.cpp
 tests/*.out
+
+# CMake build artifacts
+build/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+*.cmake
+*.autogen/
+*.dir/
+*.internal
+*.make
