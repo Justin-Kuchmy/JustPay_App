@@ -1,4 +1,4 @@
-#include "../../../include/UI/ReportLogs/ReportLogsView.h"
+#include "../../../Include/UI/Windows/ReportLogs/ReportLogsView.h"
 #include <QApplication>
 #include <QScreen>
 

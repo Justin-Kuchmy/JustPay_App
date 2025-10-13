@@ -1,4 +1,4 @@
-#include "../../include/modules/AttendanceTrackingModule.h"
+#include "../../Include/modules/AttendanceTrackingModule.h"
 #include <iostream>
 
 AttendanceTrackingModule::AttendanceTrackingModule() 

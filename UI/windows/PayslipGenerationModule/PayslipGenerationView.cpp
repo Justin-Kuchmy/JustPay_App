@@ -1,4 +1,4 @@
-#include "../../../include/UI/PayslipGeneration/PayslipGeneratorView.h"
+#include "../../../Include/UI/Windows/PayslipGeneration/PayslipGeneratorView.h"
 #include <QApplication>
 #include <QScreen>
 

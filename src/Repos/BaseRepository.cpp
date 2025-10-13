@@ -1,5 +1,5 @@
-#include "../../include/Repos/BaseRepository.h"
-#include "../../include/Entities/DataObjects.h"
+#include "../../Include/Repos/BaseRepository.h"
+#include "../../Include/Entities/DataObjects.h"
 
 BaseRepository::BaseRepository(const std::string& dbName) {
     if (sqlite3_open(dbName.c_str(), &db) != SQLITE_OK) {

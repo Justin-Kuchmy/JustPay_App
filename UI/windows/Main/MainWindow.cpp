@@ -1,6 +1,6 @@
-#include "../../../include/MainWindow.h"
-#include "../../../include/MenuManager.h"
-#include "../../../include/Parser.h"
+#include "../../../Include/MainWindow.h"
+#include "../../../Include/MenuManager.h"
+#include "../../../Include/Parser.h"
 #include <QMenuBar>
 #include <QVBoxLayout>
 #include <QApplication>

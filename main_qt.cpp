@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>    
 #include <utility>    
-#include "/home/juku/Desktop/Code/c++/JustPay_Console/include/MainWindow.h"
+#include "/home/juku/Desktop/Code/c++/JustPay_Console/Include/MainWindow.h"
 
 int main(int argc, char* argv[])
 {

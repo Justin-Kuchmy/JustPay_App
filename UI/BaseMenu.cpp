@@ -1,4 +1,4 @@
-#include "../include/BaseMenu.h"
+#include "../Include/BaseMenu.h"
 
 
 BaseMenu::BaseMenu(const MenuData& data, QWidget* parent)

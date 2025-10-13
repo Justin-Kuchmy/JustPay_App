@@ -1,6 +1,6 @@
 
 
-#include "../include/MenuManager.h"
+#include "../Include/MenuManager.h"
 
 
 MenuManager::MenuManager(Parser& parser, QWidget* parent)

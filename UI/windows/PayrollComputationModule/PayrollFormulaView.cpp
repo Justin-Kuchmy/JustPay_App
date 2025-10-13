@@ -1,4 +1,4 @@
-#include "../../../include/UI/PayrollComputation/PayrollFormulaView.h"
+#include "../../../Include/UI/Windows/PayrollComputation/PayrollFormulaView.h"
 #include <QApplication>
 #include <QScreen>
 

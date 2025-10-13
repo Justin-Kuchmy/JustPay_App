@@ -1,4 +1,4 @@
-#include "../../../include/UI/ReportLogs/GovernmentRemittanceView.h"
+#include "../../../Include/UI/Windows/ReportLogs/GovernmentRemittanceView.h"
 #include <QApplication>
 #include <QScreen>
 

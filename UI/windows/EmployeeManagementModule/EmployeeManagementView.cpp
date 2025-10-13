@@ -1,4 +1,4 @@
-#include "../../../include/UI/EmployeeManagement/EmployeeManagerView.h"
+#include "../../../Include/UI/Windows/EmployeeManagement/EmployeeManagerView.h"
 #include <QApplication>
 #include <QScreen>
 #include <QGridLayout>

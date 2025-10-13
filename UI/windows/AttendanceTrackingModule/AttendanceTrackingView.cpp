@@ -1,4 +1,4 @@
-#include "../../../include/UI/AttendanceTracking/AttendanceTrackingView.h"
+#include "../../../Include/UI/Windows/AttendanceTracking/AttendanceTrackingView.h"
 #include <QApplication>
 #include <QScreen>
 

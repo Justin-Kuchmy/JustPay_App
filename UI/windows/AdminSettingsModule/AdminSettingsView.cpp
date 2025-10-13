@@ -1,4 +1,4 @@
-#include "../../../include/UI/AdminSettings/AdminSettingsView.h"
+#include "../../../Include/UI/Windows/AdminSettings/AdminSettingsView.h"
 #include <QApplication>
 #include <QScreen>
 
