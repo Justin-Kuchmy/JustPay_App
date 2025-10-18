@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainDialog</class>
+ <widget class="QDialog" name="mainDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>736</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>711</width>
+     <height>614</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QFormLayout" name="formLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="nameLabel">
+        <property name="text">
+         <string>Full Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="nameLineEdit"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="empIDLabel">
+        <property name="text">
+         <string>Employee ID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="departmentLabel">
+        <property name="text">
+         <string>Department</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="positionLabel">
+        <property name="text">
+         <string>Position</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="jobLevelLabel">
+        <property name="text">
+         <string>Job Level</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="empStatusLabel">
+        <property name="text">
+         <string>Employment Status</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="dateHiredLabel">
+        <property name="text">
+         <string>Date Hired</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="dateSeparatedLabel">
+        <property name="text">
+         <string>Date Separated</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="sssNumberLabel">
+        <property name="text">
+         <string>SSS Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="philHealthNumberLabel">
+        <property name="text">
+         <string>PhilHealth Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="hdmfNumberLabel">
+        <property name="text">
+         <string>HDMF Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0">
+       <widget class="QLabel" name="monthlySalaryLabel">
+        <property name="text">
+         <string>Monthly Basic Salary</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="0">
+       <widget class="QLabel" name="monthlyAllowancesLabel">
+        <property name="text">
+         <string>Monthly Allowances</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="0">
+       <widget class="QLabel" name="personalEmailLabel">
+        <property name="text">
+         <string>Personal Email</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="0">
+       <widget class="QLabel" name="activeStatusLabel">
+        <property name="text">
+         <string>Active</string>
+        </property>
+       </widget>
+      </item>
+      <item row="18" column="0">
+       <widget class="QLabel" name="emergencyContactLabel">
+        <property name="text">
+         <string>Emergency Contact</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="0">
+       <widget class="QLabel" name="dependentLabel">
+        <property name="text">
+         <string>Dependent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="empIDLineEdit"/>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="positionLineEdit"/>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLineEdit" name="sssNumberLineEdit"/>
+      </item>
+      <item row="9" column="1">
+       <widget class="QLineEdit" name="philHealthNumberLineEdit"/>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLineEdit" name="hdmfNumberLineEdit"/>
+      </item>
+      <item row="15" column="1">
+       <widget class="QLineEdit" name="personEmailLineEdit"/>
+      </item>
+      <item row="18" column="1">
+       <widget class="QPushButton" name="emergencyContactButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
+      <item row="19" column="1">
+       <widget class="QPushButton" name="dependentButton">
+        <property name="text">
+         <string>Add</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="1">
+       <widget class="QCheckBox" name="activeStatusCheckBox">
+        <property name="text">
+         <string>Status</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="1">
+       <widget class="QDoubleSpinBox" name="monthlySalaryLineEdit"/>
+      </item>
+      <item row="14" column="1">
+       <widget class="QDoubleSpinBox" name="monthlyAllowancesLineEdit"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="departmentComboBox"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="jobLevelComboBox"/>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="empStatusComboBox"/>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDateEdit" name="dateHiredDateEdit"/>
+      </item>
+      <item row="7" column="1">
+       <widget class="QDateEdit" name="DateSeparatedDateEdit"/>
+      </item>
+      <item row="12" column="0">
+       <widget class="QLabel" name="bankAccountNumberLabel">
+        <property name="text">
+         <string>Bank Account Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QLineEdit" name="bankAccountNumberLineEdit"/>
+      </item>
+      <item row="16" column="0">
+       <widget class="QLabel" name="personalMobileNumberLabel">
+        <property name="text">
+         <string>Personal Mobile Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="1">
+       <widget class="QLineEdit" name="personalMobileNumberLineEdit"/>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="tinLabel">
+        <property name="text">
+         <string>TIN</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QLineEdit" name="tinLineEdit"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>mainDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>mainDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
