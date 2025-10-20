@@ -14,12 +14,20 @@ class AddDependentDialog : public QDialog {
 public:
     explicit AddDependentDialog(QWidget *parent = nullptr);
     ~AddDependentDialog();
+
+    Dependent getDependentData() const;
     
 private slots:
+    void accept() override;
+    void reject() override;
 
+    void on_nameLineEdit_textChanged(const QString &text);
+    void on_relationLineEdit_textChanged(const QString &text);
+    void on_bdayDateEdit_dateChanged(const QDate &date);
 
 private:
     Ui::AddDependentDialog *ui;
+    Dependent m_dependent;
 };
 
 

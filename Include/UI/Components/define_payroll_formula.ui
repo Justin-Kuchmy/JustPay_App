@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mainDialog</class>
- <widget class="QDialog" name="mainDialog">
+ <class>DefinePayrollFormulaDialog</class>
+ <widget class="QDialog" name="DefinePayrollFormulaDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -24,7 +24,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="mainDialogLabel">
+     <widget class="QLabel" name="DefinePayrollFormulaDialogLabel">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
