@@ -13,6 +13,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Include/UI/Generated")
 
 # ---------------------------------------------------------
 # Include directories
