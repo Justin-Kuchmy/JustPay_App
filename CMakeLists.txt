@@ -13,7 +13,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Include/UI/Generated")
+
 
 # ---------------------------------------------------------
 # Include directories
@@ -27,18 +27,17 @@ include_directories(
 # ---------------------------------------------------------
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/main_qt.cpp"
-    "${CMAKE_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/src/**/*.cpp"
-    "${CMAKE_SOURCE_DIR}/UI/*.cpp"
-    "${CMAKE_SOURCE_DIR}/UI/**/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/**/*.cpp"
     "${CMAKE_SOURCE_DIR}/Include/*.h"
     "${CMAKE_SOURCE_DIR}/Include/**/*.h"
+    "${CMAKE_SOURCE_DIR}/UI/*.cpp"
+    "${CMAKE_SOURCE_DIR}/UI/**/*.cpp"
 )
 
 # Collect UI files
 file(GLOB_RECURSE UI_FILES
-    "${CMAKE_SOURCE_DIR}/Include/UI/*.ui"
-    "${CMAKE_SOURCE_DIR}/Include/UI/Components/*.ui"
+    "${CMAKE_SOURCE_DIR}/UI/*.ui"
 )
 
 #---------------------------------------------------------
@@ -51,9 +50,14 @@ add_executable(JustPay
     ${UI_FILES}
 )
 
+target_include_directories(JustPay PRIVATE
+    ${CMAKE_SOURCE_DIR}/Include
+)
+set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Include/UI/Generated")
+
 set_target_properties(JustPay PROPERTIES
     OUTPUT_NAME "JustPay.exe"
-    AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/Include/UI/Components"
+    AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/Include/UI/Generated"
 )
     
 target_link_libraries(JustPay
@@ -75,14 +79,14 @@ set(TEST_SOURCES ${APP_SOURCES})
 list(FILTER TEST_SOURCES EXCLUDE REGEX "main_qt\\.cpp$")
 
 add_executable(JustPay_Tests
-    ${CMAKE_SOURCE_DIR}/tests/TestRunner.cpp
+    ${CMAKE_SOURCE_DIR}/Tests/TestRunner.cpp
     ${TEST_SOURCES}
     ${UI_FILES}
 )
 
 set_target_properties(JustPay_Tests PROPERTIES
     OUTPUT_NAME "JustPay_TestRunner.exe"
-    AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/Include/UI/Components"
+    AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/Include/UI/Generated"
 )
 
 target_link_libraries(JustPay_Tests
