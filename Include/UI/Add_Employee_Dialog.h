@@ -1,26 +1,26 @@
-// #ifndef ADDEMPLOYEEDIALOG_H
-// #define ADDEMPLOYEEDIALOG_H
+#ifndef ADDEMPLOYEEDIALOG_H
+#define ADDEMPLOYEEDIALOG_H
 
-// #include <QDialog>
-// #include "../Include/Models/DataObjects.h"
+#include <QDialog>
+#include "../Include/Models/DataObjects.h"
 
-// namespace Ui {
-// class AddEmployeeDialog;
-// }
+namespace Ui {
+class AddEmployeeDialog;
+}
 
-// class AddEmployeeDialog : public QDialog {
-//     Q_OBJECT
+class AddEmployeeDialog : public QDialog {
+    Q_OBJECT
 
-// public:
-//     explicit AddEmployeeDialog(QWidget *parent = nullptr);
-//     ~AddEmployeeDialog();
+public:
+    explicit AddEmployeeDialog(QWidget *parent = nullptr);
+    ~AddEmployeeDialog();
     
-// private slots:
+private slots:
 
 
-// private:
-//     Ui::AddEmployeeDialog *ui;
-// };
+private:
+    Ui::AddEmployeeDialog *ui;
+};
 
 
-// #endif
+#endif
