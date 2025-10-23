@@ -30,11 +30,13 @@ BaseMenu::BaseMenu(const MenuData& data, bool isRootMenu, QWidget* parent) : QWi
         layout->addWidget(btn);
 
         connect(btn, &QPushButton::clicked, this, [this, opt]() {
-            qDebug() << "Clicked action:" << opt.action
-                     << "| Submenu:" << opt.submenu;
+            //qDebug() << "Clicked action:" << opt.action<< "| Submenu:" << opt.submenu;
 
             if (!opt.submenu.isEmpty())
                 emit submenuRequested(opt.submenu);
+            if (!opt.action.isEmpty())
+                emit actionRequested(opt.action);
+            
         });
     }
 

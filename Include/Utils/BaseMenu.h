@@ -22,6 +22,7 @@ public:
 
 signals:
     void submenuRequested(const QString& submenuName);
+    void actionRequested(const QString& actionName);
     void backRequested();
 };
 

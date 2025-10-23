@@ -1,6 +1,7 @@
 
 
 #include "Utils/MenuManager.h"
+#include "Utils/DialogFactory.h"
 #include <QApplication>
 
 
@@ -35,8 +36,14 @@ void MenuManager::buildMenus(Parser& parser)
     }
 
      // Connect navigation signals
-    for (auto& [key, _] : parser.menuMap)
+    for (auto& [key, menu] : parser.menuMap)
     {
+        for (const auto& opt : menu.options)
+        {
+            if (!opt.action.isEmpty()) {
+                //qDebug() << opt.action << " registered";
+            }
+        } 
         auto* menuWidget = menuLookup[QString::fromStdString(key)];
 
         // Submenu navigation
@@ -52,6 +59,15 @@ void MenuManager::buildMenus(Parser& parser)
                         qWarning() << "Submenu not found:" << submenuName;
                     }
                 });
+
+        connect(menuWidget,&BaseMenu::actionRequested,this,
+            [this](const QString& actionName) {
+                //qDebug() << actionName << " clicked!!";
+                DialogFactory::registerDialogs();
+                auto dlg = DialogFactory::create(actionName);
+                if(dlg != nullptr)
+                    dlg->exec();
+            });
 
         // Back navigation
         connect(menuWidget, &BaseMenu::backRequested, this, [this]() {
@@ -73,11 +89,11 @@ void MenuManager::showMenu(const QString& name)
     if (menu)
     {
         stacked->setCurrentWidget(menu);
-        qDebug() << "Switched to menu:" << name;
+        //qDebug() << "Switched to menu:" << name;
     }
     else
     {
-        qDebug() << "Menu not found:" << name;
+        //qDebug() << "Menu not found:" << name;
     }
 }
 
