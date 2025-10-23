@@ -85,6 +85,7 @@ struct Employee
     std::string sssNumber;
     std::string philHealthNumber;
     std::string hdmfNumber;
+    std::string tin;
     double monthlyBasicSalary{};
     double monthlyAllowances{};
     std::string personalEmail;
