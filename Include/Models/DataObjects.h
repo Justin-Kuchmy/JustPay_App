@@ -90,7 +90,7 @@ struct Employee
     std::string personalEmail;
     bool isActive{true};
     Contact emergencyContact{};
-    Dependent dependant{};
+    Dependent dependent{};
     friend std::ostream& operator<<(std::ostream& os, const Employee& p);
 };
 

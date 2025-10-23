@@ -116,9 +116,9 @@
             );
             std::string sqlC = std::format("INSERT INTO dependents (employeeId, name, relation, birthday) VALUES ('{}', '{}','{}','{}')", 
                 empId,
-                employee.dependant.name,
-                employee.dependant.relation,
-                to_string(employee.dependant.birthday) // Date -> string (YYYY-MM-DD)
+                employee.dependent.name,
+                employee.dependent.relation,
+                to_string(employee.dependent.birthday) // Date -> string (YYYY-MM-DD)
             );
 
             return execute(sqlB) && execute(sqlC);
