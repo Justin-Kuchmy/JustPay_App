@@ -61,9 +61,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     
     central->setLayout(layout);
 
-    connect(win98Theme, &QAction::triggered, this, [this]() {applyTheme("../Resources/win98.qss");});
-    connect(darkTheme, &QAction::triggered, this, [this]() {applyTheme("../Resources/dark.qss");});
-    connect(lightTheme, &QAction::triggered, this, [this]() {applyTheme("../Resources/light.qss");});
+    connect(win98Theme, &QAction::triggered, this, [this]() {applyTheme("../Resources/styles/win98.qss");});
+    connect(darkTheme, &QAction::triggered, this, [this]() {applyTheme("../Resources/styles/dark.qss");});
+    connect(lightTheme, &QAction::triggered, this, [this]() {applyTheme("../Resources/styles/light.qss");});
     
 }
 
