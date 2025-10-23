@@ -1,34 +1,30 @@
-// #ifndef DEPENDENTDIALOG_H
-// #define DEPENDENTDIALOG_H
+#ifndef DEPENDENTDIALOG_H
+#define DEPENDENTDIALOG_H
 
-// #include <QDialog>
-// #include "../Include/Models/DataObjects.h"
+#include <QDialog>
+#include "../Include/Models/DataObjects.h"
 
-// namespace Ui {
-// class AddDependentDialog;
-// }
+namespace Ui {
+class AddDependentDialog;
+}
 
-// class AddDependentDialog : public QDialog {
-//     Q_OBJECT
+class AddDependentDialog : public QDialog {
+    Q_OBJECT
 
-// public:
-//     explicit AddDependentDialog(QWidget *parent = nullptr);
-//     ~AddDependentDialog();
+public:
+    explicit AddDependentDialog(QWidget *parent = nullptr);
+    ~AddDependentDialog();
 
-//     Dependent getDependentData() const;
+    Dependent getDependentData() const;
     
-// private slots:
-//     void accept() override;
-//     void reject() override;
+private slots:
+    void onOKClicked();
+    void onCancelClicked();
 
-//     void on_nameLineEdit_textChanged(const QString &text);
-//     void on_relationLineEdit_textChanged(const QString &text);
-//     void on_bdayDateEdit_dateChanged(const QDate &date);
-
-// private:
-//     Ui::AddDependentDialog *ui;
-//     Dependent m_dependent;
-// };
+private:
+    Ui::AddDependentDialog *ui;
+    Dependent m_dependent;
+};
 
 
-// #endif
+#endif
