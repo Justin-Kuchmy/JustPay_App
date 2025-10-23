@@ -9,6 +9,8 @@ void DialogFactory::registerDialogs()
 {
     registry.clear();
     registry["add_employee"] = []() { return new AddEmployeeDialog(); };
+    registry["add_contact"] = []() { return new AddEmergencyContactDialog(); };
+    registry["add_dependent"] = []() { return new AddDependentDialog(); };
     //registry.insert("add_employee", []() { return new AddEmployeeDialog(); });
     
 };
