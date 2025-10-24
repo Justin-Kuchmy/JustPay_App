@@ -5,6 +5,8 @@
 #include "Services/EmployeeService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Utils/DialogFactory.h"
+#include "UI/Add_Dependent_Dialog.h"
+#include "UI/Add_Emergency_Contact_Dialog.h"
 
 EmployeeRepository* r = new EmployeeRepository();
 EmployeeService empService(r);
@@ -64,22 +66,24 @@ AddEmployeeDialog::~AddEmployeeDialog()
     delete ui;
 };
 
-Contact AddEmployeeDialog::openAddContactDialog()
+void AddEmployeeDialog::openAddContactDialog()
 {
     DialogFactory::registerDialogs();
     auto dlg = DialogFactory::create("add_contact");
-    if(dlg != nullptr)
-        dlg->exec();
-    return {};
+    auto contactDialog = dynamic_cast<EmergencyContactDialog*>(dlg);
+    if(contactDialog && contactDialog->exec() == QDialog::Accepted)   
+        a_Employee.emergencyContact = contactDialog->getContactData();  
+    
 };
 
-Dependent AddEmployeeDialog::openAddDependentDialog()
+void AddEmployeeDialog::openAddDependentDialog()
 {
     DialogFactory::registerDialogs();
     auto dlg = DialogFactory::create("add_dependent");
-    if(dlg != nullptr)
-        dlg->exec();
-    return {};
+    auto dependentDialog = dynamic_cast<AddDependentDialog*>(dlg);
+    if(dependentDialog && dependentDialog->exec() == QDialog::Accepted)    
+        a_Employee.dependent = dependentDialog->getDependentData();;  
+    
 };
 
 void AddEmployeeDialog::onOKClicked()
@@ -100,8 +104,7 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
     a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
-    //a_Employee.emergencyContact;
-    //a_Employee.dependent;
+    qDebug() << a_Employee;
     //empService.addEmployee();
     accepted();
 };
