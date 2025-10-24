@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::AddDependentDialog *ui;
-    Dependent m_dependent;
+    Dependent m_Dependent;
 };
 
 
