@@ -17,8 +17,8 @@ public:
 private slots:
     void onOKClicked();
     void onCancelClicked();
-    Contact openAddContactDialog();
-    Dependent openAddDependentDialog();
+    void openAddContactDialog();
+    void openAddDependentDialog();
 private:
     Ui::AddEmployeeDialog *ui;
     Employee a_Employee;
