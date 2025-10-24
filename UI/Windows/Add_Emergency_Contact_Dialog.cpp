@@ -4,6 +4,8 @@
 EmergencyContactDialog::EmergencyContactDialog(QWidget *parent): QDialog(parent), ui(new Ui::EmergencyContactDialog)
 {
     ui->setupUi(this); 
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EmergencyContactDialog::onOKClicked);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &EmergencyContactDialog::onCancelClicked);
 }
 
 EmergencyContactDialog::~EmergencyContactDialog()
@@ -13,10 +15,20 @@ EmergencyContactDialog::~EmergencyContactDialog()
 
 void EmergencyContactDialog::onOKClicked()
 {
-
+    m_Contact.name = ui->nameLineEdit->text().toStdString();
+    m_Contact.relation= ui->relationLineEdit->text().toStdString();
+    m_Contact.address= ui->addressLineEdit->text().toStdString();
+    m_Contact.contactNo= ui->contactNumLineEdit->text().toStdString();
+    qDebug() << m_Contact;
+    accept();
 };
 
 void EmergencyContactDialog::onCancelClicked()
 {
-
+    reject();
 };
+
+Contact EmergencyContactDialog::getContactData() const
+{
+    return this->m_Contact;
+}
