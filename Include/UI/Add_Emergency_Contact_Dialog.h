@@ -14,6 +14,8 @@ class EmergencyContactDialog : public QDialog {
 public:
     explicit EmergencyContactDialog(QWidget *parent = nullptr);
     ~EmergencyContactDialog();
+
+    Contact getContactData() const;
     
 private slots:
     void onOKClicked();
@@ -21,6 +23,7 @@ private slots:
 
 private:
     Ui::EmergencyContactDialog *ui;
+    Contact m_Contact;
 };
 
 
