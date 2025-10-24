@@ -8,10 +8,12 @@ class EmployeeRepository: public BaseRepository {
         static Employee mapEmployee(sqlite3_stmt* stmt);
     public: 
 
-        explicit EmployeeRepository();
+        explicit EmployeeRepository(sqlite3* db);
+        
+        std::string getCreateTableSQL() const override;
+        
         
         //CREATE
-        std::string getCreateTableSQL() const override;
         bool insertEmployee(const Employee& Employee);
 
         // READ

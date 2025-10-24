@@ -1,16 +1,44 @@
 #include "Services/EmployeeService.h"
 
+EmployeeService::EmployeeService(EmployeeRepository& r): repo(r)
+{
+    // if(this->repo.createTable())
+    // {
+    //     qDebug() << "Table Created";
+    // }
+}
 
 //CREATE
-void EmployeeService::addEmployee(){};
+bool EmployeeService::addEmployee(const Employee& employee)
+{
+    //qDebug() << "Some Functionality to addEmployee";
+    qDebug() << employee;
+    return this->repo.insertEmployee(employee);
+};
 
 //READ
-void EmployeeService::getEmployeeByID(){};
+std::optional<Employee> EmployeeService::getEmployeeByID(std::string id)
+{
+    qDebug() << "Some Functionality to getEmployeeByID";
+    return {};
+};
 
-void EmployeeService::getAllEmployees(){};
+std::vector<Employee> EmployeeService::getAllEmployees()
+{
+    qDebug() << "Some Functionality to getAllEmployees";
+    return {};
+};
 
 //UPDATE
-void EmployeeService::updateEmployee(){};
+bool EmployeeService::updateEmployee(const Employee& e)
+{
+    qDebug() << "Some Functionality to updateEmployee";
+    return false;
+};
 
 //DELETE
-void EmployeeService::fireEmployee(){};
+bool EmployeeService::fireEmployee()
+{
+    qDebug() << "Some Functionality to fireEmployee";
+    return false;
+};

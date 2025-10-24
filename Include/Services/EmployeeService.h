@@ -1,23 +1,27 @@
+#ifndef EMPLOYEESERVICE_H
+#define EMPLOYEESERVICE_H
 #include "Repositories/EmployeeRepository.h"
 
 class EmployeeService
 {
-    EmployeeRepository& repo;
-
+    protected:
+        EmployeeRepository& repo;
     public:
-        EmployeeService(EmployeeRepository* r): repo(*r){};
+        explicit EmployeeService(EmployeeRepository& r);
 
         //CREATE
-        void addEmployee();
+        bool addEmployee(const Employee& employee);
 
         //READ
-        void getEmployeeByID();
+        std::optional<Employee> getEmployeeByID(std::string id);
 
-        void getAllEmployees();
+        std::vector<Employee> getAllEmployees();
 
         //UPDATE
-        void updateEmployee();
+        bool updateEmployee(const Employee& e);
         
         //DELETE
-        void fireEmployee();
+        bool fireEmployee();
 };
+
+#endif

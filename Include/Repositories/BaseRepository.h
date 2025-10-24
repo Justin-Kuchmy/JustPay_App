@@ -9,11 +9,10 @@
 #include <functional>
 
 class BaseRepository {
-protected:
+protected: 
     sqlite3* db = nullptr;
-    
 public:
-    explicit BaseRepository(const std::string& dbName);
+    explicit BaseRepository(sqlite3* db);
     virtual ~BaseRepository();
     virtual std::string getCreateTableSQL() const = 0;
     bool createTable();
