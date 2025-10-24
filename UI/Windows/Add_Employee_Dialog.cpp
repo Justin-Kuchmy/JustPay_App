@@ -7,9 +7,7 @@
 #include "Utils/DialogFactory.h"
 #include "UI/Add_Dependent_Dialog.h"
 #include "UI/Add_Emergency_Contact_Dialog.h"
-
-EmployeeRepository* r = new EmployeeRepository();
-EmployeeService empService(r);
+#include "Services/AppContext.h"
 
 AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddEmployeeDialog)
 {
@@ -104,9 +102,9 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
     a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
-    qDebug() << a_Employee;
-    //empService.addEmployee();
-    accepted();
+    if(AppContext::instance().employeeService().addEmployee(a_Employee));
+        qDebug() << "Employee " << QString::fromStdString(a_Employee.fullName) << " added!";
+        accepted();
 };
 
 void AddEmployeeDialog::onCancelClicked()
