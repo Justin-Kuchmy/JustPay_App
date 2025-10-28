@@ -7,12 +7,13 @@
 
 class DialogFactory {
 public:
-    using Creator = std::function<QDialog*()>;
+    using Creator = std::function<QWidget*()>;
 
     static void registerDialogs();
-    static QDialog* create(const QString& key);
+    static QWidget* create(const QString& key);
 
 private:
     static std::unordered_map<QString, Creator> registry;
+
 };
 #endif
