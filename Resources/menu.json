@@ -41,34 +41,8 @@
                     "action": "delete_employee"
                 },
                 {
-                    "label": "Select Employee",
-                    "submenu": "employee-details_menu"
-                }
-            ]
-        },
-
-        "employee-details_menu": {
-            "title": "Employee Details & Management",
-            "options": [
-                {
-                    "label": "Edit Employee",
-                    "action": "edit_employee"
-                },
-                {
-                    "label": "Manage Employee Status (Active/Inactive)",
-                    "action": "toggle_status"
-                },
-                {
-                    "label": "Manage Emergency Contacts",
-                    "action": "manage_emergency"
-                },
-                {
-                    "label": "Loan Ledger",
-                    "submenu": "loan-ledger_menu"
-                },
-                {
-                    "label": "Attendance Tracking",
-                    "submenu": "employee-attendance_menu"
+                    "label": "Employee Details",
+                    "action": "select_employee"
                 }
             ]
         },
