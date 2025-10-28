@@ -95,9 +95,11 @@ struct Employee
     std::string philHealthNumber;
     std::string hdmfNumber;
     std::string tin;
+    std::string bankAccountNumber;
     double monthlyBasicSalary{};
     double monthlyAllowances{};
     std::string personalEmail;
+    std::string personalMobileNumber;
     bool isActive{true};
     Contact emergencyContact{};
     Dependent dependent{};
@@ -208,6 +210,7 @@ inline std::ostream& operator<<(std::ostream& os, Employee& e)
     os <<std::left << std::setw(20) << "Email: "      << std::setw(22) << e.personalEmail                    << std::setw(25) << "| SSS_Number: "           << std::setw(15) << e.sssNumber  << std::endl;
     os <<std::left << std::setw(20) << "Hired: "      << std::setw(22) << to_string(e.dateHired)             << std::setw(25) << "| PhilHealth_Number: "    << std::setw(15) << e.philHealthNumber  << std::endl;
     os <<std::left << std::setw(20) << "Separation: " << std::setw(22) << to_string(e.dateSeparation)        << std::setw(25) << "| HDMF_Number: "          << std::setw(15) << e.hdmfNumber  << std::endl;
+    os << std::left << std::setw(20) << "PhoneNo: "    << std::setw(22) << e.personalMobileNumber           << std::setw(25) << "| Bank_Account: "         << std::setw(15) << e.bankAccountNumber << '\n';
     os << std::string(80,'=') << "\n";
     
     return os;
@@ -230,6 +233,7 @@ inline QDebug operator<<(QDebug debug, const Employee &e)
     oss << std::left << std::setw(20) << "Email: "      << std::setw(22) << e.personalEmail                     << std::setw(25)                << "| SSS_Number: "         << std::setw(15)            << e.sssNumber          << '\n';
     oss << std::left << std::setw(20) << "Hired: "      << std::setw(22) << to_string(e.dateHired)              << std::setw(25)                << "| PhilHealth_Number: "  << std::setw(15)            << e.philHealthNumber   << '\n';
     oss << std::left << std::setw(20) << "Separation: " << std::setw(22) << to_string(e.dateSeparation)         << std::setw(25)                << "| HDMF_Number: "        << std::setw(15)            << e.hdmfNumber         << '\n';
+    oss << std::left << std::setw(20) << "PhoneNo: "    << std::setw(22) << e.personalMobileNumber                   << std::setw(25)           << "| Bank_Account: "        << std::setw(15)            << e.bankAccountNumber << '\n';
     oss << std::left << std::setw(20) << "Contact: "    << std::setw(22) << e.emergencyContact.name             << std::setw(25)                << "| Dependent"            << std::setw(15)            << e.dependent.name     << '\n';
     oss << std::string(80, '=') << "\n";
 
