@@ -2,31 +2,27 @@
 
 EmployeeService::EmployeeService(EmployeeRepository& r): repo(r)
 {
-    // if(this->repo.createTable())
-    // {
-    //     qDebug() << "Table Created";
-    // }
+    if(this->repo.createTable())
+    {
+        qDebug() << "Table Created";
+    }
 }
 
 //CREATE
 bool EmployeeService::addEmployee(const Employee& employee)
 {
-    //qDebug() << "Some Functionality to addEmployee";
-    qDebug() << employee;
     return this->repo.insertEmployee(employee);
 };
 
 //READ
 std::optional<Employee> EmployeeService::getEmployeeByID(std::string id)
 {
-    qDebug() << "Some Functionality to getEmployeeByID";
-    return {};
+    return this->repo.getById(id);
 };
 
 std::vector<Employee> EmployeeService::getAllEmployees()
 {
-    qDebug() << "Some Functionality to getAllEmployees";
-    return {};
+    return this->repo.getAll();
 };
 
 //UPDATE
