@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EmployeeDetailsWidget</class>
+ <widget class="QWidget" name="EmployeeDetailsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>912</width>
+    <height>541</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QSplitter" name="mainSplitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="handleWidth">
+      <number>15</number>
+     </property>
+     <widget class="QWidget" name="employeeListPanel">
+      <layout class="QVBoxLayout" name="verticalLayoutLeft">
+       <item>
+        <widget class="QLineEdit" name="employeeSearchBox">
+         <property name="placeholderText">
+          <string>Search employee...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="employeeScrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="employeeListContainer">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>331</width>
+            <height>491</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="employeeListLayout"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="EmployeeDetailsWidgetPanel">
+      <layout class="QVBoxLayout" name="verticalLayoutRight">
+       <item>
+        <widget class="QTabWidget" name="employeeTabs">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tabGeneral">
+          <attribute name="title">
+           <string>General Info</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabContacts">
+          <attribute name="title">
+           <string>Emergency Contacts</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabDependent">
+          <attribute name="title">
+           <string>Dependents</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabLoans">
+          <attribute name="title">
+           <string>Loan Ledger</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tabAttendance">
+          <attribute name="title">
+           <string>Attendance</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="saveButton">
+         <property name="text">
+          <string>Save Changes</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
