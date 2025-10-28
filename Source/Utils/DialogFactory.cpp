@@ -3,9 +3,13 @@
 #include "UI/Add_Employee_Dialog.h"
 #include "UI/Add_Dependent_Dialog.h"
 #include "UI/Add_Emergency_Contact_Dialog.h"
+#include "UI/Employee_Details_Widget.h"
+
+
 
 
 std::unordered_map<QString, DialogFactory::Creator> DialogFactory::registry;
+
 
 void DialogFactory::registerDialogs()
 {
@@ -13,10 +17,12 @@ void DialogFactory::registerDialogs()
     registry["add_employee"] = []() { return new AddEmployeeDialog(); };
     registry["add_contact"] = []() { return new EmergencyContactDialog(); };
     registry["add_dependent"] = []() { return new AddDependentDialog(); };
+    registry["select_employee"] = []() { return new EmployeeDetailsWidget(); };
+
     
 };
 
-QDialog* DialogFactory::create(const QString& key) {
+QWidget* DialogFactory::create(const QString& key) {
     if (registry.contains(key))
         return registry[key]();
     return nullptr;
