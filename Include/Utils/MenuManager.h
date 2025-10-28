@@ -15,6 +15,8 @@ public:
     explicit MenuManager(Parser& parser, QWidget* parent = nullptr);
     void showMenu(const QString& name);
     BaseMenu* getMenu(const QString& name) const;
+
+    void showContentWidget(QWidget* widget);
 private: 
     void buildMenus(Parser& parser);
     QStackedWidget* stacked;
