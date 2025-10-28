@@ -64,9 +64,17 @@ void MenuManager::buildMenus(Parser& parser)
             [this](const QString& actionName) {
                 //qDebug() << actionName << " clicked!!";
                 DialogFactory::registerDialogs();
-                auto dlg = DialogFactory::create(actionName);
-                if(dlg != nullptr)
+                QWidget* w = DialogFactory::create(actionName);
+                if (!w) return;
+
+                if (auto dlg = qobject_cast<QDialog*>(w)) {
+                    //QDialog
                     dlg->exec();
+                    delete dlg;
+                } else {
+                    //QWidget
+                    showContentWidget(w);
+                }
             });
 
         // Back navigation
@@ -83,6 +91,21 @@ void MenuManager::buildMenus(Parser& parser)
 
 }
 
+void MenuManager::showContentWidget(QWidget* widget)
+{
+    if (!widget)
+            return;
+
+        // Remove and delete old widget if one exists
+        if (auto current = stacked->currentWidget()) 
+        {
+            history.push(current);
+        }
+
+        // Add and show the new screen
+        stacked->addWidget(widget);
+        stacked->setCurrentWidget(widget);
+};
 void MenuManager::showMenu(const QString& name)
 {
     auto* menu = getMenu(name);
