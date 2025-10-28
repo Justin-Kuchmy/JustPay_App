@@ -10,7 +10,7 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
     setWindowTitle("JustPay");
-    resize(600, 800);
+    resize(1200, 675);
 
     // Create menu bar
     QMenuBar *menuBar = new QMenuBar(this);
