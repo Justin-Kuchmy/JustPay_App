@@ -98,12 +98,13 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
     a_Employee.hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
     a_Employee.tin = ui->tinLineEdit->text().toStdString();
+    a_Employee.bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
     a_Employee.monthlyBasicSalary = ui->monthlySalarySpinBox->value();
     a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
     a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
+    a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
     if(AppContext::instance().employeeService().addEmployee(a_Employee));
-        qDebug() << "Employee " << QString::fromStdString(a_Employee.fullName) << " added!";
         accepted();
 };
 

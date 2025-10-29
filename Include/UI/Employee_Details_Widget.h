@@ -14,6 +14,7 @@
 #include "UI/Edit_Emergency_Contact_Details.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
+#include "Utils/Log.h"
 
 namespace Ui {
 class EmployeeDetailsWidget;

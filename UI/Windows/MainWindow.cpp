@@ -5,6 +5,8 @@
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QFile>
+#include <iostream>
+#include "Utils/Log.h"
 
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
@@ -72,9 +74,9 @@ void MainWindow::applyTheme(const QString &path) {
     if (file.open(QFile::ReadOnly)) {
         QString styleSheet = QString::fromUtf8(file.readAll());
         qApp->setStyleSheet(styleSheet);
-        qDebug() << "Applied theme:" << path;
+        std::cout << "\nApplied theme:" << path.toStdString();
     } else {
-        qDebug() << "Failed to open theme file:" << path;
+        LOG_DEBUG( "Failed to open theme file:" << path.toStdString());
     }
 }
 

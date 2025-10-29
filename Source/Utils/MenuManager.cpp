@@ -41,7 +41,6 @@ void MenuManager::buildMenus(Parser& parser)
         for (const auto& opt : menu.options)
         {
             if (!opt.action.isEmpty()) {
-                //qDebug() << opt.action << " registered";
             }
         } 
         auto* menuWidget = menuLookup[QString::fromStdString(key)];
@@ -62,7 +61,7 @@ void MenuManager::buildMenus(Parser& parser)
 
         connect(menuWidget,&BaseMenu::actionRequested,this,
             [this](const QString& actionName) {
-                //qDebug() << actionName << " clicked!!";
+
                 DialogFactory::registerDialogs();
                 QWidget* w = DialogFactory::create(actionName);
                 if (!w) return;
@@ -112,11 +111,6 @@ void MenuManager::showMenu(const QString& name)
     if (menu)
     {
         stacked->setCurrentWidget(menu);
-        //qDebug() << "Switched to menu:" << name;
-    }
-    else
-    {
-        //qDebug() << "Menu not found:" << name;
     }
 }
 
