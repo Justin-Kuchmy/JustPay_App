@@ -72,48 +72,16 @@ target_link_libraries(JustPay
         sqlite3
 )
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set_target_properties(JustPay PROPERTIES FOLDER "Apps")
+
+
+# ---------------------------------------------------------
+# === TESTS SUBDIRECTORY ===
+# ---------------------------------------------------------
+if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/CMakeLists.txt")
+    add_subdirectory(Tests)
+endif()
 
 
 
-
-
-
-
-
-# # ---------------------------------------------------------
-# # === TEST APP TARGET ===
-# # ---------------------------------------------------------
-# # Filter out main_qt.cpp so the test build doesn't include two mains
-# set(TEST_SOURCES ${APP_SOURCES})
-# list(FILTER TEST_SOURCES EXCLUDE REGEX "main_qt\\.cpp$")
-
-# add_executable(JustPay_Tests
-#     ${CMAKE_SOURCE_DIR}/Tests/TestRunner.cpp
-#     ${TEST_SOURCES}
-#     ${UI_FILES}
-# )
-
-# set_target_properties(JustPay_Tests PROPERTIES
-#     OUTPUT_NAME "JustPay_TestRunner.exe"
-#     # AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/include/Generated"
-#     AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/UI/Dialogs"
-
-# )
-
-# target_link_libraries(JustPay_Tests
-#     PRIVATE
-#         Qt6::Core
-#         Qt6::Gui
-#         Qt6::Widgets
-#         Qt6::Qml
-#         Qt6::Quick
-#         Qt6::QuickWidgets
-#         sqlite3
-# )
-
-# # ---------------------------------------------------------
-# # Optional: group targets in IDEs like Qt Creator or VS Code
-# # ---------------------------------------------------------
-# set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-# set_target_properties(JustPay PROPERTIES FOLDER "Apps")
-# set_target_properties(JustPay_Tests PROPERTIES FOLDER "Tests")
