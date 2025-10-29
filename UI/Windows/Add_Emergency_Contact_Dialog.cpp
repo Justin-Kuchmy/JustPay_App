@@ -19,7 +19,6 @@ void EmergencyContactDialog::onOKClicked()
     m_Contact.relation= ui->relationLineEdit->text().toStdString();
     m_Contact.address= ui->addressLineEdit->text().toStdString();
     m_Contact.contactNo= ui->contactNumLineEdit->text().toStdString();
-    qDebug() << m_Contact;
     accept();
 };
 

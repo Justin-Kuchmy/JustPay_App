@@ -2,10 +2,6 @@
 
 EmployeeService::EmployeeService(EmployeeRepository& r): repo(r)
 {
-    if(this->repo.createTable())
-    {
-        qDebug() << "Table Created";
-    }
 }
 
 //CREATE
@@ -28,13 +24,11 @@ std::vector<Employee> EmployeeService::getAllEmployees()
 //UPDATE
 bool EmployeeService::updateEmployee(const Employee& e)
 {
-    qDebug() << "Some Functionality to updateEmployee";
     return false;
 };
 
 //DELETE
 bool EmployeeService::fireEmployee()
 {
-    qDebug() << "Some Functionality to fireEmployee";
     return false;
 };

@@ -1,11 +1,12 @@
 #include "Repositories/EmployeeRepository.h"
 #include "Models/DataObjects.h"
 #include <format>
+#include "Utils/Log.h"
 
 
 EmployeeRepository::EmployeeRepository(sqlite3* db) : BaseRepository(db)
 {
-    qDebug() << "EmployeeRepository created";
+    std::cout << "\nEmployeeRepository created";
 }
 
 //CREATE
@@ -246,7 +247,7 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
     }
     else
     {
-        std::cout << "failed to get anything from the db: ";
+        LOG_DEBUG( "failed to get anything from the db: ");
         return std::nullopt;
     }
 };
@@ -262,7 +263,7 @@ std::vector<Employee> EmployeeRepository::getAll()
     }
     else
     {
-        std::cout << "failed to get anything from the db: ";
+        LOG_DEBUG( "failed to get anything from the db: ");
         return {};
     }
 };
@@ -278,7 +279,7 @@ std::vector<Employee> EmployeeRepository::findByName(const std::string& name)
     }
     else
     {
-        std::cout << "failed to get anything from the db: ";
+        LOG_DEBUG( "failed to get anything from the db: ");
         return {};
     }
 }; 

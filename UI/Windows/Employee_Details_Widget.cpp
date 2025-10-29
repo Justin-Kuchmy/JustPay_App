@@ -102,11 +102,10 @@ void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
     if(optEmployee.has_value())
     {
         a_Employee = *optEmployee;
-        qDebug() << "Employee " << QString::fromStdString(a_Employee.fullName) << "found. employeeId: " << QString::fromStdString(a_Employee.employeeId);
     }
     else
     {
-        qWarning() << "Employee not found:" << empID;
+        LOG_DEBUG("Employee not found:" << empID.toStdString());
     }
 
 };

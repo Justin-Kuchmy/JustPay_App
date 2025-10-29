@@ -11,7 +11,7 @@ AppContext::AppContext(const std::string& dbName)
 {
     std::string path = "../Resources/" + dbName;
     const char* cpath = path.c_str();
-    qDebug() << "AppContext created! Trying to open " << cpath;
+    std::cout << "\nAppContext created! Trying to open " << cpath;
     if (sqlite3_open(cpath, &m_db) != SQLITE_OK)
         throw std::runtime_error("Failed to open database");
 
@@ -21,10 +21,10 @@ AppContext::AppContext(const std::string& dbName)
 
 AppContext::~AppContext()
 {
-    qDebug() << "AppContext destroyed!";
+    std::cout << "\nAppContext destroyed!";
     if (this->m_db) {
         sqlite3_close(this->m_db);
-        qDebug() << "m_db closed";
+        std::cout << "\nm_db closed";
     }
 
 };
