@@ -24,11 +24,11 @@ std::vector<Employee> EmployeeService::getAllEmployees()
 //UPDATE
 bool EmployeeService::updateEmployee(const Employee& e)
 {
-    return false;
+    return this->repo.updateEmployee(e);
 };
 
 //DELETE
 bool EmployeeService::fireEmployee()
 {
-    return false;
+    return this->fireEmployee();
 };

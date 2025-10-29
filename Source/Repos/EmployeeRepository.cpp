@@ -310,12 +310,13 @@ bool EmployeeRepository::updateEmployee(const Employee& e)
 bool EmployeeRepository::deleteEmployee(std::string id)
 {
     std::string sql = std::format("update employees set isActive = false where employeeId = '{}'", id);
-    return false;
+    return execute(sql);
 };// Delete by ID
 
 bool EmployeeRepository::deleteAll()
 {
-    return false;
+    std::string sql = "DELETE FROM employees;";
+    return execute(sql);
 };
 
 Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
