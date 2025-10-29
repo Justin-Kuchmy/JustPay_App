@@ -16,14 +16,15 @@ class EditDependentDetails;
 class EditDependentDetails : public QWidget {
     Q_OBJECT
 public:
-    explicit EditDependentDetails(QWidget *parent = nullptr);
+    explicit EditDependentDetails(Employee &a_Employee, QWidget *parent = nullptr);
     ~EditDependentDetails();
     void setEmployeeContext();
 private slots:
 
 private:   
     Ui::EditDependentDetails *ui;
-    // Employee &a_Employee;
+    Employee &a_Employee;
+    
 };
 
 #endif
