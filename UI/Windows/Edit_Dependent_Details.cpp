@@ -4,7 +4,7 @@
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
 
-EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails)
+EditDependentDetails::EditDependentDetails(Employee &emp, QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails), a_Employee(emp)
 {
     ui->setupUi(this); 
 };
@@ -16,5 +16,7 @@ EditDependentDetails::~EditDependentDetails()
 
 void EditDependentDetails::setEmployeeContext()
 {
-
+ui->nameLineEdit->setText(QString::fromStdString(a_Employee.dependent.name));
+ui->relationLineEdit->setText(QString::fromStdString(a_Employee.dependent.relation));
+ui->bdayDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(a_Employee.dependent.birthday))));
 }

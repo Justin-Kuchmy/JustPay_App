@@ -1,6 +1,7 @@
 #include "Repositories/EmployeeRepository.h"
 #include "Models/DataObjects.h"
 #include <format>
+#define DEBUG_LOGS
 #include "Utils/Log.h"
 
 
@@ -241,15 +242,28 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
     std::string sql = std::format("select * from employees where employeeId = '{}';", id);
     auto results = EmployeeRepository::query<Employee>(sql,mapEmployee);
 
-    if(!results.empty())
+    if (results.empty())
     {
-        return results.front();
-    }
-    else
-    {
-        LOG_DEBUG( "failed to get anything from the db: ");
+        LOG_DEBUG("No employee found for ID: "<< id);
         return std::nullopt;
     }
+
+    Employee e = results.front();
+
+    //map emergency contact
+    std::string sqlForContact = std::format("select * from emergency_contacts where employeeId = '{}';", e.employeeId);
+    auto resultsForContact = EmployeeRepository::query<Contact>(sqlForContact,mapContact);
+      if (!resultsForContact.empty())
+        e.emergencyContact = resultsForContact.front();
+
+    //map dependent
+    std::string sqlForDependent = std::format("select * from dependents where employeeId = '{}';", e.employeeId);
+    auto resultsForDependent = EmployeeRepository::query<Dependent>(sqlForDependent,mapDependent);
+    if (!resultsForDependent.empty())
+        e.dependent = resultsForDependent.front();
+
+    return e;
+
 };
 
 std::vector<Employee> EmployeeRepository::getAll()
@@ -263,7 +277,7 @@ std::vector<Employee> EmployeeRepository::getAll()
     }
     else
     {
-        LOG_DEBUG( "failed to get anything from the db: ");
+        LOG_DEBUG("failed to get anything from the db");
         return {};
     }
 };
@@ -279,7 +293,7 @@ std::vector<Employee> EmployeeRepository::findByName(const std::string& name)
     }
     else
     {
-        LOG_DEBUG( "failed to get anything from the db: ");
+        LOG_DEBUG( "failed to get anything from the db");
         return {};
     }
 }; 
@@ -319,32 +333,58 @@ bool EmployeeRepository::deleteAll()
     return execute(sql);
 };
 
-Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
-        {
-             Employee e;
-                e.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-                e.fullName =   reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-                e.department = to_department(sqlite3_column_int(stmt, 3));  
-                e.position = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
-                e.jobLevel =  to_jobLevel(sqlite3_column_int(stmt, 5));  
-                e.status =     to_status(sqlite3_column_int(stmt, 6));     
-                e.dateHired =    from_string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
+Contact EmployeeRepository::mapContact(sqlite3_stmt* stmt)
+{
+    Contact c;
+    c.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+    c.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+    c.address = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+    c.contactNo = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5));
 
-                const unsigned char* text = sqlite3_column_text(stmt, 8);
-                if (text) {
-                    e.dateSeparation = from_string(reinterpret_cast<const char*>(text));
-                } else {
-                    e.dateSeparation = Date{1900,1,1};
-                }
-                e.sssNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9));
-                e.philHealthNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 10));
-                e.hdmfNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 11));
-                e.tin = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 12));
-                e.bankAccountNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 13));
-                e.monthlyBasicSalary = sqlite3_column_double(stmt, 14);
-                e.monthlyAllowances =  sqlite3_column_double(stmt, 15);
-                e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 16));
-                e.personalMobileNumber  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 17));
-                e.isActive =  sqlite3_column_int(stmt, 18);
-                return e;
+    return c;
+};
+Dependent EmployeeRepository::mapDependent(sqlite3_stmt* stmt)
+{
+    Dependent d;
+    d.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+    d.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+    const unsigned char* text = sqlite3_column_text(stmt, 4);
+    if (text) {
+        d.birthday = from_string(reinterpret_cast<const char*>(text));
+    }
+    else {
+        d.birthday = Date{1900, 1, 1};
+    }
+    return d;
+};
+
+Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
+{
+        Employee e;
+        e.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        e.fullName =   reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+        e.department = to_department(sqlite3_column_int(stmt, 3));  
+        e.position = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+        e.jobLevel =  to_jobLevel(sqlite3_column_int(stmt, 5));  
+        e.status =     to_status(sqlite3_column_int(stmt, 6));     
+        e.dateHired =    from_string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
+
+        const unsigned char* text = sqlite3_column_text(stmt, 8);
+        if (text) {
+            e.dateSeparation = from_string(reinterpret_cast<const char*>(text));
+        } else {
+            e.dateSeparation = Date{1900,1,1};
         }
+        e.sssNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 9));
+        e.philHealthNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 10));
+        e.hdmfNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 11));
+        e.tin = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 12));
+        e.bankAccountNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 13));
+        e.monthlyBasicSalary = sqlite3_column_double(stmt, 14);
+        e.monthlyAllowances =  sqlite3_column_double(stmt, 15);
+        e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 16));
+        e.personalMobileNumber  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 17));
+        e.isActive =  sqlite3_column_int(stmt, 18);
+
+        return e;
+}

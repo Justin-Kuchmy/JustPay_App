@@ -14,8 +14,8 @@ EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): QWidget(parent), 
     connect(ui->employeeSearchBox, &QLineEdit::textChanged,this, &EmployeeDetailsWidget::onEmployeeSearchBoxChanged);
 
     editEmployeeForm = new EditEmployeeDetails(a_Employee, ui->tabGeneral);
-    editContactForm = new EditEmergencyContactDetails(ui->tabContacts);
-    editDependentForm = new EditDependentDetails(ui->tabDependent);
+    editContactForm = new EditEmergencyContactDetails(a_Employee, ui->tabContacts);
+    editDependentForm = new EditDependentDetails(a_Employee, ui->tabDependent);
 
     QVBoxLayout* generalLayout = new QVBoxLayout(ui->tabGeneral);
     QVBoxLayout* contactLayout = new QVBoxLayout(ui->tabContacts);

@@ -4,17 +4,21 @@
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
 
-EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails)
+EditEmergencyContactDetails::EditEmergencyContactDetails(Employee &emp,QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails), a_Employee(emp)
 {
     ui->setupUi(this); 
 };
 
 EditEmergencyContactDetails::~EditEmergencyContactDetails()
 {
-
+    delete ui;
 };
 
 void EditEmergencyContactDetails::setEmployeeContext()
 {
+ui->nameLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.name));
+ui->relationLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.relation));
+ui->addressLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.address));
+ui->contactNumLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.contactNo));
 
 }
