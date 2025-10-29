@@ -49,8 +49,9 @@
 .vscode/
 
 #tests
-tests/TestRunner.cpp
-tests/*.out
+Tests/TestRunner.cpp
+Tests/*.out
+Tests/
 
 # CMake build artifacts
 build/
