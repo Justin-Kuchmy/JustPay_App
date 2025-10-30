@@ -16,18 +16,22 @@ EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): QWidget(parent), 
     editEmployeeForm = new EditEmployeeDetails(a_Employee, ui->tabGeneral);
     editContactForm = new EditEmergencyContactDetails(a_Employee, ui->tabContacts);
     editDependentForm = new EditDependentDetails(a_Employee, ui->tabDependent);
+    loanLedgetWidget = new LoanLedgerWidget(ui->tabLoans);
 
     QVBoxLayout* generalLayout = new QVBoxLayout(ui->tabGeneral);
     QVBoxLayout* contactLayout = new QVBoxLayout(ui->tabContacts);
     QVBoxLayout* dependentLayout = new QVBoxLayout(ui->tabDependent);
+    QVBoxLayout* loanLayout = new QVBoxLayout(ui->tabLoans);
 
     generalLayout->setContentsMargins(0, 0, 0, 0);
     contactLayout->setContentsMargins(0, 0, 0, 0);
     dependentLayout->setContentsMargins(0, 0, 0, 0);
+    loanLayout->setContentsMargins(0, 0, 0, 0);
 
     generalLayout->addWidget(editEmployeeForm);
     contactLayout->addWidget(editContactForm);
     dependentLayout->addWidget(editDependentForm);
+    loanLayout->addWidget(loanLedgetWidget);
 
 };
 
