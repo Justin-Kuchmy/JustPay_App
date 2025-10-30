@@ -12,6 +12,7 @@
 #include "UI/Edit_Employee_Details.h"
 #include "UI/Edit_Dependent_Details.h"
 #include "UI/Edit_Emergency_Contact_Details.h"
+#include "UI/Loan_Ledger_Widget.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
 #include "Utils/Log.h"
@@ -41,6 +42,7 @@ private:
     EditEmployeeDetails* editEmployeeForm;
     EditEmergencyContactDetails* editContactForm;
     EditDependentDetails* editDependentForm;
+    LoanLedgerWidget* loanLedgetWidget;
     void refreshEmployeeList(const QString &filter = QString());
     void loadEmployeeDetails();
 };
