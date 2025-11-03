@@ -333,31 +333,6 @@ bool EmployeeRepository::deleteAll()
     return execute(sql);
 };
 
-Contact EmployeeRepository::mapContact(sqlite3_stmt* stmt)
-{
-    Contact c;
-    c.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-    c.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
-    c.address = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
-    c.contactNo = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5));
-
-    return c;
-};
-Dependent EmployeeRepository::mapDependent(sqlite3_stmt* stmt)
-{
-    Dependent d;
-    d.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-    d.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
-    const unsigned char* text = sqlite3_column_text(stmt, 4);
-    if (text) {
-        d.birthday = from_string(reinterpret_cast<const char*>(text));
-    }
-    else {
-        d.birthday = Date{1900, 1, 1};
-    }
-    return d;
-};
-
 Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
 {
         Employee e;
