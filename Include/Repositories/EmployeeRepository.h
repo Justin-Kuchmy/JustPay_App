@@ -6,8 +6,7 @@
 
 class EmployeeRepository: public BaseRepository {
         static Employee mapEmployee(sqlite3_stmt* stmt);
-        static Contact mapContact(sqlite3_stmt* stmt);
-        static Dependent mapDependent(sqlite3_stmt* stmt);
+              
     public: 
 
         explicit EmployeeRepository(sqlite3* db);
