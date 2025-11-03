@@ -23,7 +23,8 @@ MenuManager::MenuManager(Parser& parser, QWidget* parent)
 
 void MenuManager::buildMenus(Parser& parser)
 {
-    QHash<QString, BaseMenu*> menuLookup;
+
+    menuLookup.clear();
 
     // Create all menu widgets
     for (auto& [key, data] : parser.menuMap)
@@ -73,14 +74,31 @@ void MenuManager::buildMenus(Parser& parser)
                 } else {
                     //QWidget
                     showContentWidget(w);
+
+                    if (auto content = qobject_cast<BaseContentWidget*>(w)) 
+                    {
+                        connect(content, &BaseContentWidget::backRequested, this, [this]() {
+                            if (!history.isEmpty()) {
+                                QWidget* current = stacked->currentWidget();
+                                QWidget* prev = history.pop();
+                                stacked->setCurrentWidget(prev);
+                                stacked->removeWidget(current);
+                                current->deleteLater();
+                            } else {
+                                QApplication::quit();
+                            }
+                        });
+                    }
                 }
             });
 
         // Back navigation
         connect(menuWidget, &BaseMenu::backRequested, this, [this]() {
             if (!history.isEmpty()) {
-                QWidget* prev = history.pop();
-                stacked->setCurrentWidget(prev);
+                QWidget* current = stacked->currentWidget();
+                QWidget* previous = history.pop();
+
+                stacked->setCurrentWidget(previous);
             } else {
                 QApplication::quit();
             }
@@ -95,13 +113,11 @@ void MenuManager::showContentWidget(QWidget* widget)
     if (!widget)
             return;
 
-        // Remove and delete old widget if one exists
         if (auto current = stacked->currentWidget()) 
         {
             history.push(current);
         }
 
-        // Add and show the new screen
         stacked->addWidget(widget);
         stacked->setCurrentWidget(widget);
 };
