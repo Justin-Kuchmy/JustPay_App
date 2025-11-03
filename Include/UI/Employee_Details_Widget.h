@@ -30,10 +30,6 @@ public:
     ~EmployeeDetailsWidget();   
 
 private slots:
-    void onOKClicked();
-    void onCancelClicked();
-    void openEditContactDialog();
-    void openEditDependentDialog();
     void onEmployeeSelected(QString& empID);
     QString getSelectedEmployee() const;
     void onEmployeeSearchBoxChanged(const QString& text);

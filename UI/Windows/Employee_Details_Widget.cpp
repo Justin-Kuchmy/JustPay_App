@@ -42,23 +42,6 @@ EmployeeDetailsWidget::~EmployeeDetailsWidget()
     delete employees;
     delete ui;
 };
-void EmployeeDetailsWidget::onOKClicked()
-{
-    
-};
-void EmployeeDetailsWidget::onCancelClicked()
-{
-    
-};
-void EmployeeDetailsWidget::openEditContactDialog()
-{
-    
-};
-void EmployeeDetailsWidget::openEditDependentDialog()
-{
-    
-};
-
 void EmployeeDetailsWidget::onEmployeeSearchBoxChanged(const QString& text)
 {
     refreshEmployeeList(text);
