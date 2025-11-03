@@ -16,17 +16,19 @@
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
 #include "Utils/Log.h"
+#include "Utils/BaseContentWidget.h"
 
 namespace Ui {
 class EmployeeDetailsWidget;
 }
 
-class EmployeeDetailsWidget : public QWidget {
+class EmployeeDetailsWidget : public BaseContentWidget {
     Q_OBJECT
 
 public:
     explicit EmployeeDetailsWidget(QWidget *parent = nullptr);
     ~EmployeeDetailsWidget();   
+
 private slots:
     void onOKClicked();
     void onCancelClicked();

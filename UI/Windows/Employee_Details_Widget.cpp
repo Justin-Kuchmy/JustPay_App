@@ -3,7 +3,7 @@
 
 
 
-EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): QWidget(parent), ui(new Ui::EmployeeDetailsWidget)
+EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::EmployeeDetailsWidget)
 {
     ui->setupUi(this); 
     ui->mainSplitter->setSizes({300, 900});
@@ -12,6 +12,8 @@ EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): QWidget(parent), 
     refreshEmployeeList();
 
     connect(ui->employeeSearchBox, &QLineEdit::textChanged,this, &EmployeeDetailsWidget::onEmployeeSearchBoxChanged);
+    connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
+    //connect(ui->backButton, &QPushButton::clicked, this, [this]() {emit backRequested();});
 
     editEmployeeForm = new EditEmployeeDetails(a_Employee, ui->tabGeneral);
     editContactForm = new EditEmergencyContactDetails(a_Employee, ui->tabContacts);
