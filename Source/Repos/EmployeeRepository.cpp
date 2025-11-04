@@ -7,18 +7,18 @@
 
 EmployeeRepository::EmployeeRepository(sqlite3* db) : BaseRepository(db)
 {
-    std::cout << "\nEmployeeRepository created";
+    std::cout << "\nEmployeeRepository created" << std::endl;
 }
 
 //CREATE
 std::string EmployeeRepository::getCreateTableSQL()const
 {
+    LOG_DEBUG("EmployeeRepository::getCreateTableSQL()");
     return R"(
 
         PRAGMA foreign_keys = OFF;
 
-        DROP TABLE IF EXISTS emergency_contacts;
-        DROP TABLE IF EXISTS dependents;
+
         DROP TABLE IF EXISTS employees;
 
 
@@ -44,24 +44,6 @@ std::string EmployeeRepository::getCreateTableSQL()const
             isActive INTEGER
         );
 
-        CREATE TABLE IF NOT EXISTS emergency_contacts (
-            contactId INTEGER PRIMARY KEY AUTOINCREMENT,
-            employeeId TEXT NOT NULL,
-            name TEXT,
-            relation TEXT,
-            address TEXT,
-            contactNo TEXT,
-            FOREIGN KEY (employeeId) REFERENCES employees(employeeId)
-        );
-
-        CREATE TABLE IF NOT EXISTS "dependents" (
-            dependentId INTEGER PRIMARY KEY AUTOINCREMENT,
-            employeeId TEXT NOT NULL,
-            name TEXT NOT NULL,
-            relation TEXT NOT NULL,
-            birthday TEXT NOT NULL,
-            FOREIGN KEY (employeeId) REFERENCES employees(employeeId)
-        );
 
         CREATE TRIGGER set_employeeId
         AFTER INSERT ON employees
@@ -126,43 +108,7 @@ VALUES
 ('Henry Bautista',2,'Cloud Engineer',1,0,'2020-02-11',NULL,'75-7778888-8','333222111','111222333','901-234-578','001234567938',65000,3000,'henry@company.com','09170010049',1);
 
 
-        -- EMERGENCY CONTACTS (sampled)
-        INSERT INTO "emergency_contacts" (employeeId, name, relation, address, contactNo) VALUES
-        ('00-0001','Juan Santos','Brother','Quezon City','09171234567'),
-        ('00-0016','Andrea Santos','Mother','Cavite','09191231231'),
-        ('00-0038','Wendy Santos','Sister','Makati','09181115555'),
-        ('01-0002','Maria Reyes','Mother','Makati','09987654321'),
-        ('01-0018','Jose Bautista','Father','Pasay','09281113333'),
-        ('01-0040','Xavier Lim','Brother','Cebu City','09193334444'),
-        ('02-0004','Andrea Dela Cruz','Wife','Pasig','09181112222'),
-        ('02-0020','Nicole Ramos','Sister','Taguig','09191230000'),
-        ('02-0035','Sofia Tan','Sister','Antipolo','09399990000'),
-        ('03-0006','Camille Gomez','Sister','Taguig','09170001111'),
-        ('03-0037','Ulyssa Dizon','Friend','Pasay','09181239876'),
-        ('04-0008','Lorenzo Co','Father','Caloocan','09285551234'),
-        ('05-0010','Karen Ramos','Mother','Mandaluyong','09453334444'),
-        ('05-0026','Kelly Ramos','Sister','Las Piñas','09175556666'),
-        ('06-0012','Carlo Robles','Husband','Pasig','09285557777'),
-        ('07-0014','Allan Cruz','Brother','Manila','09187775555'),
-        ('08-0015','Cheryl Chua','Wife','Quezon City','09356669999');
 
-        -- DEPENDENTS (subset for realism)
-        INSERT INTO "dependents" (employeeId, name, relation, birthday) VALUES
-        ('00-0001','Juan Santos','Brother','1991-05-27'),
-        ('00-0016','Andrea Santos','Daughter','2010-09-10'),
-        ('01-0002','Maria Reyes','Mother','1962-01-12'),
-        ('01-0018','Jose Bautista','Father','1955-11-22'),
-        ('02-0004','Andrea Dela Cruz','Wife','1993-02-14'),
-        ('02-0004','Mika Dela Cruz','Daughter','2018-06-20'),
-        ('02-0020','Nicole Ramos','Sister','1998-03-18'),
-        ('03-0006','Camille Gomez','Sister','1995-09-13'),
-        ('04-0008','Lorenzo Co','Father','1961-12-05'),
-        ('05-0011','Liza Lim','Wife','1992-07-30'),
-        ('06-0013','Sofia Javier','Daughter','2017-10-01'),
-        ('07-0014','Allan Cruz','Brother','1995-01-15'),
-        ('08-0015','Cheryl Chua','Wife','1988-11-11'),
-        ('05-0039','Bryan Villena','Brother','1993-05-08'),
-        ('02-0034','Ralph Go','Son','2015-10-12');
 
 
     )";
@@ -250,17 +196,17 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
 
     Employee e = results.front();
 
-    //map emergency contact
-    std::string sqlForContact = std::format("select * from emergency_contacts where employeeId = '{}';", e.employeeId);
-    auto resultsForContact = EmployeeRepository::query<Contact>(sqlForContact,mapContact);
-      if (!resultsForContact.empty())
-        e.emergencyContact = resultsForContact.front();
+    // //map emergency contact
+    // std::string sqlForContact = std::format("select * from emergency_contacts where employeeId = '{}';", e.employeeId);
+    // auto resultsForContact = EmployeeRepository::query<Contact>(sqlForContact,mapContact);
+    //   if (!resultsForContact.empty())
+    //     e.emergencyContact = resultsForContact.front();
 
-    //map dependent
-    std::string sqlForDependent = std::format("select * from dependents where employeeId = '{}';", e.employeeId);
-    auto resultsForDependent = EmployeeRepository::query<Dependent>(sqlForDependent,mapDependent);
-    if (!resultsForDependent.empty())
-        e.dependent = resultsForDependent.front();
+    // //map dependent
+    // std::string sqlForDependent = std::format("select * from dependents where employeeId = '{}';", e.employeeId);
+    // auto resultsForDependent = EmployeeRepository::query<Dependent>(sqlForDependent,mapDependent);
+    // if (!resultsForDependent.empty())
+    //     e.dependent = resultsForDependent.front();
 
     return e;
 
