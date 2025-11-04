@@ -3,6 +3,8 @@
 #include "Services/EmployeeService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Services/AppContext.h"
+#define DEBUG_LOGS
+#include "Utils/Log.h"
 
 
 
@@ -48,6 +50,8 @@ EditEmployeeDetails::EditEmployeeDetails(Employee &emp, QWidget *parent): QWidge
     ui->monthlyAllowancesSpinBox->setDecimals(2);
     //ui->monthlyAllowancesSpinBox->setPrefix("₱ ");
     ui->monthlyAllowancesSpinBox->setSingleStep(1000.00);
+
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditEmployeeDetails::onSaveClicked);
 };
 
 void EditEmployeeDetails::setEmployeeContext()
@@ -81,3 +85,28 @@ EditEmployeeDetails::~EditEmployeeDetails()
     delete ui;
 };
 
+void EditEmployeeDetails::onSaveClicked()
+{
+    a_Employee.fullName = ui->nameLineEdit->text().toStdString();
+    a_Employee.department = to_department(ui->departmentComboBox->currentIndex());
+    a_Employee.position = ui->positionLineEdit->text().toStdString();
+    a_Employee.jobLevel = to_jobLevel(ui->jobLevelComboBox->currentIndex());
+    a_Employee.status = to_status(ui->empStatusComboBox->currentIndex());
+    a_Employee.dateHired = from_string(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    a_Employee.dateSeparation = from_string(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    a_Employee.sssNumber = ui->sssNumberLineEdit->text().toStdString();
+    a_Employee.philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
+    a_Employee.hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
+    a_Employee.tin = ui->tinLineEdit->text().toStdString();
+    a_Employee.bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
+    a_Employee.monthlyBasicSalary = ui->monthlySalarySpinBox->value();
+    a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
+    a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
+    a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
+    a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
+
+    if(AppContext::instance().employeeService().updateEmployee(this->a_Employee))
+    {
+        LOG_DEBUG(a_Employee.fullName << " updated!");
+    }
+};

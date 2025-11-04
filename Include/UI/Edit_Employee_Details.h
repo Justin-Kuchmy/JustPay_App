@@ -20,7 +20,7 @@ public:
     ~EditEmployeeDetails();
     void setEmployeeContext();
 private slots:
-
+    void onSaveClicked();
 private:
     Ui::EditEmployeeDetails *ui;
     Employee &a_Employee;
