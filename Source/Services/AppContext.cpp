@@ -16,7 +16,15 @@ AppContext::AppContext(const std::string& dbName)
         throw std::runtime_error("Failed to open database");
 
     m_employeeRepo = std::make_unique<EmployeeRepository>(m_db);
+    m_dependentRepo = std::make_unique<DependentRepository>(m_db);
+    m_emergencyContactRepo = std::make_unique<EmergencyContactRepository>(m_db);
     m_employeeService = std::make_unique<EmployeeService>(*m_employeeRepo);
+    m_dependentService = std::make_unique<DependentService>(*m_dependentRepo);
+    m_emergencyContactService = std::make_unique<EmergencyContactService>(*m_emergencyContactRepo);
+    
+    m_employeeRepo->createTable();
+    m_dependentRepo->createTable();
+    m_emergencyContactRepo->createTable();
 };
 
 AppContext::~AppContext()
@@ -38,6 +46,25 @@ EmployeeService& AppContext::employeeService()
 {
     return *m_employeeService;
 };
+  
+DependentRepository& AppContext::dependentRepo()
+{
+    return *m_dependentRepo;
+};
 
+DependentService& AppContext::dependentService()
+{
+    return *m_dependentService;
+};
+
+EmergencyContactRepository& AppContext::emergencyContactRepo()
+{
+    return *m_emergencyContactRepo;
+};
+
+EmergencyContactService& AppContext::emergencyContactService()
+{
+    return *m_emergencyContactService;
+};
 
 
