@@ -20,7 +20,7 @@ public:
     ~EditEmergencyContactDetails();
     void setEmployeeContext();
 private slots:
-
+    void onSaveClicked();
 private:
     Ui::EditEmergencyContactDetails *ui;
     Employee &a_Employee;
