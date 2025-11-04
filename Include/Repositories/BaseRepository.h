@@ -7,6 +7,8 @@
 #include <vector>
 #include <optional>
 #include <functional>
+#define DEBUG_LOGS
+#include "Utils/Log.h"
 
 class BaseRepository {
 protected: 
