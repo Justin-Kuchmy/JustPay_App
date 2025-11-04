@@ -88,9 +88,13 @@ void EmployeeDetailsWidget::refreshEmployeeList(const QString &filter)
 void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
 {
     auto optEmployee = AppContext::instance().employeeService().getEmployeeByID(empID.toStdString());
+    auto optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(empID.toStdString());
+    auto optDependent = AppContext::instance().dependentService().getDependentByID(empID.toStdString());
     if(optEmployee.has_value())
     {
         a_Employee = *optEmployee;
+        if(optContact.has_value()) a_Employee.emergencyContact = *optContact;
+        if(optDependent.has_value()) a_Employee.dependent = *optDependent;
     }
     else
     {
