@@ -9,38 +9,31 @@ DependentRepository::DependentRepository(sqlite3* db): BaseRepository(db)
 
 std::string DependentRepository::getCreateTableSQL()const
 {
-    LOG_DEBUG("DependentRepository::getCreateTableSQL()");
     return R"(
         PRAGMA foreign_keys = OFF;
         DROP TABLE IF EXISTS dependents;
 
-         CREATE TABLE IF NOT EXISTS "dependents" (
+        CREATE TABLE IF NOT EXISTS dependents (
             dependentId INTEGER PRIMARY KEY AUTOINCREMENT,
-            employeeId TEXT NOT NULL,
             name TEXT NOT NULL,
             relation TEXT NOT NULL,
-            birthday TEXT NOT NULL,
-            FOREIGN KEY (employeeId) REFERENCES employees(employeeId)
+            birthday TEXT NOT NULL
+
         );
 
-
         -- DEPENDENTS (subset for realism)
-        INSERT INTO "dependents" (employeeId, name, relation, birthday) VALUES
-        ('00-0001','Juan Santos','Brother','1991-05-27'),
-        ('00-0016','Andrea Santos','Daughter','2010-09-10'),
-        ('01-0002','Maria Reyes','Mother','1962-01-12'),
-        ('01-0018','Jose Bautista','Father','1955-11-22'),
-        ('02-0004','Andrea Dela Cruz','Wife','1993-02-14'),
-        ('02-0004','Mika Dela Cruz','Daughter','2018-06-20'),
-        ('02-0020','Nicole Ramos','Sister','1998-03-18'),
-        ('03-0006','Camille Gomez','Sister','1995-09-13'),
-        ('04-0008','Lorenzo Co','Father','1961-12-05'),
-        ('05-0011','Liza Lim','Wife','1992-07-30'),
-        ('06-0013','Sofia Javier','Daughter','2017-10-01'),
-        ('07-0014','Allan Cruz','Brother','1995-01-15'),
-        ('08-0015','Cheryl Chua','Wife','1988-11-11'),
-        ('05-0039','Bryan Villena','Brother','1993-05-08'),
-        ('02-0034','Ralph Go','Son','2015-10-12');
+        INSERT INTO dependents (name, relation, birthday) VALUES
+        ('Lara Mendoza', 'Daughter', '2016-03-14'),
+        ('Ethan Cruz', 'Son', '2018-09-21'),
+        ('Sofia Reyes', 'Spouse', '1992-07-10'),
+        ('Jacob Tan', 'Son', '2013-11-05'),
+        ('Angela Lim', 'Mother', '1964-01-28'),
+        ('Miguel Torres', 'Father', '1960-06-19'),
+        ('Chloe Navarro', 'Daughter', '2017-12-02'),
+        ('Lucas Ramos', 'Son', '2015-05-09'),
+        ('Bianca Uy', 'Spouse', '1990-10-15'),
+        ('Daniel Bautista', 'Brother', '1995-04-04');
+
     )";
 };
 

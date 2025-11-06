@@ -11,41 +11,34 @@ EmergencyContactRepository::EmergencyContactRepository(sqlite3* db): BaseReposit
 
 std::string EmergencyContactRepository::getCreateTableSQL()const
 {
-    LOG_DEBUG("EmergencyContactRepository::getCreateTableSQL()");
     return R"(
         PRAGMA foreign_keys = OFF;
         DROP TABLE IF EXISTS emergency_contacts;
 
         CREATE TABLE IF NOT EXISTS emergency_contacts (
             contactId INTEGER PRIMARY KEY AUTOINCREMENT,
-            employeeId TEXT NOT NULL,
-            name TEXT,
-            relation TEXT,
+            name TEXT NOT NULL,
+            relation TEXT NOT NULL,
             address TEXT,
-            contactNo TEXT,
-            FOREIGN KEY (employeeId) REFERENCES employees(employeeId)
+            contactNo TEXTNOT NULL
+            
         );
 
 
         -- EMERGENCY CONTACTS (sampled)
-        INSERT INTO "emergency_contacts" (employeeId, name, relation, address, contactNo) VALUES
-        ('00-0001','Juan Santos','Brother','Quezon City','09171234567'),
-        ('00-0016','Andrea Santos','Mother','Cavite','09191231231'),
-        ('00-0038','Wendy Santos','Sister','Makati','09181115555'),
-        ('01-0002','Maria Reyes','Mother','Makati','09987654321'),
-        ('01-0018','Jose Bautista','Father','Pasay','09281113333'),
-        ('01-0040','Xavier Lim','Brother','Cebu City','09193334444'),
-        ('02-0004','Andrea Dela Cruz','Wife','Pasig','09181112222'),
-        ('02-0020','Nicole Ramos','Sister','Taguig','09191230000'),
-        ('02-0035','Sofia Tan','Sister','Antipolo','09399990000'),
-        ('03-0006','Camille Gomez','Sister','Taguig','09170001111'),
-        ('03-0037','Ulyssa Dizon','Friend','Pasay','09181239876'),
-        ('04-0008','Lorenzo Co','Father','Caloocan','09285551234'),
-        ('05-0010','Karen Ramos','Mother','Mandaluyong','09453334444'),
-        ('05-0026','Kelly Ramos','Sister','Las Piñas','09175556666'),
-        ('06-0012','Carlo Robles','Husband','Pasig','09285557777'),
-        ('07-0014','Allan Cruz','Brother','Manila','09187775555'),
-        ('08-0015','Cheryl Chua','Wife','Quezon City','09356669999');
+        INSERT INTO emergency_contacts (name, relation, address, contactNo) VALUES
+        ('Carlos Mendoza', 'Husband', '123 Orchid St, Quezon City', '09171234567'),
+        ('Lina Cruz', 'Mother', '45 Pine Ave, Makati City', '09181234567'),
+        ('Robert Reyes', 'Father', '89 Palm Blvd, Taguig', '09193456789'),
+        ('Patricia Tan', 'Wife', '22 Acacia Dr, Pasig', '09204567890'),
+        ('Andrea Lim', 'Sister', '77 Maple Rd, Mandaluyong', '09175554433'),
+        ('Fernando Torres', 'Brother', '66 Laurel St, Paranaque', '09206667788'),
+        ('Irene Navarro', 'Aunt', '21 Santol St, Marikina', '09186668899'),
+        ('Diego Ramos', 'Brother', '34 Cherry Ln, San Juan', '09217773344'),
+        ('Nathan Uy', 'Father', '56 Molave Ave, Las Piñas', '09174445566'),
+        ('Cecilia Bautista', 'Mother', '88 Mabini St, Caloocan', '09218882211');
+
+
     )";
 };
 
