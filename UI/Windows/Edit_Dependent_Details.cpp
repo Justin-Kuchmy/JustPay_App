@@ -7,10 +7,12 @@
 #include "Utils/Log.h"
 
 
-EditDependentDetails::EditDependentDetails(Employee &emp, QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails), a_Employee(emp)
+EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails)
 {
+
     ui->setupUi(this); 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditDependentDetails::onSaveClicked);
+
 };
 
 EditDependentDetails::~EditDependentDetails()
@@ -18,22 +20,26 @@ EditDependentDetails::~EditDependentDetails()
     delete ui;
 };
 
-void EditDependentDetails::setEmployeeContext()
-{
-ui->nameLineEdit->setText(QString::fromStdString(a_Employee.dependent.name));
-ui->relationLineEdit->setText(QString::fromStdString(a_Employee.dependent.relation));
-ui->bdayDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(a_Employee.dependent.birthday))));
+void EditDependentDetails::setDependentContext(std::optional<Dependent>& dependent)
+{   
+    if(dependent.has_value())
+    {
+        this->m_Dependent = std::make_unique<Dependent>(dependent.value());
+        ui->nameLineEdit->setText(QString::fromStdString(m_Dependent->name));
+        ui->relationLineEdit->setText(QString::fromStdString(m_Dependent->relation));
+        ui->bdayDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(m_Dependent->birthday))));
+    }
 };
 
 
 void EditDependentDetails::onSaveClicked()
 {
 
-    this->a_Employee.dependent.name = ui->nameLineEdit->text().toStdString();
-    this->a_Employee.dependent.relation = ui->relationLineEdit->text().toStdString();
-    this->a_Employee.dependent.birthday = from_string(ui->bdayDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    if(AppContext::instance().employeeService().updateEmployee(this->a_Employee))
+    m_Dependent->name = ui->nameLineEdit->text().toStdString();
+    m_Dependent->relation = ui->relationLineEdit->text().toStdString();
+    m_Dependent->birthday = from_string(ui->bdayDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    if(AppContext::instance().dependentService().updateDependent(*m_Dependent));
     {
-        LOG_DEBUG(a_Employee.dependent.name << " updated!");
+        LOG_DEBUG(m_Dependent->name << " updated!");
     }
 };

@@ -35,14 +35,14 @@ private slots:
     void onEmployeeSearchBoxChanged(const QString& text);
 private:
     Ui::EmployeeDetailsWidget *ui;
-    Employee a_Employee;
+    Employee m_Employee;
     std::vector<Employee>* employees;
     EditEmployeeDetails* editEmployeeForm;
     EditEmergencyContactDetails* editContactForm;
     EditDependentDetails* editDependentForm;
     LoanLedgerWidget* loanLedgetWidget;
     void refreshEmployeeList(const QString &filter = QString());
-    void loadEmployeeDetails();
+    bool loadEmployeeDetails(QString& empID);
 };
 
 

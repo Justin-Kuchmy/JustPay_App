@@ -8,7 +8,7 @@
 
 
 
-EditEmployeeDetails::EditEmployeeDetails(Employee &emp, QWidget *parent): QWidget(parent), ui(new Ui::EditEmployeeDetails), a_Employee(emp)
+EditEmployeeDetails::EditEmployeeDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmployeeDetails)
 {
     ui->setupUi(this); 
     ui->departmentComboBox->addItems({
@@ -54,29 +54,30 @@ EditEmployeeDetails::EditEmployeeDetails(Employee &emp, QWidget *parent): QWidge
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditEmployeeDetails::onSaveClicked);
 };
 
-void EditEmployeeDetails::setEmployeeContext()
+void EditEmployeeDetails::setEmployeeContext(Employee &emp)
 {  
-    ui->nameLineEdit->setText(QString::fromStdString(a_Employee.fullName));
-    ui->departmentComboBox->setCurrentIndex(to_int(a_Employee.department));
-    ui->positionLineEdit->setText(QString::fromStdString(a_Employee.position));
-    ui->jobLevelComboBox->setCurrentIndex(to_int(a_Employee.jobLevel));
-    ui->empStatusComboBox->setCurrentIndex(to_int(a_Employee.status));
-
-    ui->dateHiredDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(a_Employee.dateHired)), "yyyy-MM-dd"));
-    ui->DateSeparatedDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(a_Employee.dateSeparation)), "yyyy-MM-dd"));
-
-    ui->sssNumberLineEdit->setText(QString::fromStdString(a_Employee.sssNumber));
-    ui->philHealthNumberLineEdit->setText(QString::fromStdString(a_Employee.philHealthNumber));
-    ui->hdmfNumberLineEdit->setText(QString::fromStdString(a_Employee.hdmfNumber));
-    ui->tinLineEdit->setText(QString::fromStdString(a_Employee.tin));
-    ui->bankAccountNumberLineEdit->setText(QString::fromStdString(a_Employee.bankAccountNumber));
+    this-> m_Employee = std::make_unique<Employee>(emp);
+    ui->nameLineEdit->setText(QString::fromStdString(m_Employee->fullName));
+    ui->departmentComboBox->setCurrentIndex(to_int(m_Employee->department));
+    ui->positionLineEdit->setText(QString::fromStdString(m_Employee->position));
+    ui->jobLevelComboBox->setCurrentIndex(to_int(m_Employee->jobLevel));
+    ui->empStatusComboBox->setCurrentIndex(to_int(m_Employee->status));
     
-    ui->monthlySalarySpinBox->setValue(a_Employee.monthlyBasicSalary);
-    ui->monthlyAllowancesSpinBox->setValue(a_Employee.monthlyAllowances);
+    ui->dateHiredDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(m_Employee->dateHired)), "yyyy-MM-dd"));
+    ui->DateSeparatedDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(m_Employee->dateSeparation)), "yyyy-MM-dd"));
     
-    ui->personEmailLineEdit->setText(QString::fromStdString(a_Employee.personalEmail));
-    ui->personalMobileNumberLineEdit->setText(QString::fromStdString(a_Employee.personalMobileNumber));
-    ui->activeStatusCheckBox->setChecked(a_Employee.isActive);
+    ui->sssNumberLineEdit->setText(QString::fromStdString(m_Employee->sssNumber));
+    ui->philHealthNumberLineEdit->setText(QString::fromStdString(m_Employee->philHealthNumber));
+    ui->hdmfNumberLineEdit->setText(QString::fromStdString(m_Employee->hdmfNumber));
+    ui->tinLineEdit->setText(QString::fromStdString(m_Employee->tin));
+    ui->bankAccountNumberLineEdit->setText(QString::fromStdString(m_Employee->bankAccountNumber));
+    
+    ui->monthlySalarySpinBox->setValue(m_Employee->monthlyBasicSalary);
+    ui->monthlyAllowancesSpinBox->setValue(m_Employee->monthlyAllowances);
+    
+    ui->personEmailLineEdit->setText(QString::fromStdString(m_Employee->personalEmail));
+    ui->personalMobileNumberLineEdit->setText(QString::fromStdString(m_Employee->personalMobileNumber));
+    ui->activeStatusCheckBox->setChecked(m_Employee->isActive);
 
 };
 
@@ -87,26 +88,26 @@ EditEmployeeDetails::~EditEmployeeDetails()
 
 void EditEmployeeDetails::onSaveClicked()
 {
-    a_Employee.fullName = ui->nameLineEdit->text().toStdString();
-    a_Employee.department = to_department(ui->departmentComboBox->currentIndex());
-    a_Employee.position = ui->positionLineEdit->text().toStdString();
-    a_Employee.jobLevel = to_jobLevel(ui->jobLevelComboBox->currentIndex());
-    a_Employee.status = to_status(ui->empStatusComboBox->currentIndex());
-    a_Employee.dateHired = from_string(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    a_Employee.dateSeparation = from_string(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    a_Employee.sssNumber = ui->sssNumberLineEdit->text().toStdString();
-    a_Employee.philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
-    a_Employee.hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
-    a_Employee.tin = ui->tinLineEdit->text().toStdString();
-    a_Employee.bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
-    a_Employee.monthlyBasicSalary = ui->monthlySalarySpinBox->value();
-    a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
-    a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
-    a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
-    a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
+    m_Employee->fullName = ui->nameLineEdit->text().toStdString();
+    m_Employee->department = to_department(ui->departmentComboBox->currentIndex());
+    m_Employee->position = ui->positionLineEdit->text().toStdString();
+    m_Employee->jobLevel = to_jobLevel(ui->jobLevelComboBox->currentIndex());
+    m_Employee->status = to_status(ui->empStatusComboBox->currentIndex());
+    m_Employee->dateHired = from_string(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    m_Employee->dateSeparation = from_string(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    m_Employee->sssNumber = ui->sssNumberLineEdit->text().toStdString();
+    m_Employee->philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
+    m_Employee->hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
+    m_Employee->tin = ui->tinLineEdit->text().toStdString();
+    m_Employee->bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
+    m_Employee->monthlyBasicSalary = ui->monthlySalarySpinBox->value();
+    m_Employee->monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
+    m_Employee->personalEmail = ui->personEmailLineEdit->text().toStdString();
+    m_Employee->personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
+    m_Employee->isActive = ui->activeStatusCheckBox->isChecked();
 
-    if(AppContext::instance().employeeService().updateEmployee(this->a_Employee))
+    if(AppContext::instance().employeeService().updateEmployee(*m_Employee))
     {
-        LOG_DEBUG(a_Employee.fullName << " updated!");
+        LOG_DEBUG(m_Employee->fullName << " updated!");
     }
 };

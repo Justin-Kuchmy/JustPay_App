@@ -15,25 +15,27 @@ EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): BaseContentWidget
     connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
     //connect(ui->backButton, &QPushButton::clicked, this, [this]() {emit backRequested();});
 
-    editEmployeeForm = new EditEmployeeDetails(a_Employee, ui->tabGeneral);
-    editContactForm = new EditEmergencyContactDetails(a_Employee, ui->tabContacts);
-    editDependentForm = new EditDependentDetails(a_Employee, ui->tabDependent);
+    editEmployeeForm = new EditEmployeeDetails(ui->tabGeneral);
     loanLedgetWidget = new LoanLedgerWidget(ui->tabLoans);
-
+    editContactForm = new EditEmergencyContactDetails(ui->tabContacts);
+    editDependentForm = new EditDependentDetails(ui->tabDependent);
+    
     QVBoxLayout* generalLayout = new QVBoxLayout(ui->tabGeneral);
+    QVBoxLayout* loanLayout = new QVBoxLayout(ui->tabLoans);
     QVBoxLayout* contactLayout = new QVBoxLayout(ui->tabContacts);
     QVBoxLayout* dependentLayout = new QVBoxLayout(ui->tabDependent);
-    QVBoxLayout* loanLayout = new QVBoxLayout(ui->tabLoans);
-
+    
     generalLayout->setContentsMargins(0, 0, 0, 0);
+    loanLayout->setContentsMargins(0, 0, 0, 0);
     contactLayout->setContentsMargins(0, 0, 0, 0);
     dependentLayout->setContentsMargins(0, 0, 0, 0);
-    loanLayout->setContentsMargins(0, 0, 0, 0);
-
+    
     generalLayout->addWidget(editEmployeeForm);
+    loanLayout->addWidget(loanLedgetWidget);
     contactLayout->addWidget(editContactForm);
     dependentLayout->addWidget(editDependentForm);
-    loanLayout->addWidget(loanLedgetWidget);
+
+
 
 };
 
@@ -47,11 +49,17 @@ void EmployeeDetailsWidget::onEmployeeSearchBoxChanged(const QString& text)
     refreshEmployeeList(text);
 };
 
-void EmployeeDetailsWidget::loadEmployeeDetails()
+bool EmployeeDetailsWidget::loadEmployeeDetails(QString& empID)
 {
-    editEmployeeForm->setEmployeeContext();
-    editContactForm->setEmployeeContext();
-    editDependentForm->setEmployeeContext();
+    auto optEmployee = AppContext::instance().employeeService().getEmployeeByID(empID.toStdString());
+
+    if(optEmployee)
+    {
+        m_Employee = optEmployee.value();
+        editEmployeeForm->setEmployeeContext(m_Employee);
+        return true;
+    }
+    return false;
 }
 
 void EmployeeDetailsWidget::refreshEmployeeList(const QString &filter)
@@ -78,7 +86,7 @@ void EmployeeDetailsWidget::refreshEmployeeList(const QString &filter)
             connect(employeeButton, &QPushButton::clicked, this, [this, employeeButton]() {
             QString empId = employeeButton->property("employeeId").toString();
             this->onEmployeeSelected(empId);
-            this->loadEmployeeDetails();
+            
         });
         }
 
@@ -87,23 +95,38 @@ void EmployeeDetailsWidget::refreshEmployeeList(const QString &filter)
 
 void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
 {
-    auto optEmployee = AppContext::instance().employeeService().getEmployeeByID(empID.toStdString());
-    auto optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(empID.toStdString());
-    auto optDependent = AppContext::instance().dependentService().getDependentByID(empID.toStdString());
-    if(optEmployee.has_value())
+    if(EmployeeDetailsWidget::loadEmployeeDetails(empID))
     {
-        a_Employee = *optEmployee;
-        if(optContact.has_value()) a_Employee.emergencyContact = *optContact;
-        if(optDependent.has_value()) a_Employee.dependent = *optDependent;
+        auto optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(m_Employee.contactId);
+        auto optDependent = AppContext::instance().dependentService().getDependentByID(m_Employee.dependentId);
+        if(optContact)    
+        {
+            editContactForm->setContactContext(optContact);
+        }
+        else
+        {
+            LOG_DEBUG("No contact data available");
+            return;
+        }
+        if(optDependent)
+        {
+            editDependentForm->setDependentContext(optDependent);
+        }
+         else
+        {
+            LOG_DEBUG("No dependent data available");
+            return;
+        }
     }
     else
     {
         LOG_DEBUG("Employee not found:" << empID.toStdString());
     }
 
+
 };
 
 QString EmployeeDetailsWidget::getSelectedEmployee() const
 {
-    return QString::fromStdString(a_Employee.fullName);
+    return QString::fromStdString(m_Employee.fullName);
 };

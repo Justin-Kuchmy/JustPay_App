@@ -7,10 +7,11 @@
 #include "Utils/Log.h"
 
 
-EditEmergencyContactDetails::EditEmergencyContactDetails(Employee &emp,QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails), a_Employee(emp)
+EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails)
 {
     ui->setupUi(this); 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditEmergencyContactDetails::onSaveClicked);
+
 };
 
 EditEmergencyContactDetails::~EditEmergencyContactDetails()
@@ -18,24 +19,29 @@ EditEmergencyContactDetails::~EditEmergencyContactDetails()
     delete ui;
 };
 
-void EditEmergencyContactDetails::setEmployeeContext()
+void EditEmergencyContactDetails::setContactContext(std::optional<Contact>& contact)
 {
-ui->nameLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.name));
-ui->relationLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.relation));
-ui->addressLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.address));
-ui->contactNumLineEdit->setText(QString::fromStdString(a_Employee.emergencyContact.contactNo));
+
+    if(contact.has_value())
+    {
+        this->m_Contact = std::make_unique<Contact>(contact.value());
+        ui->nameLineEdit->setText(QString::fromStdString(m_Contact->name));
+        ui->relationLineEdit->setText(QString::fromStdString(m_Contact->relation));
+        ui->addressLineEdit->setText(QString::fromStdString(m_Contact->address));
+        ui->contactNumLineEdit->setText(QString::fromStdString(m_Contact->contactNo));
+    }
 
 };
 
 
 void EditEmergencyContactDetails::onSaveClicked()
 {
-    this->a_Employee.emergencyContact.name = ui->nameLineEdit->text().toStdString();
-    this->a_Employee.emergencyContact.relation = ui->relationLineEdit->text().toStdString();
-    this->a_Employee.emergencyContact.address = ui->addressLineEdit->text().toStdString();
-    this->a_Employee.emergencyContact.contactNo = ui->contactNumLineEdit->text().toStdString();
-    if(AppContext::instance().employeeService().updateEmployee(this->a_Employee))
+    m_Contact->name = ui->nameLineEdit->text().toStdString();
+    m_Contact->relation = ui->relationLineEdit->text().toStdString();
+    m_Contact->address = ui->addressLineEdit->text().toStdString();
+    m_Contact->contactNo = ui->contactNumLineEdit->text().toStdString();
+    if(AppContext::instance().emergencyContactService().updateEmergencyContact(*m_Contact));
     {
-        LOG_DEBUG(a_Employee.emergencyContact.name << " updated!");
+        LOG_DEBUG(m_Contact->name << " updated!");
     }
 };
