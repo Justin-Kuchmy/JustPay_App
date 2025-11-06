@@ -13,7 +13,7 @@ return this->repo.insertDependent(dependent);
 };
 
 //READ
-std::optional<Dependent> DependentService::getDependentByID(std::string id)
+std::optional<Dependent> DependentService::getDependentByID(int id)
 {
 return this->repo.getById(id);
 };
@@ -25,7 +25,7 @@ return this->repo.updateDependent(d);
 };
 
 //DELETE
-bool DependentService::deleteDependent(std::string id)
+bool DependentService::deleteDependent(int id)
 {
 return this->repo.deleteDependent(id);
 };

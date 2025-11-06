@@ -12,17 +12,17 @@ class EmergencyContactRepository: public BaseRepository {
         std::string getCreateTableSQL() const override;
         
         //CREATE
-        bool insertContact(const Contact& Contact);
+        int insertContact(const Contact& Contact);
 
         // READ
-        std::optional<Contact> getById(std::string id);            
+        std::optional<Contact> getById(int id);            
 
         // UPDATE
         bool updateContact(const Contact& emp); 
 
         // DELETE
-        bool deleteContact(std::string id);        
-        std::string getLastContactId();
+        bool deleteContact(int id);        
+        int getLastContactId();
 
 };
 

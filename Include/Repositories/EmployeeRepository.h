@@ -15,7 +15,7 @@ class EmployeeRepository: public BaseRepository {
         
         
         //CREATE
-        bool insertEmployee(const Employee& Employee);
+        std::string insertEmployee(const Employee& Employee);
 
         // READ
         std::optional<Employee> getById(std::string id);            

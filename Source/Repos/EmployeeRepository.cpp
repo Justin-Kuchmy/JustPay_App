@@ -3,6 +3,7 @@
 #include <format>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
+#include "Services/AppContext.h"
 
 
 EmployeeRepository::EmployeeRepository(sqlite3* db) : BaseRepository(db)
@@ -87,7 +88,7 @@ VALUES
 ('Mia Hernandez',6,'Sales Executive',0,1,'2023-03-02',NULL,'54-5553337-7','777666555','222111333','890-123-467','001234567917',32000,1500,'mia@company.com','09170010028',1),
 ('Noel Perez',6,'Account Manager',1,0,'2020-07-11',NULL,'55-1114448-8','888777666','999888777','901-234-578','001234567918',56000,3000,'noel@company.com','09170010029',1),
 ('Olivia Garcia',7,'Paralegal',0,1,'2022-09-30',NULL,'56-2225559-9','333222111','444333222','012-345-689','001234567919',35000,1500,'olivia@company.com','09170010030',1),
-('Paulo Santos',7,'Legal Researcher',0,1,'2021-08-19',NULL,'57-7778880-0','555444333','666555444','123-456-790','001234567920',33000,1200,'paulo@company.com','09170010031',1),
+('Paulo Santos',7,'Legal Researcher',0,1,'2021-08-19',NULL,'57-77788>80-0','555444333','666555444','123-456-790','001234567920',33000,1200,'paulo@company.com','09170010031',1),
 ('Queenie Dizon',8,'Procurement Assistant',0,1,'2022-10-05',NULL,'58-3339991-1','999888777','222111000','234-567-801','001234567921',34000,1000,'queenie@company.com','09170010032',1),
 ('Ralph Go',8,'Purchasing Officer',1,0,'2020-03-16',NULL,'59-4441112-2','666555444','333222111','345-678-912','001234567922',52000,2500,'ralph@company.com','09170010033',1),
 ('Sofia Tan',2,'Mobile Developer',1,0,'2021-02-12',NULL,'60-7773333-3','555444333','999888777','456-789-023','001234567923',58000,2500,'sofia@company.com','09170010034',1),
@@ -101,7 +102,7 @@ VALUES
 ('Abigail Dela Torre',4,'Office Clerk',0,1,'2023-01-25',NULL,'68-9991111-1','333222111','555444666','234-567-801','001234567931',26000,900,'abigail@company.com','09170010042',1),
 ('Bryan Villena',5,'DevOps Engineer',1,0,'2020-06-30',NULL,'69-1112222-2','666777888','111222333','345-678-912','001234567932',63000,3000,'bryan@company.com','09170010043',1),
 ('Clarisse Lee',6,'Sales Coordinator',0,1,'2022-04-21',NULL,'70-2223333-3','999888777','555444333','456-789-023','001234567933',31000,1200,'clarisse@company.com','09170010044',1),
-('Derrick Ramos',7,'Compliance Officer',1,0,'2019-09-02',NULL,'71-3334444-4','888777666','333222111','567-890-134','001234567934',57000,2800,'derrick@company.com','09170010045',1),
+('Derrick Ramos',7,'Compliance Officer',1,0,'2019-09-02',NULL,'71-33>34444-4','888777666','333222111','567-890-134','001234567934',57000,2800,'derrick@company.com','09170010045',1),
 ('Evelyn Ong',8,'Supply Chain Analyst',1,0,'2020-08-12',NULL,'72-4445555-5','777666555','111222333','678-901-245','001234567935',53000,2300,'evelyn@company.com','09170010046',1),
 ('Francis Tiu',0,'Training Officer',1,0,'2021-07-07',NULL,'73-5556666-6','555444333','222111000','789-012-356','001234567936',37000,1500,'francis@company.com','09170010047',1),
 ('Georgia Uy',1,'Treasury Assistant',0,1,'2023-05-10',NULL,'74-6667777-7','444333222','333222111','890-123-467','001234567937',33000,1200,'georgia@company.com','09170010048',1),
@@ -114,47 +115,37 @@ VALUES
     )";
 
 };
-bool EmployeeRepository::insertEmployee(const Employee& employee)
+std::string EmployeeRepository::insertEmployee(const Employee& employee)
 {
-    std::string sqlA = std::format(
-        "INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive) VALUES ('{}', {}, '{}', {}, {}, '{}', '{}', '{}', '{}', '{}', '{}', '{}', {}, {}, '{}', '{}', {})",
-        employee.fullName,
-        to_int(employee.department),       
-        employee.position,
-        to_int(employee.jobLevel),         
-        to_int(employee.status),           
-        to_string(employee.dateHired),     
-        to_string(employee.dateSeparation),
-        employee.sssNumber,
-        employee.philHealthNumber,
-        employee.hdmfNumber,
-        employee.tin,
-        employee.bankAccountNumber,
-        employee.monthlyBasicSalary,
-        employee.monthlyAllowances,
-        employee.personalEmail,
-        employee.personalMobileNumber,
-        employee.isActive
-    );
-
-    if (!execute(sqlA)) return false;
-    std::string empId = getLastEmployeeId(); 
-    std::string sqlB = std::format("INSERT INTO 'emergency_contacts' (employeeId, name, relation, address, contactNo) VALUES ('{}','{}','{}','{}','{}')", 
-        empId,
-        employee.emergencyContact.name,
-        employee.emergencyContact.relation,
-        employee.emergencyContact.address,
-        employee.emergencyContact.contactNo
-
-    );
-    std::string sqlC = std::format("INSERT INTO dependents (employeeId, name, relation, birthday) VALUES ('{}', '{}','{}','{}')", 
-        empId,
-        employee.dependent.name,
-        employee.dependent.relation,
-        to_string(employee.dependent.birthday) // Date -> string (YYYY-MM-DD)
-    );
-
-    return execute(sqlB) && execute(sqlC);
+    std::string sqlA = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    sqlite3_stmt* stmt = nullptr;
+    std::string result = "";
+    //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
+    if (sqlite3_prepare_v2(db, sqlA.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        return "";  // Failed to prepare
+    sqlite3_bind_text(stmt, 1, employee.fullName.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_int(stmt, 2, to_int(employee.department));    
+    sqlite3_bind_text(stmt, 3, employee.position.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_int(stmt, 4, to_int(employee.jobLevel));    
+    sqlite3_bind_int(stmt, 5, to_int(employee.status));    
+    sqlite3_bind_text(stmt, 6, to_string(employee.dateHired).c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 7, to_string(employee.dateSeparation).c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 8, employee.sssNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 9, employee.philHealthNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 10, employee.hdmfNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 11, employee.tin.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 12, employee.bankAccountNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_double(stmt, 13, employee.monthlyBasicSalary);    
+    sqlite3_bind_double(stmt, 14, employee.monthlyAllowances);    
+    sqlite3_bind_text(stmt, 15, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 16, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_int(stmt, 17, employee.isActive);  
+    sqlite3_bind_int(stmt, 18, employee.contactId);
+    sqlite3_bind_int(stmt, 19, employee.dependentId);
+    int rc = sqlite3_step(stmt);
+    result = getLastEmployeeId();
+    sqlite3_finalize(stmt);
+    return result;
 }
 
 std::string EmployeeRepository::getLastEmployeeId()
@@ -163,19 +154,21 @@ std::string EmployeeRepository::getLastEmployeeId()
     std::string empId;
 
 
-    sqlite3_int64 lastId = sqlite3_last_insert_rowid(db); 
+    //sqlite3_int64 lastId = sqlite3_last_insert_rowid(db); 
 
     
-    const char* sql = "SELECT employeeId FROM employees WHERE tableId = ?";
+    const char* sql = R"(
+            SELECT employeeId 
+            FROM employees 
+            WHERE employeeId IS NOT NULL 
+            ORDER BY tableId DESC 
+            LIMIT 1;
+        )";
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK)
     {
-        sqlite3_bind_int64(stmt, 1, lastId);
         if (sqlite3_step(stmt) == SQLITE_ROW)
-        {
-            const unsigned char* text = sqlite3_column_text(stmt, 0);
-            if (text) empId = reinterpret_cast<const char*>(text);
-        }
+            empId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
     }
 
     sqlite3_finalize(stmt);
@@ -195,18 +188,6 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
     }
 
     Employee e = results.front();
-
-    // //map emergency contact
-    // std::string sqlForContact = std::format("select * from emergency_contacts where employeeId = '{}';", e.employeeId);
-    // auto resultsForContact = EmployeeRepository::query<Contact>(sqlForContact,mapContact);
-    //   if (!resultsForContact.empty())
-    //     e.emergencyContact = resultsForContact.front();
-
-    // //map dependent
-    // std::string sqlForDependent = std::format("select * from dependents where employeeId = '{}';", e.employeeId);
-    // auto resultsForDependent = EmployeeRepository::query<Dependent>(sqlForDependent,mapDependent);
-    // if (!resultsForDependent.empty())
-    //     e.dependent = resultsForDependent.front();
 
     return e;
 
@@ -306,6 +287,8 @@ Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
         e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 16));
         e.personalMobileNumber  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 17));
         e.isActive =  sqlite3_column_int(stmt, 18);
+        e.contactId = sqlite3_column_int(stmt, 19);
+        e.dependentId = sqlite3_column_int(stmt, 20);
 
         return e;
 }

@@ -12,7 +12,7 @@ bool EmergencyContactService::addEmergencyContact(const Contact& contact)
 };
 
 //READ
-std::optional<Contact> EmergencyContactService::getEmergencyContactByID(std::string id)
+std::optional<Contact> EmergencyContactService::getEmergencyContactByID(int id)
 {
     return this->repo.getById(id);
 };
@@ -25,7 +25,7 @@ bool EmergencyContactService::updateEmergencyContact(const Contact& e)
 };
 
 //DELETE
-bool EmergencyContactService::deleteEmergencyContact(std::string id)
+bool EmergencyContactService::deleteEmergencyContact(int id)
 {
     return this->repo.deleteContact(id);
 };
