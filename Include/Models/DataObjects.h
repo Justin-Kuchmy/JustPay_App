@@ -43,6 +43,7 @@ enum EmploymentStatus
 
 struct Contact 
 {
+    int contactId;
     std::string name;
     std::string relation;
     std::string address;
@@ -63,6 +64,7 @@ struct Date {
 };
 struct Dependent
 {
+    int dependentId;
     std::string name;
     std::string relation;
     Date birthday{};
@@ -87,8 +89,8 @@ struct Employee
     std::string personalEmail;
     std::string personalMobileNumber;
     bool isActive{true};
-    Contact emergencyContact{};
-    Dependent dependent{};
+    int contactId{};
+    int dependentId{};
     // friend std::ostream& operator<<(std::ostream& os, const Employee& e);
 };
 

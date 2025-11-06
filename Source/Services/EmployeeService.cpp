@@ -5,7 +5,7 @@ EmployeeService::EmployeeService(EmployeeRepository& r): repo(r)
 }
 
 //CREATE
-bool EmployeeService::addEmployee(const Employee& employee)
+std::string EmployeeService::addEmployee(const Employee& employee)
 {
     return this->repo.insertEmployee(employee);
 };

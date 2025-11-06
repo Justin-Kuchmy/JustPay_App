@@ -13,7 +13,7 @@ class DependentService
         bool addDependent(const Dependent& Dependent);
 
         //READ
-        std::optional<Dependent> getDependentByID(std::string id);
+        std::optional<Dependent> getDependentByID(int id);
 
         std::vector<Dependent> getAllDependents();
 
@@ -21,7 +21,7 @@ class DependentService
         bool updateDependent(const Dependent& e);
         
         //DELETE
-        bool deleteDependent(std::string id);
+        bool deleteDependent(int id);
 };
 
 #endif

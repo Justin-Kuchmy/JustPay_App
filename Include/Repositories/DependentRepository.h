@@ -13,16 +13,16 @@ class DependentRepository: public BaseRepository {
         std::string getCreateTableSQL() const override;
 
         //CREATE
-        bool insertDependent(const Dependent& Dependent);
+        int insertDependent(const Dependent& Dependent);
 
         // READ
-        std::optional<Dependent> getById(std::string id);             
+        std::optional<Dependent> getById(int id);             
 
         // UPDATE
         bool updateDependent(const Dependent& emp); 
 
         // DELETE
-        bool deleteDependent(std::string id);        
+        bool deleteDependent(int id);        
         std::string getLastDependentId();
 };
 

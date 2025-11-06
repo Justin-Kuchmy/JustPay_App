@@ -13,7 +13,7 @@ class EmergencyContactService
         bool addEmergencyContact(const Contact& EmergencyContact);
 
         //READ
-        std::optional<Contact> getEmergencyContactByID(std::string id);
+        std::optional<Contact> getEmergencyContactByID(int id);
 
         std::vector<Contact> getAllEmergencyContacts();
 
@@ -21,7 +21,7 @@ class EmergencyContactService
         bool updateEmergencyContact(const Contact& e);
         
         //DELETE
-        bool deleteEmergencyContact(std::string id);
+        bool deleteEmergencyContact(int id);
 };
 
 #endif

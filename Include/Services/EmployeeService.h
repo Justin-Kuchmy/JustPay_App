@@ -10,7 +10,7 @@ class EmployeeService
         explicit EmployeeService(EmployeeRepository& r);
 
         //CREATE
-        bool addEmployee(const Employee& employee);
+        std::string addEmployee(const Employee& employee);
 
         //READ
         std::optional<Employee> getEmployeeByID(std::string id);
