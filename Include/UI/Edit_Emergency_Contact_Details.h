@@ -16,14 +16,14 @@ class EditEmergencyContactDetails;
 class EditEmergencyContactDetails : public QWidget {
     Q_OBJECT
 public:
-    explicit EditEmergencyContactDetails(Employee &a_Employee, QWidget *parent = nullptr);
+    explicit EditEmergencyContactDetails(QWidget *parent = nullptr);
     ~EditEmergencyContactDetails();
-    void setEmployeeContext();
+    void setContactContext(std::optional<Contact> &contact);
 private slots:
     void onSaveClicked();
 private:
     Ui::EditEmergencyContactDetails *ui;
-    Employee &a_Employee;
+    std::unique_ptr<Contact> m_Contact;
 };
 
 #endif
