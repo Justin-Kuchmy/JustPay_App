@@ -70,7 +70,7 @@ void AddEmployeeDialog::openAddContactDialog()
     auto dlg = DialogFactory::create("add_contact");
     auto contactDialog = dynamic_cast<EmergencyContactDialog*>(dlg);
     if(contactDialog && contactDialog->exec() == QDialog::Accepted)   
-        a_Employee.emergencyContact = contactDialog->getContactData();  
+        m_Contact = contactDialog->getContactData();  
     
 };
 
@@ -80,12 +80,15 @@ void AddEmployeeDialog::openAddDependentDialog()
     auto dlg = DialogFactory::create("add_dependent");
     auto dependentDialog = dynamic_cast<AddDependentDialog*>(dlg);
     if(dependentDialog && dependentDialog->exec() == QDialog::Accepted)    
-        a_Employee.dependent = dependentDialog->getDependentData();;  
+        m_Dependent = dependentDialog->getDependentData();
     
 };
 
 void AddEmployeeDialog::onOKClicked()
 {
+    int contactID = AppContext::instance().emergencyContactService().addEmergencyContact(this->m_Contact);
+    int dependentID = AppContext::instance().dependentService().addDependent(this->m_Dependent);
+
     a_Employee.fullName = ui->nameLineEdit->text().toStdString();
     //a_Employee.employeeId; //this will be auto generated
     a_Employee.department = to_department(ui->departmentComboBox->currentIndex());
@@ -104,8 +107,11 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.personalEmail = ui->personEmailLineEdit->text().toStdString();
     a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
-    if(AppContext::instance().employeeService().addEmployee(a_Employee));
-        accepted();
+    if(contactID > 0 && dependentID > 0)
+        this->a_Employee.contactId = contactID;
+        this->a_Employee.dependentId = dependentID;
+        if(!AppContext::instance().employeeService().addEmployee(a_Employee).empty());
+            accepted();
 };
 
 void AddEmployeeDialog::onCancelClicked()
