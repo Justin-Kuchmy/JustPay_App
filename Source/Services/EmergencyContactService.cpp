@@ -1,4 +1,6 @@
 #include "Services/EmergencyContactService.h"
+#define DEBUG_LOGS
+#include "Utils/Log.h"
 
 
 EmergencyContactService::EmergencyContactService(EmergencyContactRepository& r): repo(r)
@@ -6,9 +8,15 @@ EmergencyContactService::EmergencyContactService(EmergencyContactRepository& r):
 };
 
 //CREATE
-bool EmergencyContactService::addEmergencyContact(const Contact& contact)
+int EmergencyContactService::addEmergencyContact(const Contact& contact)
 {
-    return this->repo.insertContact(contact);
+    int newId = repo.insertContact(contact);
+    if (newId <= 0) {
+        LOG_DEBUG("[EmergencyContactService] Database insert failed.\n");
+        return 0;
+    }
+
+    return newId;
 };
 
 //READ
