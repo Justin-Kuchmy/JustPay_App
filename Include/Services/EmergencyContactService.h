@@ -10,7 +10,7 @@ class EmergencyContactService
         explicit EmergencyContactService(EmergencyContactRepository& r);
 
         //CREATE
-        bool addEmergencyContact(const Contact& EmergencyContact);
+        int addEmergencyContact(const Contact& EmergencyContact);
 
         //READ
         std::optional<Contact> getEmergencyContactByID(int id);
