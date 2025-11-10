@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <cstdio> 
 #include <locale>
+#include <chrono>
+#include <ctime>
 
 
 enum Department
@@ -60,6 +62,30 @@ struct Date {
         std::istringstream iss(s);
         iss >> d.year >> dash >> d.month >> dash >> d.day;
         return d;
+    }
+
+    static Date getTodayDate()
+    {
+
+        const auto now = std::chrono::system_clock::now();
+        std::time_t t = std::chrono::system_clock::to_time_t(now);
+        std::tm localTime = *std::localtime(&t);
+
+        return Date {
+            localTime.tm_year+1900,
+            localTime.tm_mon+1,
+            localTime.tm_mday
+        };
+
+    }
+
+    bool operator>(const Date& rhs) const
+    {
+
+        return 
+        (year > rhs.year) || 
+        (year == rhs.year && month > month) || 
+        (year == rhs.year && month == month && day > rhs.day);
     }
 };
 struct Dependent
