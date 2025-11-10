@@ -10,7 +10,7 @@ class DependentService
         explicit DependentService(DependentRepository& r);
 
         //CREATE
-        bool addDependent(const Dependent& Dependent);
+        int addDependent(const Dependent& Dependent);
 
         //READ
         std::optional<Dependent> getDependentByID(int id);
@@ -22,6 +22,7 @@ class DependentService
         
         //DELETE
         bool deleteDependent(int id);
+ 
 };
 
 #endif
