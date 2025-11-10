@@ -2,6 +2,7 @@
 #define DEPENDENTDIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
 #include "../Include/Models/DataObjects.h"
 
 namespace Ui {
