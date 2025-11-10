@@ -22,6 +22,8 @@ private slots:
 private:
     Ui::AddEmployeeDialog *ui;
     Employee a_Employee;
+    Dependent m_Dependent;
+    Contact m_Contact;
     QVector<Employee>* employees;
 };
 
