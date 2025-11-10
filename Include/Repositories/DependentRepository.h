@@ -6,8 +6,9 @@
 
 class DependentRepository: public BaseRepository {
     static Dependent mapDependent(sqlite3_stmt* stmt);
-
+    
     public:
+        
         explicit DependentRepository(sqlite3* db);
 
         std::string getCreateTableSQL() const override;
@@ -24,6 +25,9 @@ class DependentRepository: public BaseRepository {
         // DELETE
         bool deleteDependent(int id);        
         std::string getLastDependentId();
+
+        bool exists(const std::string& name, const Date& birthday);
+
 };
 
 #endif
