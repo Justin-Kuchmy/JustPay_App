@@ -42,7 +42,30 @@ enum EmploymentStatus
     InternOJT,     
     Consultant,    
 };
+enum LoanType 
+{
+    HDMF_Salary_Loan,
+    HDMF_Housing_Loan,
+    HDMF_Calamity_Loan,
+    SSS_Salary_Loan,
+    SSS_Calamity_Loan,
+    Personal_Cash_Advance,
+    Other,     
+};
 
+struct LoanLedger
+{
+    int loanLedgerId;
+    LoanType loanType;
+    double principalAmount;
+    Date loanDate;
+    int NumOfAmortizations;
+    std::string deductionsPerPayroll;
+    bool deductionFirstHalf;
+    bool deductionSecondHalf;
+    std::string status;
+
+}
 struct Contact 
 {
     int contactId;
@@ -126,6 +149,33 @@ struct Employee
 // CONVERSION HELPERS
 // =========================
 
+// --- Loan Type ---
+inline int to_int(LoanType lt)
+{
+    return static_cast<int>(lt);
+}
+
+inline LoanType toLoanType(int i)
+{
+    return static_Cast<LoanType>(i)
+}
+
+inline std::string loanType_to_string(int i)
+{
+    switch(toLoanType(i))
+    {
+        case LoanType::HDMF_Salary_Loan:        return "HDMF_Salary_Loan";
+        case LoanType::HDMF_Housing_Loan:       return "HDMF_Housing_Loan";
+        case LoanType::HDMF_Calamity_Loan:      return "HDMF_Calamity_Loan";
+        case LoanType::SSS_Salary_Loan:         return "SSS_Salary_Loan";
+        case LoanType::SSS_Calamity_Loan:       return "SSS_Calamity_Loan";
+        case LoanType::Personal_Cash_Advance:   return "Personal_Cash_Advance";
+        case LoanType::Other:                   return "Other";
+        default:                                return "unknown";
+    }
+}
+
+
 // --- Department ---
 inline int to_int(Department d) {
     return static_cast<int>(d);
@@ -156,10 +206,7 @@ inline int to_int(JobLevel j) {
 inline JobLevel to_jobLevel(int i) {
     return static_cast<JobLevel>(i);
 }
-                      
-                        
-                        
-                        
+                   
                         
 inline std::string JobLevel_to_string (int i) {
     switch (static_cast<JobLevel>(i)) {
