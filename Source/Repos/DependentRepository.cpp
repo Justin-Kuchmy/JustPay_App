@@ -37,6 +37,13 @@ std::string DependentRepository::getCreateTableSQL()const
     )";
 };
 
+bool DependentRepository::exists(const std::string& name, const Date& birthday)
+{
+    std::string sql = std::format("select * from dependents where name = '{}' and birthday = '{}';", name, to_string(birthday));
+    std::vector<Dependent> results = this->query<Dependent>(sql, mapDependent);
+    return !results.empty();
+}
+
 Dependent DependentRepository::mapDependent(sqlite3_stmt* stmt)
 {
     Dependent d;
