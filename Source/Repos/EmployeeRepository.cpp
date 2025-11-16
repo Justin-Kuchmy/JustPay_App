@@ -84,12 +84,12 @@ std::string EmployeeRepository::insertEmployee(const Employee& employee)
     if (sqlite3_prepare_v2(db, sqlA.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
         return "";  // Failed to prepare
     sqlite3_bind_text(stmt, 1, employee.fullName.c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_int(stmt, 2, to_int(employee.department));    
+    sqlite3_bind_int(stmt, 2, static_cast<int>(employee.department));    
     sqlite3_bind_text(stmt, 3, employee.position.c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_int(stmt, 4, to_int(employee.jobLevel));    
-    sqlite3_bind_int(stmt, 5, to_int(employee.status));    
-    sqlite3_bind_text(stmt, 6, to_string(employee.dateHired).c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_text(stmt, 7, to_string(employee.dateSeparation).c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_int(stmt, 4, static_cast<int>(employee.jobLevel));    
+    sqlite3_bind_int(stmt, 5, static_cast<int>(employee.status));    
+    sqlite3_bind_text(stmt, 6, employee.dateHired.to_string().c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 7, employee.dateSeparation.to_string().c_str(), -1, SQLITE_TRANSIENT);    
     sqlite3_bind_text(stmt, 8, employee.sssNumber.c_str(), -1, SQLITE_TRANSIENT);    
     sqlite3_bind_text(stmt, 9, employee.philHealthNumber.c_str(), -1, SQLITE_TRANSIENT);    
     sqlite3_bind_text(stmt, 10, employee.hdmfNumber.c_str(), -1, SQLITE_TRANSIENT);    
@@ -190,12 +190,12 @@ bool EmployeeRepository::updateEmployee(const Employee& e)
 {            
     std::string sql = std::format("update employees set fullName='{}', department={}, position='{}', jobLevel={}, status={}, dateHired='{}', dateSeparation='{}', sssNumber='{}', philHealthNumber='{}', hdmfNumber='{}', monthlyBasicSalary={}, monthlyAllowances={}, personalEmail='{}', isActive=1 where employeeId = '{}'",
         e.fullName,
-        to_int(e.department),       
+        static_cast<int>(e.department),       
         e.position,
-        to_int(e.jobLevel),         
-        to_int(e.status),           
-        to_string(e.dateHired),     
-        to_string(e.dateSeparation),
+        static_cast<int>(e.jobLevel),         
+        static_cast<int>(e.status),           
+        e.dateHired.to_string(),     
+        e.dateSeparation.to_string(),
         e.sssNumber,
         e.philHealthNumber,
         e.hdmfNumber,
@@ -225,15 +225,15 @@ Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
         Employee e;
         e.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         e.fullName =   reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-        e.department = to_department(sqlite3_column_int(stmt, 3));  
+        e.department = static_cast<Department>(sqlite3_column_int(stmt, 3));  
         e.position = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
-        e.jobLevel =  to_jobLevel(sqlite3_column_int(stmt, 5));  
-        e.status =     to_status(sqlite3_column_int(stmt, 6));     
-        e.dateHired =    from_string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
+        e.jobLevel =  static_cast<JobLevel>(sqlite3_column_int(stmt, 5));  
+        e.status =     static_cast<EmploymentStatus>(sqlite3_column_int(stmt, 6));     
+        e.dateHired =    Date::fromString(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7)));   
 
         const unsigned char* text = sqlite3_column_text(stmt, 8);
         if (text) {
-            e.dateSeparation = from_string(reinterpret_cast<const char*>(text));
+            e.dateSeparation = Date::fromString(reinterpret_cast<const char*>(text));
         } else {
             e.dateSeparation = Date{1900,1,1};
         }
