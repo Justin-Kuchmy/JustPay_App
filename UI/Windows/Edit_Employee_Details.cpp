@@ -23,22 +23,22 @@ EditEmployeeDetails::EditEmployeeDetails(QWidget *parent): QWidget(parent), ui(n
         QString::fromStdString(department_to_string(Department::Engineering))
     }); //Department enum
     ui->jobLevelComboBox->addItems({
-        QString::fromStdString(JobLevel_to_string(JobLevel::RankAndFile)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Supervisory)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Managerial)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Executive)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::BoardOwnership))
+        QString::fromStdString(joblevel_to_string(JobLevel::RankAndFile)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Supervisory)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Managerial)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Executive)),
+        QString::fromStdString(joblevel_to_string(JobLevel::BoardOwnership))
     });   //JobLevel enum
     ui->empStatusComboBox->addItems({
-        QString::fromStdString(Status_to_string(EmploymentStatus::Regular)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Probationary)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Contractual)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::ProjectBased)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Seasonal)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Casual)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::PartTime)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::InternOJT)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Consultant))
+        QString::fromStdString(status_to_string(EmploymentStatus::Regular)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Probationary)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Contractual)),
+        QString::fromStdString(status_to_string(EmploymentStatus::ProjectBased)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Seasonal)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Casual)),
+        QString::fromStdString(status_to_string(EmploymentStatus::PartTime)),
+        QString::fromStdString(status_to_string(EmploymentStatus::InternOJT)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Consultant))
     });  //EmploymentStatus enum
 
     ui->monthlySalarySpinBox->setRange(0.00, 1'000'000'000.00);  // 1 billion max
@@ -58,13 +58,13 @@ void EditEmployeeDetails::setEmployeeContext(Employee &emp)
 {  
     this-> m_Employee = std::make_unique<Employee>(emp);
     ui->nameLineEdit->setText(QString::fromStdString(m_Employee->fullName));
-    ui->departmentComboBox->setCurrentIndex(to_int(m_Employee->department));
+    ui->departmentComboBox->setCurrentIndex(static_cast<int>(m_Employee->department));
     ui->positionLineEdit->setText(QString::fromStdString(m_Employee->position));
-    ui->jobLevelComboBox->setCurrentIndex(to_int(m_Employee->jobLevel));
-    ui->empStatusComboBox->setCurrentIndex(to_int(m_Employee->status));
+    ui->jobLevelComboBox->setCurrentIndex(static_cast<int>(m_Employee->jobLevel));
+    ui->empStatusComboBox->setCurrentIndex(static_cast<int>(m_Employee->status));
     
-    ui->dateHiredDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(m_Employee->dateHired)), "yyyy-MM-dd"));
-    ui->DateSeparatedDateEdit->setDate(QDate::fromString(QString::fromStdString(to_string(m_Employee->dateSeparation)), "yyyy-MM-dd"));
+    ui->dateHiredDateEdit->setDate(QDate::fromString(QString::fromStdString(m_Employee->dateHired.to_string()), "yyyy-MM-dd"));
+    ui->DateSeparatedDateEdit->setDate(QDate::fromString(QString::fromStdString(m_Employee->dateSeparation.to_string()), "yyyy-MM-dd"));
     
     ui->sssNumberLineEdit->setText(QString::fromStdString(m_Employee->sssNumber));
     ui->philHealthNumberLineEdit->setText(QString::fromStdString(m_Employee->philHealthNumber));
@@ -89,12 +89,12 @@ EditEmployeeDetails::~EditEmployeeDetails()
 void EditEmployeeDetails::onSaveClicked()
 {
     m_Employee->fullName = ui->nameLineEdit->text().toStdString();
-    m_Employee->department = to_department(ui->departmentComboBox->currentIndex());
+    m_Employee->department = static_cast<Department>(ui->departmentComboBox->currentIndex());
     m_Employee->position = ui->positionLineEdit->text().toStdString();
-    m_Employee->jobLevel = to_jobLevel(ui->jobLevelComboBox->currentIndex());
-    m_Employee->status = to_status(ui->empStatusComboBox->currentIndex());
-    m_Employee->dateHired = from_string(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    m_Employee->dateSeparation = from_string(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    m_Employee->jobLevel = static_cast<JobLevel>(ui->jobLevelComboBox->currentIndex());
+    m_Employee->status = static_cast<EmploymentStatus>(ui->empStatusComboBox->currentIndex());
+    m_Employee->dateHired = Date::fromString(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    m_Employee->dateSeparation = Date::fromString(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
     m_Employee->sssNumber = ui->sssNumberLineEdit->text().toStdString();
     m_Employee->philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
     m_Employee->hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
