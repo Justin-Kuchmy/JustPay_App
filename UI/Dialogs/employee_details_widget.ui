@@ -51,6 +51,21 @@
      <widget class="QWidget" name="EmployeeDetailsWidgetPanel">
       <layout class="QVBoxLayout" name="verticalLayoutRight">
        <item>
+        <widget class="QLabel" name="employeeNameLabel">
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Select An Employee</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QTabWidget" name="employeeTabs">
          <property name="currentIndex">
           <number>0</number>
