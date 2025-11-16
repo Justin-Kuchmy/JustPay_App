@@ -29,7 +29,6 @@ int DependentService::addDependent(const Dependent& dependent)
         return 0;
     }
 
-    // If all good, insert and return the new ID
     int newId = repo.insertDependent(dependent);
     if (newId <= 0) {
         LOG_DEBUG("[DependentService] Database insert failed.\n");
