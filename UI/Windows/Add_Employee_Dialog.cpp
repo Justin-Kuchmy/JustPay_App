@@ -25,22 +25,22 @@ AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new U
         QString::fromStdString(department_to_string(Department::Engineering))
     }); //Department enum
     ui->jobLevelComboBox->addItems({
-        QString::fromStdString(JobLevel_to_string(JobLevel::RankAndFile)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Supervisory)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Managerial)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::Executive)),
-        QString::fromStdString(JobLevel_to_string(JobLevel::BoardOwnership))
+        QString::fromStdString(joblevel_to_string(JobLevel::RankAndFile)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Supervisory)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Managerial)),
+        QString::fromStdString(joblevel_to_string(JobLevel::Executive)),
+        QString::fromStdString(joblevel_to_string(JobLevel::BoardOwnership))
     });   //JobLevel enum
     ui->empStatusComboBox->addItems({
-        QString::fromStdString(Status_to_string(EmploymentStatus::Regular)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Probationary)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Contractual)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::ProjectBased)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Seasonal)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Casual)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::PartTime)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::InternOJT)),
-        QString::fromStdString(Status_to_string(EmploymentStatus::Consultant))
+        QString::fromStdString(status_to_string(EmploymentStatus::Regular)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Probationary)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Contractual)),
+        QString::fromStdString(status_to_string(EmploymentStatus::ProjectBased)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Seasonal)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Casual)),
+        QString::fromStdString(status_to_string(EmploymentStatus::PartTime)),
+        QString::fromStdString(status_to_string(EmploymentStatus::InternOJT)),
+        QString::fromStdString(status_to_string(EmploymentStatus::Consultant))
     });  //EmploymentStatus enum
 
     ui->monthlySalarySpinBox->setRange(0.00, 1'000'000'000.00);  // 1 billion max
@@ -91,12 +91,12 @@ void AddEmployeeDialog::onOKClicked()
 
     a_Employee.fullName = ui->nameLineEdit->text().toStdString();
     //a_Employee.employeeId; //this will be auto generated
-    a_Employee.department = to_department(ui->departmentComboBox->currentIndex());
+    a_Employee.department = static_cast<Department>(ui->departmentComboBox->currentIndex());
     a_Employee.position = ui->positionLineEdit->text().toStdString();
-    a_Employee.jobLevel = to_jobLevel(ui->jobLevelComboBox->currentIndex());
-    a_Employee.status = to_status(ui->empStatusComboBox->currentIndex());
-    a_Employee.dateHired = from_string(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    a_Employee.dateSeparation = from_string(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    a_Employee.jobLevel = static_cast<JobLevel>(ui->jobLevelComboBox->currentIndex());
+    a_Employee.status = static_cast<EmploymentStatus>(ui->empStatusComboBox->currentIndex());
+    a_Employee.dateHired = Date::fromString(ui->dateHiredDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    a_Employee.dateSeparation = Date::fromString(ui->DateSeparatedDateEdit->date().toString("yyyy-MM-dd").toStdString());
     a_Employee.sssNumber = ui->sssNumberLineEdit->text().toStdString();
     a_Employee.philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
     a_Employee.hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
