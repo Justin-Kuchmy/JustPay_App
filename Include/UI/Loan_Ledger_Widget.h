@@ -5,6 +5,8 @@
 #include <QString>
 #include <QLabel>
 #include <QPushButton>
+#include <QDialogButtonBox>
+#include <QMessageBox>
 #include "../Include/Models/DataObjects.h"
 
 namespace Ui {
@@ -15,13 +17,21 @@ class LoanLedgerWidget : public QWidget {
 public:
     LoanLedgerWidget(QWidget *parent = nullptr);
     ~LoanLedgerWidget();
+    void setLoanLedgerContext(std::vector<LoanLedger> *loanLedger, std::string& employeeId);
 private slots:
     void onSaveClicked();
+    void onAddClicked();
     void onDeleteClicked();
-    void onTogleStatusClicked();
-    void onLoanSelected(QString& empID);
+    void onLoanSelected(int i);
     QString getSelectedLoan() const;
+    void updateDeductionPerPayroll();
+    void setDefaults();
+    void populateLoanList();
 private:
     Ui::LoanLedgerWidget *ui;
+    std::vector<LoanLedger>* loanLedgers = nullptr;
+    LoanLedger* selectedLoanLedger = nullptr;
+    LoanLedger m_LoanLedger;
+    std::string employeeId;
 };
 #endif
