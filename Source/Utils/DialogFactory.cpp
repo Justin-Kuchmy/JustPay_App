@@ -4,6 +4,7 @@
 #include "UI/Add_Dependent_Dialog.h"
 #include "UI/Add_Emergency_Contact_Dialog.h"
 #include "UI/Employee_Details_Widget.h"
+#include "UI/Add_Loan_Ledger_dialog.h"
 
 
 
@@ -18,6 +19,7 @@ void DialogFactory::registerDialogs()
     registry["add_contact"] = []() { return new EmergencyContactDialog(); };
     registry["add_dependent"] = []() { return new AddDependentDialog(); };
     registry["select_employee"] = []() { return new EmployeeDetailsWidget(); };
+    registry["add_loan_ledger"] = []() { return new AddLoanLedgerDialog(); };
 
     
 };
