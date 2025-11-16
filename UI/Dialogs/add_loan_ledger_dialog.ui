@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddEmployeeDialog</class>
- <widget class="QDialog" name="AddEmployeeDialog">
+ <class>AddLoanLedgerDialog</class>
+ <widget class="QDialog" name="AddLoanLedgerDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,20 +11,41 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add Loan Ledger</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>421</width>
-     <height>241</height>
+     <width>431</width>
+     <height>261</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
     <item>
      <layout class="QFormLayout" name="formLayout">
+      <property name="leftMargin">
+       <number>10</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>10</number>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="loanTypeLabel">
         <property name="text">
@@ -35,14 +56,14 @@
       <item row="6" column="0">
        <widget class="QLabel" name="processLabel">
         <property name="text">
-         <string>To Be Processed</string>
+         <string>Status</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="deductTimingLabel">
         <property name="text">
-         <string>Decuction Timing</string>
+         <string>Deduction Timing</string>
         </property>
        </widget>
       </item>
@@ -85,8 +106,13 @@
       </item>
       <item row="4" column="1">
        <widget class="QLabel" name="deductPerPayValue">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
         <property name="text">
-         <string>placeholder</string>
+         <string>*Automatically Calculated Upon Added*</string>
         </property>
        </widget>
       </item>
@@ -99,6 +125,9 @@
          <widget class="QCheckBox" name="firstHalfBox">
           <property name="text">
            <string>First Half</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -114,7 +143,10 @@
       <item row="6" column="1">
        <widget class="QCheckBox" name="processCheckBox">
         <property name="text">
-         <string>Process</string>
+         <string>Active</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -141,7 +173,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AddEmployeeDialog</receiver>
+   <receiver>AddLoanLedgerDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -157,7 +189,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AddEmployeeDialog</receiver>
+   <receiver>AddLoanLedgerDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
