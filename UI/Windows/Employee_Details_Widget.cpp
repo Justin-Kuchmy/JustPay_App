@@ -97,8 +97,10 @@ void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
 {
     if(EmployeeDetailsWidget::loadEmployeeDetails(empID))
     {
-        auto optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(m_Employee.contactId);
-        auto optDependent = AppContext::instance().dependentService().getDependentByID(m_Employee.dependentId);
+        ui->employeeNameLabel->setText(QString::fromStdString(m_Employee.fullName));
+        this->optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(m_Employee.contactId);
+        this->optDependent = AppContext::instance().dependentService().getDependentByID(m_Employee.dependentId);
+        this->optLoanLedgers = AppContext::instance().loanLedgerService().getAllLoanLedgers(m_Employee.employeeId);
         if(optContact)    
         {
             editContactForm->setContactContext(optContact);
@@ -112,11 +114,12 @@ void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
         {
             editDependentForm->setDependentContext(optDependent);
         }
-         else
+        else
         {
             LOG_DEBUG("No dependent data available");
             return;
         }
+        loanLedgetWidget->setLoanLedgerContext(&optLoanLedgers, m_Employee.employeeId);
     }
     else
     {
