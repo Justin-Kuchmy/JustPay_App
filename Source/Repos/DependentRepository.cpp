@@ -21,7 +21,7 @@ std::string DependentRepository::getCreateTableSQL()const
 
         );
 
-        -- DEPENDENTS (subset for realism)
+        -- DEPENDENTS
         INSERT INTO dependents (name, relation, birthday) VALUES
         ('Lara Mendoza', 'Daughter', '2016-03-14'),
         ('Ethan Cruz', 'Son', '2018-09-21'),
@@ -39,7 +39,7 @@ std::string DependentRepository::getCreateTableSQL()const
 
 bool DependentRepository::exists(const std::string& name, const Date& birthday)
 {
-    std::string sql = std::format("select * from dependents where name = '{}' and birthday = '{}';", name, to_string(birthday));
+    std::string sql = std::format("select * from dependents where name = '{}' and birthday = '{}';", name, birthday.to_string());
     std::vector<Dependent> results = this->query<Dependent>(sql, mapDependent);
     return !results.empty();
 }
@@ -52,7 +52,7 @@ Dependent DependentRepository::mapDependent(sqlite3_stmt* stmt)
     d.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
     const unsigned char* text = sqlite3_column_text(stmt, 3);
     if (text) {
-        d.birthday = from_string(reinterpret_cast<const char*>(text));
+        d.birthday = Date::fromString(reinterpret_cast<const char*>(text));
     }
     else {
         d.birthday = Date{1900, 1, 1};
@@ -81,7 +81,7 @@ int DependentRepository::insertDependent(const Dependent& dependent)
     //   SQLITE_TRANSIENT → Instructs SQLite to make its own copy of the string (safe if original may go out of scope)
     sqlite3_bind_text(stmt, 1, dependent.name.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, dependent.relation.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, to_string(dependent.birthday).c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, dependent.birthday.to_string().c_str(), -1, SQLITE_TRANSIENT);
 
     int rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -119,7 +119,7 @@ bool DependentRepository::updateDependent(const Dependent& d)
     std::string sql = std::format("update Dependents set name='{}', relation='{}', birthday='{}' where dependentId = '{}'",
         d.name,
         d.relation,
-        to_string(d.birthday),
+        d.birthday.to_string(),
         d.dependentId
         );
     return DependentRepository::execute(sql);
