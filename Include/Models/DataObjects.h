@@ -7,7 +7,10 @@
 #include <locale>
 #include <chrono>
 #include <ctime>
-
+#include <sstream>
+#include <iostream>
+#define DEBUG_LOGS
+#include "../Utils/Log.h"
 
 enum Department
 {
@@ -53,19 +56,18 @@ enum LoanType
     Other,     
 };
 
-struct LoanLedger
-{
-    int loanLedgerId;
-    LoanType loanType;
-    double principalAmount;
-    Date loanDate;
-    int NumOfAmortizations;
-    std::string deductionsPerPayroll;
-    bool deductionFirstHalf;
-    bool deductionSecondHalf;
-    std::string status;
 
-}
+
+// =========================
+// CONVERSION ENUM DECLARATIONS
+// =========================
+
+
+ inline std::string loantype_to_string(int i);
+ inline std::string department_to_string(int i);
+ inline std::string joblevel_to_string(int i);
+ inline std::string status_to_string(int i);
+
 struct Contact 
 {
     int contactId;
@@ -73,12 +75,25 @@ struct Contact
     std::string relation;
     std::string address;
     std::string contactNo;
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "contactId: " << contactId
+        << "\n name: " << name
+        << "\n relation: " << relation
+        << "\n address: " << address
+        << "\n contactNo: " << contactNo;
+
+        return oss.str();
+    }
 };
+
 struct Date {
     int year{};
     int month{};
     int day{};
-
+    
     static Date fromString(const std::string& s) {
         Date d;
         char dash;
@@ -87,29 +102,69 @@ struct Date {
         return d;
     }
 
+    std::string to_string() const 
+    {
+        std::ostringstream oss;
+        oss << std::setw(4) << std::setfill('0') << year << '-'
+            << std::setw(2) << std::setfill('0') << month << '-'
+            << std::setw(2) << std::setfill('0') << day;
+        return oss.str();
+    }
+    
     static Date getTodayDate()
     {
-
+        
         const auto now = std::chrono::system_clock::now();
         std::time_t t = std::chrono::system_clock::to_time_t(now);
         std::tm localTime = *std::localtime(&t);
-
+        
         return Date {
             localTime.tm_year+1900,
             localTime.tm_mon+1,
             localTime.tm_mday
         };
-
+        
     }
-
+    
     bool operator>(const Date& rhs) const
     {
-
+        
         return 
         (year > rhs.year) || 
         (year == rhs.year && month > month) || 
         (year == rhs.year && month == month && day > rhs.day);
     }
+};
+struct LoanLedger
+{
+    int loanLedgerId;
+    std::string employeeId;
+    LoanType loanType;
+    double principalAmount;
+    Date loanDate;
+    int NumOfAmortizations;
+    double deductionsPerPayroll;
+    bool deductionFirstHalf;
+    bool deductionSecondHalf;
+    bool status;
+
+    std::string to_string() const {
+        std::ostringstream oss;
+        oss << "LoanLedger { "
+            << "loanLedgerId: " << loanLedgerId
+            << ", employeeId: " << employeeId
+            << ", loanType: " << loantype_to_string(static_cast<int>(loanType))
+            << ", principalAmount: " << principalAmount
+            << ", loanDate: " << loanDate.to_string()
+            << ", NumOfAmortizations: " << NumOfAmortizations
+            << ", deductionsPerPayroll: " << deductionsPerPayroll
+            << ", deductionFirstHalf: " << deductionFirstHalf
+            << ", deductionSecondHalf: " << deductionSecondHalf
+            << ", status: " << status
+            << " }";
+        return oss.str();
+    }
+
 };
 struct Dependent
 {
@@ -117,6 +172,17 @@ struct Dependent
     std::string name;
     std::string relation;
     Date birthday{};
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "dependentId: " << dependentId
+        << "\n name: " << name
+        << "\n relation: " << relation
+        << "\n birthday: " << birthday.to_string();
+
+        return oss.str();
+    }
 };
 struct Employee 
 {
@@ -140,29 +206,48 @@ struct Employee
     bool isActive{true};
     int contactId{};
     int dependentId{};
-    // friend std::ostream& operator<<(std::ostream& os, const Employee& e);
+
+    // Instance method for debugging
+    std::string to_string() const {
+        std::ostringstream oss;
+        oss << "Employee { "
+            << "fullName: " << fullName
+            << ", employeeId: " << employeeId
+            << ", department: " << department_to_string(department)
+            << ", position: " << position
+            << ", jobLevel: " << joblevel_to_string(jobLevel)
+            << ", status: " << status_to_string(status)
+            << ", dateHired: " << dateHired.to_string()
+            << ", dateSeparation: " << dateSeparation.to_string()
+            << ", sssNumber: " << sssNumber
+            << ", philHealthNumber: " << philHealthNumber
+            << ", hdmfNumber: " << hdmfNumber
+            << ", tin: " << tin
+            << ", bankAccountNumber: " << bankAccountNumber
+            << ", monthlyBasicSalary: " << monthlyBasicSalary
+            << ", monthlyAllowances: " << monthlyAllowances
+            << ", personalEmail: " << personalEmail
+            << ", personalMobileNumber: " << personalMobileNumber
+            << ", isActive: " << isActive
+            << ", contactId: " << contactId
+            << ", dependentId: " << dependentId
+            << " }";
+        return oss.str();
+    
+    };
 };
 
 
 
 // =========================
-// CONVERSION HELPERS
+// CONVERSION ENUM HELPERS
 // =========================
 
 // --- Loan Type ---
-inline int to_int(LoanType lt)
-{
-    return static_cast<int>(lt);
-}
 
-inline LoanType toLoanType(int i)
+inline std::string loantype_to_string(int i)
 {
-    return static_Cast<LoanType>(i)
-}
-
-inline std::string loanType_to_string(int i)
-{
-    switch(toLoanType(i))
+    switch(static_cast<LoanType>(i))
     {
         case LoanType::HDMF_Salary_Loan:        return "HDMF_Salary_Loan";
         case LoanType::HDMF_Housing_Loan:       return "HDMF_Housing_Loan";
@@ -177,14 +262,9 @@ inline std::string loanType_to_string(int i)
 
 
 // --- Department ---
-inline int to_int(Department d) {
-    return static_cast<int>(d);
-}
-inline Department to_department(int i) {
-    return static_cast<Department>(i);
-}
 
-inline std::string department_to_string (int i) {
+
+inline std::string department_to_string(int i) {
     switch (static_cast<Department>(i)) {
         case Department::HR:            return "HR";                
         case Department::Finance:       return "Finance";                
@@ -200,15 +280,9 @@ inline std::string department_to_string (int i) {
 }
 
 // --- JobLevel ---
-inline int to_int(JobLevel j) {
-    return static_cast<int>(j);
-}
-inline JobLevel to_jobLevel(int i) {
-    return static_cast<JobLevel>(i);
-}
                    
                         
-inline std::string JobLevel_to_string (int i) {
+inline std::string joblevel_to_string(int i) {
     switch (static_cast<JobLevel>(i)) {
         case JobLevel::RankAndFile:     return "RankAndFile";                
         case JobLevel::Supervisory:     return "Supervisory";                
@@ -220,14 +294,7 @@ inline std::string JobLevel_to_string (int i) {
 }
 
 // --- EmploymentStatus ---
-inline int to_int(EmploymentStatus s) {
-    return static_cast<int>(s);
-}
-inline EmploymentStatus to_status(int i) {
-    return static_cast<EmploymentStatus>(i);
-}
-
-inline std::string Status_to_string(int i) {
+inline std::string status_to_string(int i) {
     switch (static_cast<EmploymentStatus>(i)) {
         case EmploymentStatus::Regular:         return "Regular";
         case EmploymentStatus::Probationary:    return "Probationary";
@@ -241,39 +308,5 @@ inline std::string Status_to_string(int i) {
         default:                        return "Unknown";
     }
 }
-
-// --- Date <-> String ---
-inline std::string to_string(const Date& d) {
-    char buffer[11]; // YYYY-MM-DD\0
-    std::snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d", d.year, d.month, d.day);
-    return std::string(buffer);
-}
-
-inline Date from_string(const std::string& s) {
-    Date d{};
-    std::sscanf(s.c_str(), "%d-%d-%d", &d.year, &d.month, &d.day);
-    return d;
-}
-// inline std::ostream& operator<<(std::ostream& os, const Employee& e)
-// {
-//     os.imbue(std::locale("en_PH.UTF-8"));
-//     os << std::fixed << std::setprecision(2);
-//     os << std::string(80,'=') << "\n";
-//     os << std::right << std::setw(32) << "" << "Employee Record" << std::setw(32) << "" << "\n";
-//     os << std::string(80,'=') << "\n";
-//     os <<std::left << std::setw(20) << "EmployeeId: " << std::setw(22) << e.employeeId                       << std::setw(25) << "| Monthly Basic Salary: " <<"₱"<< std::setw(15) << e.monthlyBasicSalary  << std::endl;
-//     os <<std::left << std::setw(20) << "Full Name: "  << std::setw(22) << e.fullName                         << std::setw(25) << "| Monthly Allowances: "   <<"₱"<< std::setw(15) << e.monthlyAllowances  << std::endl;
-//     os <<std::left << std::setw(20) << "Department: " << std::setw(22) << department_to_string(e.department) << std::setw(25) << "| Active: "               << std::setw(15) << e.isActive  << std::endl;
-//     os <<std::left << std::setw(20) << "JobLevel: "   << std::setw(22) << JobLevel_to_string(e.jobLevel)     << std::setw(25) << "|"<<std::endl;                 
-//     os <<std::left << std::setw(20) << "Position: "   << std::setw(22) << e.position                         << std::setw(25) << "|"<<std::endl;                 
-//     os <<std::left << std::setw(20) << "Status: "     << std::setw(22) << Status_to_string(e.status)         << std::setw(25) << "|"<<std::endl;                 
-//     os <<std::left << std::setw(20) << "Email: "      << std::setw(22) << e.personalEmail                    << std::setw(25) << "| SSS_Number: "           << std::setw(15) << e.sssNumber  << std::endl;
-//     os <<std::left << std::setw(20) << "Hired: "      << std::setw(22) << to_string(e.dateHired)             << std::setw(25) << "| PhilHealth_Number: "    << std::setw(15) << e.philHealthNumber  << std::endl;
-//     os <<std::left << std::setw(20) << "Separation: " << std::setw(22) << to_string(e.dateSeparation)        << std::setw(25) << "| HDMF_Number: "          << std::setw(15) << e.hdmfNumber  << std::endl;
-//     os << std::left << std::setw(20) << "PhoneNo: "    << std::setw(22) << e.personalMobileNumber           << std::setw(25) << "| Bank_Account: "         << std::setw(15) << e.bankAccountNumber << '\n';
-//     os << std::string(80,'=') << "\n";
-    
-//     return os;
-// }
 
 #endif // DATAOBJECTS_HPP
