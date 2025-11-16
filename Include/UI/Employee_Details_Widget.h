@@ -43,6 +43,10 @@ private:
     LoanLedgerWidget* loanLedgetWidget;
     void refreshEmployeeList(const QString &filter = QString());
     bool loadEmployeeDetails(QString& empID);
+    std::optional<Contact> optContact;
+    std::optional<Dependent> optDependent;
+    std::vector<LoanLedger> optLoanLedgers;
+    
 };
 
 
