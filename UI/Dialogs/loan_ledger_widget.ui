@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QSplitter" name="splitter">
+  <widget class="QSplitter" name="loanLedgerSplitter">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -40,14 +40,42 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="selectLoanLabel">
-       <property name="text">
-        <string>Select Loan</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="selectLoanLabel">
+         <property name="text">
+          <string>Select Loan</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QScrollArea" name="loanListScrollArea">
@@ -59,8 +87,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>108</width>
-          <height>497</height>
+          <width>175</width>
+          <height>478</height>
          </rect>
         </property>
        </widget>
@@ -82,7 +110,7 @@
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="formAlignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="horizontalSpacing">
         <number>10</number>
@@ -114,7 +142,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QLabel" name="statusLabel">
          <property name="font">
           <font>
@@ -126,7 +154,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QLabel" name="deductTimingLabel">
          <property name="font">
           <font>
@@ -138,7 +166,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="deductPerPayLabel">
          <property name="font">
           <font>
@@ -150,7 +178,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="numOfAmortLabel">
          <property name="font">
           <font>
@@ -162,7 +190,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="loanDateLabel">
          <property name="font">
           <font>
@@ -174,7 +202,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="principalAmountLabel">
          <property name="font">
           <font>
@@ -187,16 +215,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox">
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox">
+        <widget class="QComboBox" name="loanTypeComboBox">
          <property name="font">
           <font>
            <pointsize>14</pointsize>
@@ -205,7 +224,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDateEdit" name="dateEdit">
+        <widget class="QDoubleSpinBox" name="principalAmountSpinBox">
          <property name="font">
           <font>
            <pointsize>14</pointsize>
@@ -214,7 +233,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QDateEdit" name="loanDateEdit">
          <property name="font">
           <font>
            <pointsize>14</pointsize>
@@ -223,6 +242,15 @@
         </widget>
        </item>
        <item row="4" column="1">
+        <widget class="QSpinBox" name="amortSpinBox">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
         <widget class="QLabel" name="deductPayrollValue">
          <property name="font">
           <font>
@@ -237,10 +265,10 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="firstHalfCheckBox">
            <property name="font">
             <font>
              <pointsize>14</pointsize>
@@ -252,7 +280,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="secondHalfCheckBox">
            <property name="font">
             <font>
              <pointsize>14</pointsize>
@@ -265,18 +293,30 @@
          </item>
         </layout>
        </item>
-       <item row="6" column="1">
-        <widget class="QLabel" name="statusValue">
+       <item row="7" column="1">
+        <widget class="QCheckBox" name="statusValue">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <pointsize>15</pointsize>
           </font>
          </property>
-         <property name="text">
-          <string>Processed / Unprocessed</string>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+         <property name="text">
+          <string>Active</string>
          </property>
         </widget>
        </item>
@@ -301,13 +341,6 @@
         <widget class="QPushButton" name="deleteButton">
          <property name="text">
           <string>Delete Loan</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="toggleStatusButton">
-         <property name="text">
-          <string>Toggle Status</string>
          </property>
         </widget>
        </item>
