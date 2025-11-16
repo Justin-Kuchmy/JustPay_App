@@ -20,7 +20,7 @@ void AddDependentDialog::onOKClicked()
 {
     m_Dependent.name = ui->nameLineEdit->text().toStdString();
     m_Dependent.relation = ui->relationLineEdit->text().toStdString();
-    m_Dependent.birthday = from_string(ui->bdayDateEdit->date().toString("yyyy-MM-dd").toStdString());
+    m_Dependent.birthday = Date::fromString(ui->bdayDateEdit->date().toString("yyyy-MM-dd").toStdString());
     auto today = Date::getTodayDate();
     if (m_Dependent.birthday > today) {
         LOG_DEBUG("[AddDependentDialog] record failed check birthday");
