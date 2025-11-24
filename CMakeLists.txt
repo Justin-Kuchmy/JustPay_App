@@ -13,6 +13,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 
 # ---------------------------------------------------------
