@@ -2,10 +2,19 @@
 #define QUERYWIDGET_H
 
 #include <QDialog>
+#include <QVariant>
 #include <QWidget>
 #include <QMessageBox>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
 #include <QSqlDatabase>
+#include <QListWidget>
 #include <QSqlQueryModel>
+#include <QStandardItemModel>
+#include <sqlite3.h>
+#define DEBUG_LOGS
+#include "Utils/Log.h"
 
 namespace Ui {
 class SqlQueryWidget;
@@ -17,35 +26,38 @@ class SqlQueryWidget : public QWidget {
 public:
     explicit SqlQueryWidget(QWidget *parent = nullptr);
     ~SqlQueryWidget();
-   void setDatabase(const QSqlDatabase &db);        // Pass database connection
-    void loadSavedQueries();                         // Load previous queries (optional)
-    QString currentQuery() const;                    // Get the SQL currently typed
+    void setDatabase(const QSqlDatabase &db);         
+    void loadSavedQueries();                         
+    QString currentQuery() const;                    
 
 private slots:
-    void onExecuteClicked();                         // Runs SQL query
-    void onClearClicked();                           // Clears text box
-    void onSaveQueryClicked();                       // Saves query to a list
-    void onQueryDoubleClicked(const QModelIndex &);  // Load query from history
-    void onExportCSVClicked();                       // Export table result
+    void onExecuteClicked();                         
+    void onClearClicked();                           
+    void onSaveQueryClicked();                       
+    void onQueryDoubleClicked(const QModelIndex &);  
+    void onExportCSVClicked();                       
 
 private:
-    void runQuery(const QString &sql);               // Internal helper
-    void showQueryError(const QString &msg);         // Error popup
-    void updateTable();                              // Refresh table view columns
-    void loadColumnWidths();                         // Optional: remember table width prefs
-    void saveColumnWidths();
+    QVariant mapColumn(sqlite3_stmt* stmt, int col);
+    void LoadListItems();
 
 private:
     Ui::SqlQueryWidget *ui;
 
     // SQL & Model:
-    QSqlDatabase database;
-    QSqlQueryModel *model;          // Holds the result set
+    sqlite3* m_db = nullptr;
+    //QSqlDatabase database;
+    //QSqlQueryModel *model;          // Holds the result set
     QString lastExecutedQuery;
+    std::string sqlQuery;
+    std::string description;
 
     // Query history:
-    QStringList savedQueries;       // Optional: stored in file/settings
+    QListWidget* savedQueries = nullptr;  
+    QStringList listItems;     // Optional: stored in file/settings
     QString historyFilePath;
+    std::unordered_map<QString, QString> dict{};
+    QStandardItemModel* model = nullptr;
 
     // UI state:
     bool autoResizeColumns = true;  // User preference
