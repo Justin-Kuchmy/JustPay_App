@@ -1,0 +1,4 @@
+emp|select * from employees
+--END--
+report|SELECT      e.employeeId,     e.fullName,     e.position,     e.jobLevel,     e.department,     e.monthlyBasicSalary,     e.monthlyAllowances,     (e.monthlyBasicSalary + e.monthlyAllowances) AS totalCompensation,     d.name AS dependentName,     d.relation AS dependentRelation,     ec.name AS emergencyContactName,     ll.loanType,     ll.principalAmount,     ll.deductionsPerPayroll,     ll.status AS loanStatus FROM employees e LEFT JOIN dependents d ON e.dependentId = d.dependentId LEFT JOIN emergency_contacts ec ON e.contactId = ec.contactId LEFT JOIN loan_ledgers ll ON e.employeeId = ll.employeeId AND ll.status IN (0,1) WHERE e.isActive = 1 ORDER BY totalCompensation DESC, e.fullName ASC LIMIT 50;   
+--END--
