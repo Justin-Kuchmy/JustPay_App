@@ -9,7 +9,7 @@
                 },
                 {
                     "label": "Attendance Tracking Module",
-                    "submenu": "attendance-tracking_menu"
+                    "action": "attendance_list"
                 },
                 {
                     "label": "Payroll Computation Module",
@@ -50,16 +50,16 @@
             "title": "Loan Ledger",
             "options": [
                 {
-                "label": "Upload Loan Ledger (CSV/Excel)",
-                "action": "upload_loan_ledger"
+                    "label": "Upload Loan Ledger (CSV/Excel)",
+                    "action": "upload_loan_ledger"
                 },
                 {
-                "label": "View Loan Ledgers by Employee",
-                "action": "view_loan_ledgers_employee"
+                    "label": "View Loan Ledgers by Employee",
+                    "action": "view_loan_ledgers_employee"
                 },
                 {
-                "label": "View Loan Ledgers by Type",
-                "action": "view_loan_ledgers_type"
+                    "label": "View Loan Ledgers by Type",
+                    "action": "view_loan_ledgers_type"
                 }
             ]
         },

@@ -7,6 +7,7 @@
 #include "UI/Add_Loan_Ledger_dialog.h"
 #include "UI/Add_Time_Log_Dialog.h"
 #include "UI/Add_Overtime_Hours_Dialog.h"
+#include "UI/Attendance_List_Widget.h"
 
 
 
@@ -22,6 +23,7 @@ void DialogFactory::registerDialogs()
     registry["add_dependent"] = []() { return new AddDependentDialog(); };
     registry["select_employee"] = []() { return new EmployeeDetailsWidget(); };
     registry["add_loan_ledger"] = []() { return new AddLoanLedgerDialog(); };
+    registry["attendance_list"] = []() { return new AttendanceListWidget(); };
     registry["Add_Time_Log"] = []() { return new AddTimeLogDialog(); };
     registry["Add_Overtime_Hours"] = []() { return new AddOvertimeHoursDialog(); };
 
