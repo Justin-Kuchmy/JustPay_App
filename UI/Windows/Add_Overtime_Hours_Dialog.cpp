@@ -8,6 +8,9 @@
 AddOvertimeHoursDialog::AddOvertimeHoursDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddOvertimeHoursDialog)
 {
     ui->setupUi(this);
+
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &AddOvertimeHoursDialog::onOkayClicked); //to close myself
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &AddOvertimeHoursDialog::onCancelClicked);
 };
 
 AddOvertimeHoursDialog::~AddOvertimeHoursDialog()
@@ -17,11 +20,11 @@ AddOvertimeHoursDialog::~AddOvertimeHoursDialog()
 
 void AddOvertimeHoursDialog::onOkayClicked()
 {
-
+    accept();
 };
 
 void AddOvertimeHoursDialog::onCancelClicked()
 {
-
+    reject();
 };
 
