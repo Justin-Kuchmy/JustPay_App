@@ -18,6 +18,7 @@ class AddTimeLogDialog: public QDialog
 private slots:
         void onOkayClicked();
         void onCancelClicked();
+        void onSelectTypeClicked();
 private:
     Ui::AddTimeLogDialog* ui;        
 };
