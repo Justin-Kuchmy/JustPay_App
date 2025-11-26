@@ -68,39 +68,54 @@ enum LoanType
  inline std::string joblevel_to_string(int i);
  inline std::string status_to_string(int i);
 
- struct AttendanceLog
- {
-    int logId;
-    std::string employeeId;
-    Date logDate;
-    int lateByMinute;
-    int underTimeByMinute;
-    int overTimeByMinute;
-    bool isAbsent;
-    std::string overtimeJson;
 
-    double getOvertimePay() const {
-        Overtime o;
-        o.fromJson(overtimeJson);
-        return o.calculatePay();
+struct Date {
+    int year{};
+    int month{};
+    int day{};
+    
+    static Date fromString(const std::string& s) {
+        Date d;
+        char dash;
+        std::istringstream iss(s);
+        iss >> d.year >> dash >> d.month >> dash >> d.day;
+        return d;
     }
 
-
-    std::string to_string() const
+    std::string to_string() const 
     {
         std::ostringstream oss;
-        oss << "logId: " << logId
-        << "\n employeeId: " << employeeId
-        << "\n logDate: " << logDate.to_string()
-        << "\n lateByMinute: " << lateByMinute
-        << "\n underTimeByMinute: " << underTimeByMinute
-        << "\n overTimeByMinute: " << overTimeByMinute
-        << "\n isAbsent: " << (isAbsent == 1) ? "True" : "False";
-
+        oss << std::setw(4) << std::setfill('0') << year << '-'
+            << std::setw(2) << std::setfill('0') << month << '-'
+            << std::setw(2) << std::setfill('0') << day;
         return oss.str();
     }
+    
+    static Date getTodayDate()
+    {
+        
+        const auto now = std::chrono::system_clock::now();
+        std::time_t t = std::chrono::system_clock::to_time_t(now);
+        std::tm localTime = *std::localtime(&t);
+        
+        return Date {
+            localTime.tm_year+1900,
+            localTime.tm_mon+1,
+            localTime.tm_mday
+        };
+        
+    }
+    
+    bool operator>(const Date& rhs) const
+    {
+        
+        return 
+        (year > rhs.year) || 
+        (year == rhs.year && month > month) || 
+        (year == rhs.year && month == month && day > rhs.day);
+    }
+};
 
- };
 
  struct Overtime
  {
@@ -163,7 +178,7 @@ enum LoanType
         std::string to_string() const
     {
         std::ostringstream oss;
-        oss "\n regular: " <<  regular
+        oss << "\n regular: " <<  regular
         << "\n rest_day: " <<  rest_day
         << "\n rest_day_plus: " <<  rest_day_plus
         << "\n legal_holiday: " <<  legal_holiday
@@ -173,6 +188,40 @@ enum LoanType
         << "\n rest_plus_legal: " <<  rest_plus_legal
         << "\n rest_plus_special: " <<  rest_plus_special
         << "\n night_shift_diff: " <<  night_shift_diff;
+
+        return oss.str();
+    }
+
+ };
+
+ struct AttendanceLog
+ {
+    int logId;
+    std::string employeeId;
+    Date logDate;
+    int lateByMinute;
+    int underTimeByMinute;
+    int overTimeByMinute;
+    bool isAbsent;
+    std::string overtimeJson;
+
+    double getOvertimePay() const {
+        Overtime o;
+        o.fromJson(overtimeJson);
+        return o.calculatePay();
+    }
+
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "logId: " << logId
+        << "\n employeeId: " << employeeId
+        << "\n logDate: " << logDate.to_string()
+        << "\n lateByMinute: " << lateByMinute
+        << "\n underTimeByMinute: " << underTimeByMinute
+        << "\n overTimeByMinute: " << overTimeByMinute
+        << "\n isAbsent: " << (isAbsent == 1) ? "True" : "False";
 
         return oss.str();
     }
@@ -200,52 +249,6 @@ struct Contact
     }
 };
 
-struct Date {
-    int year{};
-    int month{};
-    int day{};
-    
-    static Date fromString(const std::string& s) {
-        Date d;
-        char dash;
-        std::istringstream iss(s);
-        iss >> d.year >> dash >> d.month >> dash >> d.day;
-        return d;
-    }
-
-    std::string to_string() const 
-    {
-        std::ostringstream oss;
-        oss << std::setw(4) << std::setfill('0') << year << '-'
-            << std::setw(2) << std::setfill('0') << month << '-'
-            << std::setw(2) << std::setfill('0') << day;
-        return oss.str();
-    }
-    
-    static Date getTodayDate()
-    {
-        
-        const auto now = std::chrono::system_clock::now();
-        std::time_t t = std::chrono::system_clock::to_time_t(now);
-        std::tm localTime = *std::localtime(&t);
-        
-        return Date {
-            localTime.tm_year+1900,
-            localTime.tm_mon+1,
-            localTime.tm_mday
-        };
-        
-    }
-    
-    bool operator>(const Date& rhs) const
-    {
-        
-        return 
-        (year > rhs.year) || 
-        (year == rhs.year && month > month) || 
-        (year == rhs.year && month == month && day > rhs.day);
-    }
-};
 struct LoanLedger
 {
     int loanLedgerId;
