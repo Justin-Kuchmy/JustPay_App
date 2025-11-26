@@ -77,6 +77,14 @@ enum LoanType
     int underTimeByMinute;
     int overTimeByMinute;
     bool isAbsent;
+    std::string overtimeJson;
+
+    double getOvertimePay() const {
+        Overtime o;
+        o.fromJson(overtimeJson);
+        return o.calculatePay();
+    }
+
 
     std::string to_string() const
     {
@@ -94,41 +102,20 @@ enum LoanType
 
  };
 
- struct OvertimeTypes
+ struct Overtime
  {
-    int typeId;
-    int logId;
-    double regular;
-    double rest_day;
-    double rest_day_plus;
-    double legal_holiday;
-    double legal_holiday_plus;
-    double special_holiday;
-    double special_holiday_plus;
-    double rest_plus_legal;
-    double rest_plus_special;
-    double night_shift_diff;
+    double regular = 0.0;
+    double rest_day = 0.0;
+    double rest_day_plus = 0.0;
+    double legal_holiday = 0.0;
+    double legal_holiday_plus = 0.0;
+    double special_holiday = 0.0;
+    double special_holiday_plus = 0.0;
+    double rest_plus_legal = 0.0;
+    double rest_plus_special = 0.0;
+    double night_shift_diff = 0.0;
 
-    std::string to_string() const
-    {
-        std::ostringstream oss;
-        oss << "typeId: " << typeId
-        << "\n logId: " << logId
-        << "\n regular: " <<  regular
-        << "\n rest_day: " <<  rest_day
-        << "\n rest_day_plus: " <<  rest_day_plus
-        << "\n legal_holiday: " <<  legal_holiday
-        << "\n legal_holiday_plus: " <<  legal_holiday_plus
-        << "\n special_holiday: " <<  special_holiday
-        << "\n special_holiday_plus: " <<  special_holiday_plus
-        << "\n rest_plus_legal: " <<  rest_plus_legal
-        << "\n rest_plus_special: " <<  rest_plus_special
-        << "\n night_shift_diff: " <<  night_shift_diff;
-
-        return oss.str();
-    }
-
-    double calculatePay()
+    double calculatePay() const
     {
         double sum = 0.0;
         sum += (regular / 60.0 * 1.25);
@@ -145,6 +132,51 @@ enum LoanType
         //this value is multiplied by the rate of pay
         return sum;
     }
+
+    static double extractNumber(const std::string& json, const std::string& key) 
+    {
+        auto pos = json.find("\"" + key + "\"");
+        if (pos == std::string::npos) return 0.0;
+
+        pos = json.find(":", pos);
+        if (pos == std::string::npos) return 0.0;
+
+        std::stringstream ss(json.substr(pos + 1));
+        double value = 0;
+        ss >> value;
+        return value;
+    }
+
+    void fromJson(const std::string& json) {
+        regular             = extractNumber(json, "regular");
+        rest_day            = extractNumber(json, "rest_day");
+        rest_day_plus       = extractNumber(json, "rest_day_plus");
+        legal_holiday       = extractNumber(json, "legal_holiday");
+        legal_holiday_plus  = extractNumber(json, "legal_holiday_plus");
+        special_holiday     = extractNumber(json, "special_holiday");
+        special_holiday_plus= extractNumber(json, "special_holiday_plus");
+        rest_plus_legal     = extractNumber(json, "rest_plus_legal");
+        rest_plus_special   = extractNumber(json, "rest_plus_special");
+        night_shift_diff    = extractNumber(json, "night_shift_diff");
+    }
+
+        std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss "\n regular: " <<  regular
+        << "\n rest_day: " <<  rest_day
+        << "\n rest_day_plus: " <<  rest_day_plus
+        << "\n legal_holiday: " <<  legal_holiday
+        << "\n legal_holiday_plus: " <<  legal_holiday_plus
+        << "\n special_holiday: " <<  special_holiday
+        << "\n special_holiday_plus: " <<  special_holiday_plus
+        << "\n rest_plus_legal: " <<  rest_plus_legal
+        << "\n rest_plus_special: " <<  rest_plus_special
+        << "\n night_shift_diff: " <<  night_shift_diff;
+
+        return oss.str();
+    }
+
  };
 
 struct Contact 
