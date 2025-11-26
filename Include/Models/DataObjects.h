@@ -68,6 +68,85 @@ enum LoanType
  inline std::string joblevel_to_string(int i);
  inline std::string status_to_string(int i);
 
+ struct AttendanceLog
+ {
+    int logId;
+    std::string employeeId;
+    Date logDate;
+    int lateByMinute;
+    int underTimeByMinute;
+    int overTimeByMinute;
+    bool isAbsent;
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "logId: " << logId
+        << "\n employeeId: " << employeeId
+        << "\n logDate: " << logDate.to_string()
+        << "\n lateByMinute: " << lateByMinute
+        << "\n underTimeByMinute: " << underTimeByMinute
+        << "\n overTimeByMinute: " << overTimeByMinute
+        << "\n isAbsent: " << (isAbsent == 1) ? "True" : "False";
+
+        return oss.str();
+    }
+
+ };
+
+ struct OvertimeTypes
+ {
+    int typeId;
+    int logId;
+    double regular;
+    double rest_day;
+    double rest_day_plus;
+    double legal_holiday;
+    double legal_holiday_plus;
+    double special_holiday;
+    double special_holiday_plus;
+    double rest_plus_legal;
+    double rest_plus_special;
+    double night_shift_diff;
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "typeId: " << typeId
+        << "\n logId: " << logId
+        << "\n regular: " <<  regular
+        << "\n rest_day: " <<  rest_day
+        << "\n rest_day_plus: " <<  rest_day_plus
+        << "\n legal_holiday: " <<  legal_holiday
+        << "\n legal_holiday_plus: " <<  legal_holiday_plus
+        << "\n special_holiday: " <<  special_holiday
+        << "\n special_holiday_plus: " <<  special_holiday_plus
+        << "\n rest_plus_legal: " <<  rest_plus_legal
+        << "\n rest_plus_special: " <<  rest_plus_special
+        << "\n night_shift_diff: " <<  night_shift_diff;
+
+        return oss.str();
+    }
+
+    double calculatePay()
+    {
+        double sum = 0.0;
+        sum += (regular / 60.0 * 1.25);
+        sum += (rest_day / 60.0 * 1.30);
+        sum += (rest_day_plus / 60.0 * 1.69);
+        sum += (legal_holiday / 60.0 * 2.00);
+        sum += (legal_holiday_plus / 60.0 * 2.60);
+        sum += (special_holiday / 60.0 * 1.30);
+        sum += (special_holiday_plus / 60.0 * 1.69);
+        sum += (rest_plus_legal / 60.0 * 2.60);
+        sum += (rest_plus_special / 60.0 * 3.38);
+        sum += (night_shift_diff / 60.0 * 0.10);
+
+        //this value is multiplied by the rate of pay
+        return sum;
+    }
+ };
+
 struct Contact 
 {
     int contactId;
