@@ -15,6 +15,7 @@ class AttendanceLogService
         //READ
         std::optional<AttendanceLog> getAttendanceLogByID(int id);
 
+        std::vector<AttendanceLog> getAllAttendanceLogsById(std::string id);
         std::vector<AttendanceLog> getAllAttendanceLogs();
 
         //UPDATE

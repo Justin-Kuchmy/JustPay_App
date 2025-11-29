@@ -16,11 +16,13 @@ class AttendanceLogRepository: public BaseRepository
     int insertAttendanceLog(const AttendanceLog& attendanceLog);
     //read
     std::optional<AttendanceLog> getById(int id);
+    std::vector<AttendanceLog> getAllById(std::string id);
+    std::vector<AttendanceLog> getAll();
     //update
     bool updateAttendanceLog(const AttendanceLog& emp);
     //delete
     bool deleteAttendanceLog(int id);
-    std::string getLastDependentId();
+    std::string getLastAttendanceLogId();
 };
 
 #endif
