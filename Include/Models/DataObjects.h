@@ -130,6 +130,22 @@ struct Date {
     double rest_plus_special = 0.0;
     double night_shift_diff = 0.0;
 
+    int sumMinutes() const
+    {
+        int sum = 0.0;
+        sum += regular;
+        sum += rest_day;
+        sum += rest_day_plus;
+        sum += legal_holiday;
+        sum += legal_holiday_plus;
+        sum += special_holiday;
+        sum += special_holiday_plus;
+        sum += rest_plus_legal;
+        sum += rest_plus_special;
+        sum += night_shift_diff;
+        return sum;
+    }
+
     double calculatePay() const
     {
         double sum = 0.0;
@@ -148,11 +164,16 @@ struct Date {
         return sum;
     }
 
+    static double calculatePay(const std::string& json) {
+        Overtime ot = fromJson(json);
+        return ot.calculatePay();
+    }
+
     static double extractNumber(const std::string& json, const std::string& key) 
     {
-        auto pos = json.find("\"" + key + "\"");
+        auto pos = json.find("\'" + key + "\'");
         if (pos == std::string::npos) return 0.0;
-
+        
         pos = json.find(":", pos);
         if (pos == std::string::npos) return 0.0;
 
@@ -162,34 +183,40 @@ struct Date {
         return value;
     }
 
-    void fromJson(const std::string& json) {
-        regular             = extractNumber(json, "regular");
-        rest_day            = extractNumber(json, "rest_day");
-        rest_day_plus       = extractNumber(json, "rest_day_plus");
-        legal_holiday       = extractNumber(json, "legal_holiday");
-        legal_holiday_plus  = extractNumber(json, "legal_holiday_plus");
-        special_holiday     = extractNumber(json, "special_holiday");
-        special_holiday_plus= extractNumber(json, "special_holiday_plus");
-        rest_plus_legal     = extractNumber(json, "rest_plus_legal");
-        rest_plus_special   = extractNumber(json, "rest_plus_special");
-        night_shift_diff    = extractNumber(json, "night_shift_diff");
+    static Overtime fromJson(const std::string& json) {
+        Overtime ot;
+        ot.regular             = extractNumber(json, "regular");
+        ot.rest_day            = extractNumber(json, "rest_day");
+        ot.rest_day_plus       = extractNumber(json, "rest_day_plus");
+        ot.legal_holiday       = extractNumber(json, "legal_holiday");
+        ot.legal_holiday_plus  = extractNumber(json, "legal_holiday_plus");
+        ot.special_holiday     = extractNumber(json, "special_holiday");
+        ot.special_holiday_plus= extractNumber(json, "special_holiday_plus");
+        ot.rest_plus_legal     = extractNumber(json, "rest_plus_legal");
+        ot.rest_plus_special   = extractNumber(json, "rest_plus_special");
+        ot.night_shift_diff    = extractNumber(json, "night_shift_diff");
+        return ot;
     }
 
-        std::string to_string() const
+    std::string to_string() const 
     {
-        std::ostringstream oss;
-        oss << "\n regular: " <<  regular
-        << "\n rest_day: " <<  rest_day
-        << "\n rest_day_plus: " <<  rest_day_plus
-        << "\n legal_holiday: " <<  legal_holiday
-        << "\n legal_holiday_plus: " <<  legal_holiday_plus
-        << "\n special_holiday: " <<  special_holiday
-        << "\n special_holiday_plus: " <<  special_holiday_plus
-        << "\n rest_plus_legal: " <<  rest_plus_legal
-        << "\n rest_plus_special: " <<  rest_plus_special
-        << "\n night_shift_diff: " <<  night_shift_diff;
-
-        return oss.str();
+        return std::format(
+            "{{'regular':{},'rest_day':{},'rest_day_plus':{},"
+            "'legal_holiday':{},'legal_holiday_plus':{},"
+            "'special_holiday':{},'special_holiday_plus':{},"
+            "'rest_plus_legal':{},'rest_plus_special':{},"
+            "'night_shift_diff':{}}}",
+            regular,
+            rest_day,
+            rest_day_plus,
+            legal_holiday,
+            legal_holiday_plus,
+            special_holiday,
+            special_holiday_plus,
+            rest_plus_legal,
+            rest_plus_special,
+            night_shift_diff
+        );
     }
 
  };
@@ -204,6 +231,8 @@ struct Date {
     int overTimeByMinute;
     bool isAbsent;
     std::string overtimeJson;
+    Overtime overtimeObj;
+    std::string notes;
 
     double getOvertimePay() const {
         Overtime o;
@@ -221,7 +250,8 @@ struct Date {
         << "\n lateByMinute: " << lateByMinute
         << "\n underTimeByMinute: " << underTimeByMinute
         << "\n overTimeByMinute: " << overTimeByMinute
-        << "\n isAbsent: " << (isAbsent == 1) ? "True" : "False";
+        << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
+        << "\n Notes: " << notes;
 
         return oss.str();
     }
