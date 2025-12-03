@@ -134,7 +134,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btnBack">
+        <widget class="QPushButton" name="backButton">
          <property name="text">
           <string>Back</string>
          </property>

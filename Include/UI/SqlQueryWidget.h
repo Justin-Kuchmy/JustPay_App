@@ -15,12 +15,13 @@
 #include <sqlite3.h>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
+#include "Utils/BaseContentWidget.h"
 
 namespace Ui {
 class SqlQueryWidget;
 }
 
-class SqlQueryWidget : public QWidget {
+class SqlQueryWidget : public BaseContentWidget {
     Q_OBJECT
 
 public:
