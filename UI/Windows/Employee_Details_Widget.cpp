@@ -19,21 +19,25 @@ EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): BaseContentWidget
     loanLedgetWidget = new LoanLedgerWidget(ui->tabLoans);
     editContactForm = new EditEmergencyContactDetails(ui->tabContacts);
     editDependentForm = new EditDependentDetails(ui->tabDependent);
+    employeeAttendanceLogWidget = new EmployeeAttendanceWidget(ui->tabAttendance);
     
     QVBoxLayout* generalLayout = new QVBoxLayout(ui->tabGeneral);
     QVBoxLayout* loanLayout = new QVBoxLayout(ui->tabLoans);
     QVBoxLayout* contactLayout = new QVBoxLayout(ui->tabContacts);
     QVBoxLayout* dependentLayout = new QVBoxLayout(ui->tabDependent);
+    QVBoxLayout* attendanceLayout = new QVBoxLayout(ui->tabAttendance);
     
     generalLayout->setContentsMargins(0, 0, 0, 0);
     loanLayout->setContentsMargins(0, 0, 0, 0);
     contactLayout->setContentsMargins(0, 0, 0, 0);
     dependentLayout->setContentsMargins(0, 0, 0, 0);
+    attendanceLayout->setContentsMargins(0, 0, 0, 0);
     
     generalLayout->addWidget(editEmployeeForm);
     loanLayout->addWidget(loanLedgetWidget);
     contactLayout->addWidget(editContactForm);
     dependentLayout->addWidget(editDependentForm);
+    attendanceLayout->addWidget(employeeAttendanceLogWidget);
 
 
 
@@ -101,6 +105,7 @@ void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
         this->optContact = AppContext::instance().emergencyContactService().getEmergencyContactByID(m_Employee.contactId);
         this->optDependent = AppContext::instance().dependentService().getDependentByID(m_Employee.dependentId);
         this->optLoanLedgers = AppContext::instance().loanLedgerService().getAllLoanLedgers(m_Employee.employeeId);
+        this->optAttendanceLogs = AppContext::instance().attendanceLogService().getAllAttendanceLogsById(m_Employee.employeeId);
         if(optContact)    
         {
             editContactForm->setContactContext(optContact);
@@ -120,6 +125,7 @@ void EmployeeDetailsWidget::onEmployeeSelected(QString& empID)
             return;
         }
         loanLedgetWidget->setLoanLedgerContext(&optLoanLedgers, m_Employee.employeeId);
+        employeeAttendanceLogWidget->setEmployeeAttendanceContext(&optAttendanceLogs, m_Employee.employeeId);
     }
     else
     {
