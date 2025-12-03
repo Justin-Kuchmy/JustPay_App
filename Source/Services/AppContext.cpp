@@ -19,16 +19,19 @@ AppContext::AppContext(const std::string& dbName)
     m_dependentRepo = std::make_unique<DependentRepository>(m_db);
     m_emergencyContactRepo = std::make_unique<EmergencyContactRepository>(m_db);
     m_loanLedgerRepo = std::make_unique<LoanLedgerRepository>(m_db);
+    m_attendanceLogRepo = std::make_unique<AttendanceLogRepository>(m_db);
 
     m_employeeService = std::make_unique<EmployeeService>(*m_employeeRepo);
     m_dependentService = std::make_unique<DependentService>(*m_dependentRepo);
     m_emergencyContactService = std::make_unique<EmergencyContactService>(*m_emergencyContactRepo);
     m_loanLedgerService = std::make_unique<LoanLedgerService>(*m_loanLedgerRepo);
+    m_attendanceLogService = std::make_unique<AttendanceLogService>(*m_attendanceLogRepo);
     
     m_employeeRepo->createTable();
     m_dependentRepo->createTable();
     m_emergencyContactRepo->createTable();
     m_loanLedgerRepo->createTable();
+    m_attendanceLogRepo->createTable();
 };
 
 AppContext::~AppContext()
@@ -61,6 +64,11 @@ LoanLedgerRepository& AppContext::loanLedgerRepo()
     return *m_loanLedgerRepo;
 };
 
+AttendanceLogRepository& AppContext::attendanceLogRepo()
+{
+    return *m_attendanceLogRepo;
+}
+
 DependentService& AppContext::dependentService()
 {
     return *m_dependentService;
@@ -81,5 +89,7 @@ LoanLedgerService& AppContext::loanLedgerService()
     return *m_loanLedgerService;
 };
 
-
-
+AttendanceLogService& AppContext::attendanceLogService()
+{
+    return *m_attendanceLogService;
+}
