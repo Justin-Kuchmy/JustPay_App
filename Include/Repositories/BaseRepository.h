@@ -33,11 +33,10 @@ protected:
             std::cerr << "Failed to prepare: " << sqlite3_errmsg(db) << std::endl;
             return results;
         }
-
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             results.push_back(mapper(stmt));
         }
-
+        
         sqlite3_finalize(stmt);
         return results;
     }
