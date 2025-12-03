@@ -54,21 +54,21 @@
       <item row="4" column="0">
        <widget class="QLabel" name="overTimeHoursLabel">
         <property name="text">
-         <string>Overtime Hours</string>
+         <string>Overtime In Minutes</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="timeOutLabel">
         <property name="text">
-         <string>Time Out</string>
+         <string>UnderTime in Minutes</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="timeInLabel">
         <property name="text">
-         <string>Time In</string>
+         <string>Latenes In Minutes</string>
         </property>
        </widget>
       </item>
@@ -84,12 +84,6 @@
       </item>
       <item row="1" column="1">
        <widget class="QDateEdit" name="DateEdit"/>
-      </item>
-      <item row="2" column="1">
-       <widget class="QTimeEdit" name="timeInTimeEdit"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QTimeEdit" name="timeOutTimeEdit"/>
       </item>
       <item row="6" column="1">
        <widget class="QTextEdit" name="notesTextEdit"/>
@@ -119,7 +113,7 @@
         <item>
          <widget class="QLabel" name="hourLabel">
           <property name="text">
-           <string>hrs</string>
+           <string>Mins</string>
           </property>
          </widget>
         </item>
@@ -143,6 +137,12 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="latespinBox"/>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSpinBox" name="undertimeSpinbox"/>
       </item>
      </layout>
     </item>
