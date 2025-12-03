@@ -47,6 +47,7 @@
 
 # others
 .vscode/
+history.txt
 
 #tests
 Tests/TestRunner.cpp

@@ -8,11 +8,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---------------------------------------------------------
 # Qt Setup
 # ---------------------------------------------------------
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 
 # ---------------------------------------------------------
@@ -69,6 +71,7 @@ target_link_libraries(JustPay
         Qt6::Qml
         Qt6::Quick
         Qt6::QuickWidgets
+        Qt6::Sql 
         sqlite3
 )
 

@@ -5,6 +5,8 @@
 #include "UI/Add_Emergency_Contact_Dialog.h"
 #include "UI/Employee_Details_Widget.h"
 #include "UI/Add_Loan_Ledger_dialog.h"
+#include "UI/SqlQueryWidget.h"
+#include "UI/Add_Sql_Description.h"
 #include "UI/Add_Time_Log_Dialog.h"
 #include "UI/Add_Overtime_Hours_Dialog.h"
 #include "UI/Attendance_List_Widget.h"
@@ -23,6 +25,8 @@ void DialogFactory::registerDialogs()
     registry["add_dependent"] = []() { return new AddDependentDialog(); };
     registry["select_employee"] = []() { return new EmployeeDetailsWidget(); };
     registry["add_loan_ledger"] = []() { return new AddLoanLedgerDialog(); };
+    registry["sql_query_module"] = []() { return new SqlQueryWidget(); };
+    registry["add_sql_description"] = []() { return new AddSqlDescriptionDialog(); };
     registry["attendance_list"] = []() { return new AttendanceListWidget(); };
     registry["Add_Time_Log"] = []() { return new AddTimeLogDialog(); };
     registry["Add_Overtime_Hours"] = []() { return new AddOvertimeHoursDialog(); };
