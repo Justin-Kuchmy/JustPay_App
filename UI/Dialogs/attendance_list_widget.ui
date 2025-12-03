@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>480</height>
+    <width>981</width>
+    <height>704</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -21,7 +21,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineSearch">
+      <widget class="QLineEdit" name="employeeSearchBox">
        <property name="placeholderText">
         <string>Enter employee ID...</string>
        </property>
@@ -34,67 +34,16 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="btnReload">
-       <property name="text">
-        <string>Reload</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="tableAttendance">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
+    <widget class="QTableView" name="attendanceLogTableView"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="backButton">
+     <property name="text">
+      <string>Back</string>
      </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::SingleSelection</enum>
-     </property>
-     <property name="selectionBehavior">
-      <enum>QAbstractItemView::SelectRows</enum>
-     </property>
-     <property name="rowCount">
-      <number>0</number>
-     </property>
-     <property name="columnCount">
-      <number>7</number>
-     </property>
-     <column>
-      <property name="text">
-       <string>Employee ID</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Name</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Date</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Late (min)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Undertime (min)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Overtime (min)</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Absent</string>
-      </property>
-     </column>
     </widget>
    </item>
   </layout>
