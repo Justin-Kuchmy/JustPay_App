@@ -3,7 +3,7 @@
 #include "UI/Add_Sql_Description.h"
 #include "Utils/DialogFactory.h"
 
-SqlQueryWidget::SqlQueryWidget(QWidget *parent): QWidget(parent), ui(new Ui::SqlQueryWidget)
+SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::SqlQueryWidget)
 {
     ui->setupUi(this); 
     ui->sqlSplitter->setSizes({300, 900});
@@ -61,6 +61,7 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent): QWidget(parent), ui(new Ui::Sql
     connect(ui->btnSave, &QPushButton::clicked, this, &SqlQueryWidget::onSaveQueryClicked);
     connect(ui->btnExport, &QPushButton::clicked, this, &SqlQueryWidget::onExportCSVClicked);
     connect(ui->historyList, &QListWidget::clicked, this, &SqlQueryWidget::onQueryDoubleClicked);
+    connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
     
 }
 
