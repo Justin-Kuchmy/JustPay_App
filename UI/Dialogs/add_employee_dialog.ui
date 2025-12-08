@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>711</width>
-     <height>614</height>
+     <height>672</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -117,42 +117,42 @@
         </property>
        </widget>
       </item>
-      <item row="13" column="0">
+      <item row="15" column="0">
        <widget class="QLabel" name="monthlySalaryLabel">
         <property name="text">
          <string>Monthly Basic Salary</string>
         </property>
        </widget>
       </item>
-      <item row="14" column="0">
+      <item row="16" column="0">
        <widget class="QLabel" name="monthlyAllowancesLabel">
         <property name="text">
          <string>Monthly Allowances</string>
         </property>
        </widget>
       </item>
-      <item row="15" column="0">
+      <item row="17" column="0">
        <widget class="QLabel" name="personalEmailLabel">
         <property name="text">
          <string>Personal Email</string>
         </property>
        </widget>
       </item>
-      <item row="17" column="0">
+      <item row="19" column="0">
        <widget class="QLabel" name="activeStatusLabel">
         <property name="text">
          <string>Active</string>
         </property>
        </widget>
       </item>
-      <item row="18" column="0">
+      <item row="20" column="0">
        <widget class="QLabel" name="emergencyContactLabel">
         <property name="text">
          <string>Emergency Contact</string>
         </property>
        </widget>
       </item>
-      <item row="19" column="0">
+      <item row="21" column="0">
        <widget class="QLabel" name="dependentLabel">
         <property name="text">
          <string>Dependent</string>
@@ -174,34 +174,34 @@
       <item row="10" column="1">
        <widget class="QLineEdit" name="hdmfNumberLineEdit"/>
       </item>
-      <item row="15" column="1">
+      <item row="17" column="1">
        <widget class="QLineEdit" name="personEmailLineEdit"/>
       </item>
-      <item row="18" column="1">
+      <item row="20" column="1">
        <widget class="QPushButton" name="emergencyContactButton">
         <property name="text">
          <string>Add</string>
         </property>
        </widget>
       </item>
-      <item row="19" column="1">
+      <item row="21" column="1">
        <widget class="QPushButton" name="dependentButton">
         <property name="text">
          <string>Add</string>
         </property>
        </widget>
       </item>
-      <item row="17" column="1">
+      <item row="19" column="1">
        <widget class="QCheckBox" name="activeStatusCheckBox">
         <property name="text">
          <string>Status</string>
         </property>
        </widget>
       </item>
-      <item row="13" column="1">
+      <item row="15" column="1">
        <widget class="QDoubleSpinBox" name="monthlySalarySpinBox"/>
       </item>
-      <item row="14" column="1">
+      <item row="16" column="1">
        <widget class="QDoubleSpinBox" name="monthlyAllowancesSpinBox"/>
       </item>
       <item row="2" column="1">
@@ -219,24 +219,24 @@
       <item row="7" column="1">
        <widget class="QDateEdit" name="DateSeparatedDateEdit"/>
       </item>
-      <item row="12" column="0">
+      <item row="14" column="0">
        <widget class="QLabel" name="bankAccountNumberLabel">
         <property name="text">
          <string>Bank Account Number</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="1">
+      <item row="14" column="1">
        <widget class="QLineEdit" name="bankAccountNumberLineEdit"/>
       </item>
-      <item row="16" column="0">
+      <item row="18" column="0">
        <widget class="QLabel" name="personalMobileNumberLabel">
         <property name="text">
          <string>Personal Mobile Number</string>
         </property>
        </widget>
       </item>
-      <item row="16" column="1">
+      <item row="18" column="1">
        <widget class="QLineEdit" name="personalMobileNumberLineEdit"/>
       </item>
       <item row="11" column="0">
@@ -248,6 +248,26 @@
       </item>
       <item row="11" column="1">
        <widget class="QLineEdit" name="tinLineEdit"/>
+      </item>
+      <item row="12" column="0">
+       <widget class="QLabel" name="clockInLabel">
+        <property name="text">
+         <string>ClockIn Time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0">
+       <widget class="QLabel" name="clockOutLabel">
+        <property name="text">
+         <string>ClockOut Time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QTimeEdit" name="clockInTimeEdit"/>
+      </item>
+      <item row="13" column="1">
+       <widget class="QTimeEdit" name="clockOutTimeEdit"/>
       </item>
      </layout>
     </item>
