@@ -12,8 +12,7 @@
 AddTimeLogDialog::AddTimeLogDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddTimeLogDialog)
 {
     ui->setupUi(this);
-    connect(ui->selectOvertimeType,&QPushButton::clicked,this,&AddTimeLogDialog::onSelectTypeClicked);
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &AddTimeLogDialog::onOkayClicked); //to close myself
+    connect(ui->selectOvertimeType,&QPushButton::clicked,this,&AddTimeLogDialog::onSelectTypeClicked); 
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &AddTimeLogDialog::onCancelClicked);
     connect(ui->empComboBox, &QComboBox::currentIndexChanged, this, &AddTimeLogDialog::onEmployeeSelected);
 };
@@ -27,19 +26,19 @@ void AddTimeLogDialog::getLogData(int logId)
 {
     std::optional<AttendanceLog> optLog = AppContext::instance().attendanceLogService().getAttendanceLogByID(logId);
 
-    //if log successfully taken from the database. 
+    
     if(optLog.has_value())
     {
-        //get object
+        
         selectedAttendanceLog = optLog.value();
 
-        //search for the log with the matching employeeID that we selected
+        
         auto it = std::find_if(allEmployees.begin(), allEmployees.end(), [this](Employee emp) {return emp.employeeId == this->selectedAttendanceLog.employeeId;});
-        //if we found it
+        
         if (it != allEmployees.end()) {
-            //the distance between the start and the found item, thus gives us the index
+            
         std::size_t index = std::distance(allEmployees.begin(), it);
-            //sets combobox to the same index. 
+            
             ui->empComboBox->setCurrentIndex(index);
         }
     }
@@ -49,58 +48,111 @@ void AddTimeLogDialog::getLogData(int logId)
                selectedAttendanceLog.logDate.day);
     ui->DateEdit->setDate(date);
 
-    // Set the spinboxes
-    ui->latespinBox->setValue(selectedAttendanceLog.lateByMinute);
-    ui->undertimeSpinbox->setValue(selectedAttendanceLog.underTimeByMinute);
+    QTime scheduledInTime  = QTime::fromString(QString::fromStdString(selectedEmployee.clockInTimeStr), "hh:mm");  
+    QTime scheduledOutTime = QTime::fromString(QString::fromStdString(selectedEmployee.clockOutTimeStr), "hh:mm"); 
 
-    // Set the checkbox
+    int lateByMinute = selectedAttendanceLog.lateByMinute;     
+    int underTimeByMinute = selectedAttendanceLog.underTimeByMinute;
+
+    scheduledInTime = scheduledInTime.addSecs(lateByMinute*60);
+
+    scheduledOutTime = scheduledOutTime.addSecs(1-(underTimeByMinute*60));
+
+
     ui->absentCheckBox->setChecked(selectedAttendanceLog.isAbsent);
 
-    // Set the notes
     ui->notesTextEdit->setPlainText(QString::fromStdString(selectedAttendanceLog.notes));
 
-    // If you also have overtime JSON or other fields, store it internally
     this->jsonDataFromDialog = selectedAttendanceLog.overtimeJson;
 
-    // Optionally, update UI elements that depend on overtimeJson
     Overtime ot = Overtime::fromJson(selectedAttendanceLog.overtimeJson);
     double minutes = ot.sumMinutes();
     ui->hourLabel->setText(QString::number(minutes) + " Minutes");
+
+    scheduledOutTime = scheduledOutTime.addSecs(minutes*60);
+    
+    ui->undertimeTimeEdit->setTime(scheduledOutTime);
+    ui->latenessTimeEdit->setTime(scheduledInTime);
 }
 
 
 void AddTimeLogDialog::onEmployeeSelected()
 {
-    // when user clicks OK
+    
     int index = ui->empComboBox->currentIndex();
-    this->al.employeeId = ui->empComboBox->itemData(index).toString().toStdString();
+    std::optional<Employee> emp = AppContext::instance().employeeService().getEmployeeByID(ui->empComboBox->itemData(index).toString().toStdString());
+    if(emp.has_value())
+    {
+        this->selectedEmployee = emp.value();
+    }
+    else
+    {
+        this->selectedEmployee = {};
+    }
+    this->selectedAttendanceLog.employeeId = selectedEmployee.employeeId;
+
 }
 
-void AddTimeLogDialog::onOkayClicked()
+void AddTimeLogDialog::getFormData()
 {
     QDate date = ui->DateEdit->date();
-    int latespinBox = ui->latespinBox->value();
-    int undertimeSpinbox = ui->undertimeSpinbox->value();
+
+    QTime scheduledInTime  = QTime::fromString(QString::fromStdString(selectedEmployee.clockInTimeStr), "hh:mm");
+    QTime scheduledOutTime = QTime::fromString(QString::fromStdString(selectedEmployee.clockOutTimeStr), "hh:mm");
+
+    QTime actualInTime  = ui->latenessTimeEdit->time();
+    QTime actualOutTime = ui->undertimeTimeEdit->time();
+
+
+    int lateByMinute = scheduledInTime.secsTo(actualInTime) / 60;
+    if (lateByMinute < 0) lateByMinute = 0; 
+
+
+    int underTimeByMinute = actualOutTime.secsTo(scheduledOutTime) / 60;
+    if (underTimeByMinute < 0) underTimeByMinute = 0; 
+
+    int overTimeByMinute = scheduledOutTime.secsTo(actualOutTime) / 60;
+    if (overTimeByMinute < 0) overTimeByMinute = 0;
+        
     bool absent = ui->absentCheckBox->isChecked();
     QString notes = ui->notesTextEdit->toPlainText();
     
-    this->al.logId = 0;
-    this->al.logDate = Date::fromString(date.toString("yyyy-MM-dd").toStdString());
-    this->al.lateByMinute = latespinBox;
-    this->al.underTimeByMinute = undertimeSpinbox;
-    this->al.overTimeByMinute = 0;
-    this->al.overtimeJson = this->jsonDataFromDialog;
-    this->al.isAbsent = absent;
-    this->al.notes = notes.toStdString();
-
-    int newId = AppContext::instance().attendanceLogService().addAttendanceLog(this->al);
-    if(newId > 0)
+    this->selectedAttendanceLog.logDate = Date::fromString(date.toString("yyyy-MM-dd").toStdString());
+    this->selectedAttendanceLog.lateByMinute = lateByMinute;
+    this->selectedAttendanceLog.underTimeByMinute = underTimeByMinute;
+    this->selectedAttendanceLog.overtimeJson = this->jsonDataFromDialog;
+    this->selectedAttendanceLog.overTimeByMinute = Overtime::fromJson(this->jsonDataFromDialog).sumMinutes();
+    this->selectedAttendanceLog.isAbsent = absent;
+    this->selectedAttendanceLog.notes = notes.toStdString();
+}
+void AddTimeLogDialog::onSaveClicked()
+{
+    getFormData();
+    if(AppContext::instance().attendanceLogService().updateAttendanceLog(this->selectedAttendanceLog))
     {
-        this->al.logId = newId;
+        LOG_DEBUG("Object Updated!");
         accept();
     }
     else
     {
+        LOG_DEBUG("Updated Failed");
+        reject();
+    }
+}
+void AddTimeLogDialog::onOkayClicked()
+{
+    
+    getFormData();
+    int newId = AppContext::instance().attendanceLogService().addAttendanceLog(this->selectedAttendanceLog);
+    if(newId > 0)
+    {
+        this->selectedAttendanceLog.logId = newId;
+        LOG_DEBUG("Object added!: " << newId);
+        accept();
+    }
+    else
+    {
+        LOG_DEBUG("add Failed");
         reject();
     }
     
@@ -108,7 +160,7 @@ void AddTimeLogDialog::onOkayClicked()
 
 AttendanceLog AddTimeLogDialog::getTimeLogData()
 {
-    return this->al;
+    return this->selectedAttendanceLog;
 }
 
 void AddTimeLogDialog::onCancelClicked()
@@ -147,13 +199,21 @@ void AddTimeLogDialog::setEmployeeList(std::vector<Employee> &emps)
 
 void AddTimeLogDialog::changeMode(std::string mode)
 {
+
+    auto okButton = ui->buttonBox->button(QDialogButtonBox::Ok);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted,this, nullptr);
+
     if (mode == "edit") 
     {
         this->ui->empComboBox->setEnabled(false);
+        okButton->setText("Save");
+        connect(ui->buttonBox, &QDialogButtonBox::accepted,this, &AddTimeLogDialog::onSaveClicked);
     } 
     else if (mode == "add") 
     {
         this->ui->empComboBox->setEnabled(true);
+         okButton->setText("OK");
+        connect(ui->buttonBox, &QDialogButtonBox::accepted,this, &AddTimeLogDialog::onOkayClicked);
     }
 }
 
