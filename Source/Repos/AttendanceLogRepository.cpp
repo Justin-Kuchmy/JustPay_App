@@ -48,7 +48,6 @@ std::string AttendanceLogRepository::getCreateTableSQL() const
 
 AttendanceLog AttendanceLogRepository::mapAttendanceLog(sqlite3_stmt* stmt)
 {
-    //LOG_DEBUG("enter mapAttendanceLog");
     AttendanceLog al;
     al.logId = sqlite3_column_int(stmt, 0);
     al.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
@@ -155,18 +154,19 @@ std::vector<AttendanceLog> AttendanceLogRepository::getAll()
 //update
 bool AttendanceLogRepository::updateAttendanceLog(const AttendanceLog& al)
 {
-               
-    std::string sql = std::format("update attendance_log set employeeId='{}', log_date='{}', late_min={}, undertime_min={}, overtime_min={}, absent={}, notes='{}', overtime_json='{}' where logId = '{}'",
-    al.employeeId,
-    al.logDate.to_string(),
-    al.lateByMinute ,
-    al.underTimeByMinute,
-    al.overTimeByMinute,
-    al.isAbsent,
-    al.notes,
-    al.overtimeJson,
-    al.logId
-        );
+    LOG_DEBUG("logId " << al.logId);
+    LOG_DEBUG("updateAttendanceLog " << al.lateByMinute);
+    std::string sql = std::format("update attendance_log set employeeId='{}', log_date='{}', late_min={}, undertime_min={}, overtime_min={}, absent={}, notes='{}', overtime_json=\"{}\" where logId = '{}'",
+        al.employeeId,
+        al.logDate.to_string(),
+        al.lateByMinute ,
+        al.underTimeByMinute,
+        al.overTimeByMinute,
+        al.isAbsent,
+        al.notes,
+        al.overtimeJson,
+        al.logId
+    );
     return AttendanceLogRepository::execute(sql);
 };
 
