@@ -37,6 +37,8 @@ std::string EmployeeRepository::getCreateTableSQL()const
             hdmfNumber TEXT,
             tin TEXT,
             bankAccountNumber TEXT,
+            clockInTimeStr TEXT,
+            clockOutTimeStr TEXT,
             monthlyBasicSalary REAL,
             monthlyAllowances REAL,
             personalEmail TEXT,
@@ -60,24 +62,24 @@ std::string EmployeeRepository::getCreateTableSQL()const
         END;
 
        -- EMPLOYEES (50 entries)
-        INSERT INTO "employees" (fullName, department, position, jobLevel, status, dateHired, dateSeparation,sssNumber, philHealthNumber, hdmfNumber,tin, bankAccountNumber,monthlyBasicSalary, monthlyAllowances, personalEmail, personalMobileNumber, isActive, contactId, dependentId)
+        INSERT INTO "employees" (fullName, department, position, jobLevel, status, dateHired, dateSeparation,sssNumber, philHealthNumber, hdmfNumber,tin, bankAccountNumber,clockInTimeStr,clockOutTimeStr,monthlyBasicSalary, monthlyAllowances, personalEmail, personalMobileNumber, isActive, contactId, dependentId)
         VALUES
-        ('Alice Santos',0,'HR Manager',2,0,'2022-01-15',NULL,'12-3456789-0','987654321','123456789','123-456-789','001234567890',45000,5000,'alice@example.com','09170010001',1,1,1),
-        ('Bob Reyes',1,'Finance Associate',0,1,'2023-03-01',NULL,'23-9876543-1','123456789','987654321','234-567-890','001234567891',28000,2000,'bob@example.com','09170010002',1,2,2),
-        ('Mary Mabulay',1,'Senior Accountant',1,0,'2016-01-15',NULL,'11-3159781-0','387254961','148563279','345-678-901','001234567892',80000,5000,'mary@example.com','09170010003',1,3,3),
-        ('Carlos Dela Cruz',2,'Software Engineer',1,0,'2021-05-03',NULL,'14-1234567-9','111222333','555666777','456-789-012','001234567893',55000,3000,'carlos@company.com','09170010004',1,4,4),
-        ('Janine Uy',2,'UI/UX Designer',0,1,'2022-11-10',NULL,'17-7654321-0','444555666','333222111','567-890-123','001234567894',42000,2500,'janine@company.com','09170010005',1,5,5),
-        ('Patrick Gomez',3,'Marketing Specialist',0,0,'2020-02-14',NULL,'22-1112223-4','777888999','555444333','678-901-234','001234567895',38000,1500,'patrick@company.com','09170010006',1,6,6),
-        ('Lea Navarro',3,'Marketing Manager',2,0,'2018-08-01',NULL,'25-9998887-6','222111000','999888777','789-012-345','001234567896',65000,5000,'lea@company.com','09170010007',1,7,7),
-        ('Jasmine Co',4,'Admin Assistant',0,1,'2021-12-20',NULL,'30-6543210-9','555444333','222333444','890-123-456','001234567897',25000,1200,'jasmine@company.com','09170010008',1,8,8),
-        ('Miguel Tan',4,'Operations Supervisor',1,0,'2019-03-25',NULL,'31-1230987-4','666777888','111222333','901-234-567','001234567898',47000,3000,'miguel@company.com','09170010009',1,9,9),
-        ('Katrina Ramos',5,'IT Support',0,1,'2023-06-05',NULL,'32-3216549-8','555666777','888999000','012-345-678','001234567899',30000,1500,'katrina@company.com','09170010010',1,10,10);
+        ('Alice Santos',0,'HR Manager',2,0,'2022-01-15',NULL,'12-3456789-0','987654321','123456789','123-456-789','001234567890','08:30','17:00',45000,5000,'alice@example.com','09170010001',1,1,1),
+        ('Bob Reyes',1,'Finance Associate',0,1,'2023-03-01',NULL,'23-9876543-1','123456789','987654321','234-567-890','001234567891','08:30','17:00',28000,2000,'bob@example.com','09170010002',1,2,2),
+        ('Mary Mabulay',1,'Senior Accountant',1,0,'2016-01-15',NULL,'11-3159781-0','387254961','148563279','345-678-901','001234567892','08:30','17:00',80000,5000,'mary@example.com','09170010003',1,3,3),
+        ('Carlos Dela Cruz',2,'Software Engineer',1,0,'2021-05-03',NULL,'14-1234567-9','111222333','555666777','456-789-012','001234567893','08:30','17:00',55000,3000,'carlos@company.com','09170010004',1,4,4),
+        ('Janine Uy',2,'UI/UX Designer',0,1,'2022-11-10',NULL,'17-7654321-0','444555666','333222111','567-890-123','001234567894','08:30','17:00',42000,2500,'janine@company.com','09170010005',1,5,5),
+        ('Patrick Gomez',3,'Marketing Specialist',0,0,'2020-02-14',NULL,'22-1112223-4','777888999','555444333','678-901-234','001234567895','08:30','17:00',38000,1500,'patrick@company.com','09170010006',1,6,6),
+        ('Lea Navarro',3,'Marketing Manager',2,0,'2018-08-01',NULL,'25-9998887-6','222111000','999888777','789-012-345','001234567896','08:30','17:00',65000,5000,'lea@company.com','09170010007',1,7,7),
+        ('Jasmine Co',4,'Admin Assistant',0,1,'2021-12-20',NULL,'30-6543210-9','555444333','222333444','890-123-456','001234567897','08:30','17:00',25000,1200,'jasmine@company.com','09170010008',1,8,8),
+        ('Miguel Tan',4,'Operations Supervisor',1,0,'2019-03-25',NULL,'31-1230987-4','666777888','111222333','901-234-567','001234567898','08:30','17:00',47000,3000,'miguel@company.com','09170010009',1,9,9),
+        ('Katrina Ramos',5,'IT Support',0,1,'2023-06-05',NULL,'32-3216549-8','555666777','888999000','012-345-678','001234567899','08:30','17:00',30000,1500,'katrina@company.com','09170010010',1,10,10);
     )";
 
 };
 std::string EmployeeRepository::insertEmployee(const Employee& employee)
 {
-    std::string sqlA = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    std::string sqlA = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     sqlite3_stmt* stmt = nullptr;
     std::string result = "";
     //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
@@ -95,13 +97,15 @@ std::string EmployeeRepository::insertEmployee(const Employee& employee)
     sqlite3_bind_text(stmt, 10, employee.hdmfNumber.c_str(), -1, SQLITE_TRANSIENT);    
     sqlite3_bind_text(stmt, 11, employee.tin.c_str(), -1, SQLITE_TRANSIENT);    
     sqlite3_bind_text(stmt, 12, employee.bankAccountNumber.c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_double(stmt, 13, employee.monthlyBasicSalary);    
-    sqlite3_bind_double(stmt, 14, employee.monthlyAllowances);    
-    sqlite3_bind_text(stmt, 15, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_text(stmt, 16, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);    
-    sqlite3_bind_int(stmt, 17, employee.isActive);  
-    sqlite3_bind_int(stmt, 18, employee.contactId);
-    sqlite3_bind_int(stmt, 19, employee.dependentId);
+    sqlite3_bind_text(stmt, 13, employee.clockInTimeStr.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 14, employee.clockOutTimeStr.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_double(stmt, 15, employee.monthlyBasicSalary);    
+    sqlite3_bind_double(stmt, 16, employee.monthlyAllowances);    
+    sqlite3_bind_text(stmt, 17, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_text(stmt, 18, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);    
+    sqlite3_bind_int(stmt, 19, employee.isActive);  
+    sqlite3_bind_int(stmt, 20, employee.contactId);
+    sqlite3_bind_int(stmt, 21, employee.dependentId);
     int rc = sqlite3_step(stmt);
     result = getLastEmployeeId();
     sqlite3_finalize(stmt);
@@ -188,7 +192,7 @@ std::vector<Employee> EmployeeRepository::findByName(const std::string& name)
 // UPDATE
 bool EmployeeRepository::updateEmployee(const Employee& e)
 {            
-    std::string sql = std::format("update employees set fullName='{}', department={}, position='{}', jobLevel={}, status={}, dateHired='{}', dateSeparation='{}', sssNumber='{}', philHealthNumber='{}', hdmfNumber='{}', monthlyBasicSalary={}, monthlyAllowances={}, personalEmail='{}', isActive=1 where employeeId = '{}'",
+    std::string sql = std::format("update employees set fullName='{}', department={}, position='{}', jobLevel={}, status={}, dateHired='{}', dateSeparation='{}', sssNumber='{}', philHealthNumber='{}', hdmfNumber='{}', tin='{}', bankAccountNumber='{}', clockInTimeStr='{}',clockOutTimeStr='{}',monthlyBasicSalary={}, monthlyAllowances={}, personalEmail='{}', isActive=1 where employeeId = '{}'",
         e.fullName,
         static_cast<int>(e.department),       
         e.position,
@@ -199,6 +203,10 @@ bool EmployeeRepository::updateEmployee(const Employee& e)
         e.sssNumber,
         e.philHealthNumber,
         e.hdmfNumber,
+        e.tin,
+        e.bankAccountNumber,
+        e.clockInTimeStr,
+        e.clockOutTimeStr,
         e.monthlyBasicSalary,
         e.monthlyAllowances,
         e.personalEmail,
@@ -242,13 +250,15 @@ Employee EmployeeRepository::mapEmployee(sqlite3_stmt* stmt)
         e.hdmfNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 11));
         e.tin = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 12));
         e.bankAccountNumber = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 13));
-        e.monthlyBasicSalary = sqlite3_column_double(stmt, 14);
-        e.monthlyAllowances =  sqlite3_column_double(stmt, 15);
-        e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 16));
-        e.personalMobileNumber  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 17));
-        e.isActive =  sqlite3_column_int(stmt, 18);
-        e.contactId = sqlite3_column_int(stmt, 19);
-        e.dependentId = sqlite3_column_int(stmt, 20);
+        e.clockInTimeStr =  reinterpret_cast<const char*>(sqlite3_column_text(stmt, 14)); 
+        e.clockOutTimeStr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 15));
+        e.monthlyBasicSalary = sqlite3_column_double(stmt, 16);
+        e.monthlyAllowances =  sqlite3_column_double(stmt, 17);
+        e.personalEmail = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 18));
+        e.personalMobileNumber  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 19));
+        e.isActive =  sqlite3_column_int(stmt, 20);
+        e.contactId = sqlite3_column_int(stmt, 21);
+        e.dependentId = sqlite3_column_int(stmt, 22);
 
         return e;
 }

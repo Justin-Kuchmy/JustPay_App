@@ -71,6 +71,8 @@ void EditEmployeeDetails::setEmployeeContext(Employee &emp)
     ui->hdmfNumberLineEdit->setText(QString::fromStdString(m_Employee->hdmfNumber));
     ui->tinLineEdit->setText(QString::fromStdString(m_Employee->tin));
     ui->bankAccountNumberLineEdit->setText(QString::fromStdString(m_Employee->bankAccountNumber));
+    ui->clockInTimeEdit->setTime(QTime::fromString(QString::fromStdString(m_Employee->clockInTimeStr)));
+    ui->clockOutTimeEdit->setTime(QTime::fromString(QString::fromStdString(m_Employee->clockOutTimeStr)));
     
     ui->monthlySalarySpinBox->setValue(m_Employee->monthlyBasicSalary);
     ui->monthlyAllowancesSpinBox->setValue(m_Employee->monthlyAllowances);
@@ -100,6 +102,8 @@ void EditEmployeeDetails::onSaveClicked()
     m_Employee->hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
     m_Employee->tin = ui->tinLineEdit->text().toStdString();
     m_Employee->bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
+    m_Employee->clockInTimeStr =  ui->clockInTimeEdit->time().toString("HH:mm").toStdString();
+    m_Employee->clockOutTimeStr = ui->clockOutTimeEdit->time().toString("HH:mm").toStdString();
     m_Employee->monthlyBasicSalary = ui->monthlySalarySpinBox->value();
     m_Employee->monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
     m_Employee->personalEmail = ui->personEmailLineEdit->text().toStdString();

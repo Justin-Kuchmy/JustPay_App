@@ -343,6 +343,8 @@ struct Employee
     std::string hdmfNumber;
     std::string tin;
     std::string bankAccountNumber;
+    std::string clockInTimeStr;  
+    std::string clockOutTimeStr; 
     double monthlyBasicSalary{};
     double monthlyAllowances{};
     std::string personalEmail;
@@ -368,6 +370,8 @@ struct Employee
             << ", hdmfNumber: " << hdmfNumber
             << ", tin: " << tin
             << ", bankAccountNumber: " << bankAccountNumber
+            << ", clockInTimeStr: " << clockInTimeStr
+            << ", clockOutTimeStr: " << clockOutTimeStr
             << ", monthlyBasicSalary: " << monthlyBasicSalary
             << ", monthlyAllowances: " << monthlyAllowances
             << ", personalEmail: " << personalEmail

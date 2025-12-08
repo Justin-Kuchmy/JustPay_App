@@ -101,6 +101,8 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.philHealthNumber = ui->philHealthNumberLineEdit->text().toStdString();
     a_Employee.hdmfNumber = ui->hdmfNumberLineEdit->text().toStdString();
     a_Employee.tin = ui->tinLineEdit->text().toStdString();
+    a_Employee.clockInTimeStr = ui->clockInTimeEdit->time().toString("HH:mm").toStdString();
+    a_Employee.clockOutTimeStr = ui->clockOutTimeEdit->time().toString("HH:mm").toStdString();
     a_Employee.bankAccountNumber = ui->bankAccountNumberLineEdit->text().toStdString();
     a_Employee.monthlyBasicSalary = ui->monthlySalarySpinBox->value();
     a_Employee.monthlyAllowances = ui->monthlyAllowancesSpinBox->value();
