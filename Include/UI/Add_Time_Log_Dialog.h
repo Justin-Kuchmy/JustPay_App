@@ -20,18 +20,20 @@ class AddTimeLogDialog: public QDialog
         void setEmployeeList(std::vector<Employee> &emps);
         void changeMode(std::string mode);
         void getLogData(int employeeId);
+        void getFormData();
 
 private slots:
         void onOkayClicked();
+        void onSaveClicked();
         void onCancelClicked();
         void onSelectTypeClicked();
         void onEmployeeSelected();
 private:
     Ui::AddTimeLogDialog* ui; 
     std::string jsonDataFromDialog;  
-    AttendanceLog al;   
     std::vector<Employee> allEmployees; 
     AttendanceLog selectedAttendanceLog;
+    Employee selectedEmployee;
 
 };
 #endif
