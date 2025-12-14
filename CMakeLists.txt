@@ -42,23 +42,30 @@ file(GLOB_RECURSE UI_FILES
     "${CMAKE_SOURCE_DIR}/UI/*.ui"
 )
 
+
+
 #---------------------------------------------------------
 #=== MAIN APP TARGET ===
 #----------------------------------------------------------
 
+
 add_executable(JustPay
-    ${CMAKE_SOURCE_DIR}/main_qt.cpp
-    ${APP_SOURCES}
-    ${UI_FILES}
+${CMAKE_SOURCE_DIR}/main_qt.cpp
+${CMAKE_SOURCE_DIR}/Resources/resources.qrc
+${APP_SOURCES}
+${UI_FILES}
 )
 
 target_include_directories(JustPay PRIVATE
-    ${CMAKE_SOURCE_DIR}/Include
+${CMAKE_SOURCE_DIR}/Include
 )
+
+
+
 set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Generated")
 
 set_target_properties(JustPay PROPERTIES
-    OUTPUT_NAME "JustPay.exe"
+    OUTPUT_NAME "JustPay"
     AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/UI/Dialogs"
 
 )

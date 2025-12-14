@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/resources">
+    <file>menu.json</file>
+    <file>history.txt</file>
+  </qresource>
+</RCC>

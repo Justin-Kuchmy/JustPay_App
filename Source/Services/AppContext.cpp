@@ -1,5 +1,7 @@
 
 #include "./Services/AppContext.h"
+#include <QApplication>
+#include <QDir>
 
 AppContext& AppContext::instance(const std::string& dbName) 
 {
@@ -9,9 +11,12 @@ AppContext& AppContext::instance(const std::string& dbName)
 
 AppContext::AppContext(const std::string& dbName)
 {
-    std::string path = "../Resources/" + dbName;
-    const char* cpath = path.c_str();
-    std::cout << "\nAppContext created! Trying to open " << cpath;
+   
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString(dbName));
+    const char* cpath = dbPath.toStdString().c_str();
+
+    LOG_DEBUG("\nAppContext created! Trying to open " << cpath);
     if (sqlite3_open(cpath, &m_db) != SQLITE_OK)
         throw std::runtime_error("Failed to open database");
 
