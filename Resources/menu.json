@@ -13,7 +13,7 @@
                 },
                 {
                     "label": "Payroll Computation Module",
-                    "submenu": "payroll-compute_menu"
+                    "action": "payroll-compute_widget"
                 },
                 {
                     "label": "Payslip Generation Module",

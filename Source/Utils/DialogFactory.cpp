@@ -10,6 +10,7 @@
 #include "UI/Add_Time_Log_Dialog.h"
 #include "UI/Add_Overtime_Hours_Dialog.h"
 #include "UI/Attendance_List_Widget.h"
+#include "UI/Payroll_Widget.h"
 
 
 
@@ -30,6 +31,8 @@ void DialogFactory::registerDialogs()
     registry["attendance_list"] = []() { return new AttendanceListWidget(); };
     registry["Add_Time_Log"] = []() { return new AddTimeLogDialog(); };
     registry["Add_Overtime_Hours"] = []() { return new AddOvertimeHoursDialog(); };
+    registry["payroll-compute_widget"] = []() { return new PayrollWidget(); };
+
 
     
 };
