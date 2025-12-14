@@ -2,18 +2,20 @@
 #include "Utils/Parser.h"
 #include <qstring.h>
 
+#include <qfile.h>
+
 
 Parser::Parser()
 {
-    std::ifstream file("../Resources/menu.json");
-    if (!file.is_open())
+    QFile file(":/resources/menu.json");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         std::cerr << "Error: could not open menu.json\n";
         return;
     }
 
-    json j;
-    file >> j;
+    QByteArray data = file.readAll();
+    json j = json::parse(data.toStdString());
 
     for (auto& [menuKey, menuVal] : j["menus"].items())
     {

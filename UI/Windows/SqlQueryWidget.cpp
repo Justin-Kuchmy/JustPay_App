@@ -1,5 +1,6 @@
 #include "include/Generated/ui_sql_module.h"
 #include "UI/SqlQueryWidget.h"
+#include <QApplication>
 #include "UI/Add_Sql_Description.h"
 #include "Utils/DialogFactory.h"
 
@@ -7,15 +8,16 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(n
 {
     ui->setupUi(this); 
     ui->sqlSplitter->setSizes({300, 900});
-    std::string path = "../Resources/payroll.db";
-    const char* cpath = path.c_str();
-    LOG_DEBUG("\nSqlQueryWidget trying to open " << cpath);
+
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString("payroll.db"));
+    const char* cpath = dbPath.toStdString().c_str();
+
     if (sqlite3_open(cpath, &m_db) != SQLITE_OK)
         throw std::runtime_error("Failed to open database");
 
-    std::string historyPath = "../Resources/history.txt";
-    QFile historyfile(QString::fromStdString(historyPath));
-    if (!historyfile.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile historyPath(":/resources/history.txt");
+    if (!historyPath.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         QMessageBox::warning(this, "Error", "Failed to open file for writing");
         return;
@@ -23,7 +25,7 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(n
     else
     {
         QString lineFromFile = "";
-        QTextStream historyIn(&historyfile);
+        QTextStream historyIn(&historyPath);
         bool readingSQL = false;
         this->listItems.clear();
         QString key   = QString::fromStdString("");

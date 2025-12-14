@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <vector>
 #include "./Models/QObjects.h"
+#define DEBUG_LOGS
+#include "../Utils/Log.h"
 
 using json = nlohmann::json;
 
