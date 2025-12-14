@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PayrollWidget</class>
+ <widget class="QWidget" name="PayrollWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1005</width>
+    <height>710</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_payrollInfo">
+      <attribute name="title">
+       <string>Pay Period</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vbox_payrollInfo">
+       <item>
+        <widget class="QGroupBox" name="group_employee_select">
+         <property name="title">
+          <string>Employee Selection</string>
+         </property>
+         <layout class="QGridLayout" name="grid_period">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_monthYear">
+            <property name="text">
+             <string>Employee Select</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_half">
+            <property name="text">
+             <string>Bulk Mode</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="combo_half"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>All Employees?</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="group_period">
+         <property name="title">
+          <string>Payroll Period</string>
+         </property>
+         <layout class="QGridLayout" name="grid_period">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_monthYear">
+            <property name="text">
+             <string>Month &amp; Year:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDateEdit" name="date_monthYear">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_half">
+            <property name="text">
+             <string>Payroll Half:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="combo_half">
+            <item>
+             <property name="text">
+              <string>1st Half</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2nd Half</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="hbox_salary_hours">
+         <item>
+          <widget class="QGroupBox" name="group_salary">
+           <property name="title">
+            <string>Salary &amp; Allowance</string>
+           </property>
+           <layout class="QGridLayout" name="grid_salary">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_basicSalary">
+              <property name="text">
+               <string>Monthly Basic Salary:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="spin_basicSalary">
+              <property name="maximum">
+               <double>999999.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_allowance">
+              <property name="text">
+               <string>Monthly Allowance:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="spin_allowance">
+              <property name="maximum">
+               <double>999999.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="group_hours">
+           <property name="title">
+            <string>Tardiness / Absences / Undertime</string>
+           </property>
+           <layout class="QGridLayout" name="grid_hours">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_tardy">
+              <property name="text">
+               <string>Tardiness (hrs):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="spin_tardy"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_absences">
+              <property name="text">
+               <string>Absences (hrs):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="spin_absences"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_undertime">
+              <property name="text">
+               <string>Undertime (hrs):</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="spin_undertime"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_overtime">
+      <attribute name="title">
+       <string>Overtime</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vbox_overtime">
+       <item>
+        <widget class="QGroupBox" name="group_overtime">
+         <property name="title">
+          <string>Overtime</string>
+         </property>
+         <layout class="QVBoxLayout" name="vbox_ot">
+          <item>
+           <widget class="QTableWidget" name="table_overtime">
+            <column>
+             <property name="text">
+              <string>OT Type</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Hours</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="hbox_ot_buttons">
+            <item>
+             <widget class="QPushButton" name="btn_addOT">
+              <property name="text">
+               <string>Add Overtime</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_removeOT">
+              <property name="text">
+               <string>Remove Selected</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_adjustments">
+      <attribute name="title">
+       <string>Adjust</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vbox_adjustments">
+       <item>
+        <widget class="QGroupBox" name="group_adjustments">
+         <property name="title">
+          <string>Adjustments</string>
+         </property>
+         <layout class="QGridLayout" name="grid_adjustments">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_taxAdj">
+            <property name="text">
+             <string>Taxable Adjustments:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="spin_taxableAdj"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_nonTaxAdj">
+            <property name="text">
+             <string>Non-Taxable Adjustments:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="spin_nonTaxableAdj"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="group_contrib">
+         <property name="title">
+          <string>Government Contributions</string>
+         </property>
+         <layout class="QGridLayout" name="grid_contrib">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_sss">
+            <property name="text">
+             <string>SSS (1st half):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="spin_sss"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_phic">
+            <property name="text">
+             <string>PHIC (2nd half):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDoubleSpinBox" name="spin_phic"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_hdmf">
+            <property name="text">
+             <string>HDMF (2nd half):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="spin_hdmf"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="group_loans">
+         <property name="title">
+          <string>Loans</string>
+         </property>
+         <layout class="QGridLayout" name="grid_loans">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_loans">
+            <property name="text">
+             <string>Loan Deductions:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="spin_loans"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_results">
+      <attribute name="title">
+       <string>Results</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="vbox_results">
+       <item>
+        <widget class="QGroupBox" name="group_payrollMeta">
+         <property name="title">
+          <string>Payroll Summary</string>
+         </property>
+         <layout class="QGridLayout" name="grid_payrollMeta">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_payPeriod">
+            <property name="text">
+             <string>Payroll Period:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="value_payPeriod">
+            <property name="text">
+             <string>—</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_dateProcessed">
+            <property name="text">
+             <string>Date Processed:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="value_dateProcessed">
+            <property name="text">
+             <string>—</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="group_resultsTable">
+         <property name="title">
+          <string>Employee Payroll Results</string>
+         </property>
+         <layout class="QVBoxLayout" name="vbox_resultsTable">
+          <item>
+           <widget class="QTableWidget" name="table_results">
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="rowCount">
+             <number>0</number>
+            </property>
+            <property name="columnCount">
+             <number>15</number>
+            </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>140</number>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Emp ID.</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Name</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Department</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Basic Salary</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Allowance</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>OT Pay</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Adjustments</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Gross Income</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>SSS Premium</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>PHIC Premium</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>HDMF Premium</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Loans</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>W-hold Tax</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Total Deduct</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Net Pay</string>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="computeButton">
+     <property name="text">
+      <string>Compute Payroll</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="backButton">
+     <property name="text">
+      <string>Back</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
