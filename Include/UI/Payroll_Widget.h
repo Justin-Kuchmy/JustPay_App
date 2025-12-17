@@ -30,7 +30,8 @@ public:
     ~PayrollWidget();                
 
 private slots:
-                    
+    void previousWindow();
+    void nextWindow();
 private:
 
 private:
