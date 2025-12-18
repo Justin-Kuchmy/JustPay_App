@@ -385,6 +385,28 @@ struct Employee
     };
 };
 
+class PayrollCalculationResults
+{
+    std::string payrollPeriod{"first"};
+    Date dateProcessed{Date(2025,12,18)};
+    std::string employeeId{""};
+    std::string fullName{""};
+    std::string employeeDepartment{""};
+    double monthlyBasicSalary{};
+    double monthlyAllowances{};
+    double adjustments{};
+    double grossIncome{};
+    double sssPremium{};
+    double philHealthPremium{};
+    double hdmfPremium{};
+    double loanDeductionsPerPayroll{};
+    bool deductionFirstHalf{};
+    bool deductionSecondHalf{};
+    double withHoldingTax{};
+    double totalDeductions{};
+    double netPay{};
+};
+
 
 
 // =========================
