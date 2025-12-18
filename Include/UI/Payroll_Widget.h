@@ -16,6 +16,9 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"
+#include "UI/Premium_Values_Widget.h"
+#include "UI/Results_Widget.h"
+#include "UI/Employee_Validation_Widget.h"
 
 
 namespace Ui{
@@ -32,10 +35,16 @@ public:
 private slots:
     void previousWindow();
     void nextWindow();
-private:
+signals:
+
 
 private:
     Ui::PayrollWidget *ui;
+    EmployeeValidationWidget* employeeValidation;
+    PremiumValuesWidget* premiumValue;
+    ResultsWidget* results;
+    std::vector<PayrollCalculationResults> payrollResults;
+    std::vector<PayrollCalculationResults>* payrollResults_ptr = nullptr;
 };
 
 #endif
