@@ -17,17 +17,8 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>-1</number>
      </property>
-     <widget class="QWidget" name="page_one">
-      <layout class="QVBoxLayout"/>
-     </widget>
-     <widget class="QWidget" name="page_two">
-      <layout class="QVBoxLayout"/>
-     </widget>
-     <widget class="QWidget" name="page_three">
-      <layout class="QVBoxLayout"/>
-     </widget>
     </widget>
    </item>
    <item>
