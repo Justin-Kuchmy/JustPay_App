@@ -14,9 +14,10 @@ class PremiumValuesWidget : public BaseContentWidget {
 
 public:
     explicit PremiumValuesWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
-    ~PremiumValuesWidget();                
-
+    ~PremiumValuesWidget(); 
+    
 private slots:
+    void applyClicked();
 
 private:
     Ui::PremiumValuesWidget *ui;
