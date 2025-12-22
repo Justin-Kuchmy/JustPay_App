@@ -17,7 +17,8 @@ class EmployeeValidationWidget : public BaseContentWidget {
 
 public:
     explicit EmployeeValidationWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
-    ~EmployeeValidationWidget();                
+    ~EmployeeValidationWidget();
+    void loadDataBus();                
 
 private slots:
     void loadEmployees();
