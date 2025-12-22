@@ -406,6 +406,31 @@ public:
     double withHoldingTax{};
     double totalDeductions{};
     double netPay{};
+
+    std::string to_string() const {
+    std::ostringstream oss;
+    oss << "PayrollCalculationResults { "
+        << "\n dateProcessed: " << dateProcessed.to_string()
+        << "\n employeeId: " << employeeId
+        << "\n fullName: " << fullName
+        << "\n employeeDepartment: " << employeeDepartment
+        << "\n monthlyBasicSalary: " << monthlyBasicSalary
+        << "\n monthlyAllowances: " << monthlyAllowances
+        << "\n adjustments: " << adjustments
+        << "\n grossIncome: " << grossIncome
+        << "\n sssPremium: " << sssPremium
+        << "\n philHealthPremium: " << philHealthPremium
+        << "\n hdmfPremium: " <<hdmfPremium
+        << "\n loanDeductionsPerPayroll: " <<loanDeductionsPerPayroll
+        << "\n deductionFirstHalf: " <<deductionFirstHalf
+        << "\n deductionSecondHalf: " << deductionSecondHalf
+        << "\n totalDeductions: " << totalDeductions
+        << "\n withHoldingTax: " << withHoldingTax
+        << "\n netPay: " << netPay
+        << " }";
+    return oss.str();
+
+};
 };
 
 
