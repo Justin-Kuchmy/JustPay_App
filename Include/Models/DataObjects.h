@@ -387,6 +387,7 @@ struct Employee
 
 class PayrollCalculationResults
 {
+public: 
     std::string payrollPeriod{"first"};
     Date dateProcessed{Date(2025,12,18)};
     std::string employeeId{""};
