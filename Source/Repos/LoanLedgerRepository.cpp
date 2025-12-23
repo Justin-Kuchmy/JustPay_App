@@ -45,7 +45,8 @@ LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt* stmt)
 {
     LoanLedger lled;
     lled.loanLedgerId = sqlite3_column_int(stmt, 0);
-    lled.employeeId = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)) ?: "";
+    const unsigned char* empid_text =  sqlite3_column_text(stmt, 1);
+    lled.employeeId = empid_text ? reinterpret_cast<const char*>(empid_text) : std::string{};
     lled.loanType = static_cast<LoanType>(sqlite3_column_int(stmt, 2));
     lled.principalAmount = sqlite3_column_double(stmt, 3);
     const unsigned char* date = sqlite3_column_text(stmt, 4);
