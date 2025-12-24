@@ -9,7 +9,7 @@ AttendanceLogService::AttendanceLogService(AttendanceLogRepository& r): repo(r)
 };
 
 //CREATE
-int AttendanceLogService::addAttendanceLog(const AttendanceLog& AttendanceLog)
+sqlite3_int64 AttendanceLogService::addAttendanceLog(const AttendanceLog& AttendanceLog)
 {
     return this->repo.insertAttendanceLog(AttendanceLog);
 };

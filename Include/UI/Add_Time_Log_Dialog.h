@@ -16,6 +16,8 @@ class AddTimeLogDialog: public QDialog
     public:
         AddTimeLogDialog(QWidget *parent = nullptr);
         ~AddTimeLogDialog();
+        AddTimeLogDialog(const AddTimeLogDialog&) = delete; 
+        AddTimeLogDialog& operator=(const AddTimeLogDialog&) = delete;
         AttendanceLog getTimeLogData();
         void setEmployeeList(std::vector<Employee> &emps);
         void changeMode(std::string mode);

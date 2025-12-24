@@ -10,7 +10,7 @@ LoanLedgerService::LoanLedgerService(LoanLedgerRepository& r): repo(r)
 }
 
  //CREATE
-int LoanLedgerService::addLoanLedger(const LoanLedger& LoanLedger)
+sqlite3_int64 LoanLedgerService::addLoanLedger(const LoanLedger& LoanLedger)
 {
     return this->repo.insertLoanLedger(LoanLedger);
 }

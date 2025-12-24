@@ -21,7 +21,7 @@ class EmployeeService
         bool updateEmployee(const Employee& e);
         
         //DELETE
-        bool fireEmployee();
+        bool fireEmployee(std::string id);
 };
 
 #endif

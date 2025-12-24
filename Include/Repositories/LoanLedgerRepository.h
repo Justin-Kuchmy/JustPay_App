@@ -13,7 +13,7 @@ class LoanLedgerRepository: public BaseRepository
         std::string getCreateTableSQL() const override;
 
         //create
-        int insertLoanLedger(const LoanLedger& loanLedger);
+        sqlite3_int64 insertLoanLedger(const LoanLedger& loanLedger);
         
         //read
         std::optional<LoanLedger> getById(int id);

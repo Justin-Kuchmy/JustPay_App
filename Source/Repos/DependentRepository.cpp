@@ -62,11 +62,10 @@ Dependent DependentRepository::mapDependent(sqlite3_stmt* stmt)
 
 
 //CREATE
-int DependentRepository::insertDependent(const Dependent& dependent)
+sqlite3_int64 DependentRepository::insertDependent(const Dependent& dependent)
 {
     const char* sql = "INSERT INTO dependents (name, relation, birthday) VALUES (?,?,?)";
     sqlite3_stmt* stmt = nullptr;
-    int result = 0;
     //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
         return 0;  // Failed to prepare

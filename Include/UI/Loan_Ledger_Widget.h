@@ -17,12 +17,14 @@ class LoanLedgerWidget : public QWidget {
 public:
     LoanLedgerWidget(QWidget *parent = nullptr);
     ~LoanLedgerWidget();
+    LoanLedgerWidget(const LoanLedgerWidget&) = delete; 
+    LoanLedgerWidget& operator=(const LoanLedgerWidget&) = delete;    
     void setLoanLedgerContext(std::vector<LoanLedger> *loanLedger, std::string& employeeId);
 private slots:
     void onSaveClicked();
     void onAddClicked();
     void onDeleteClicked();
-    void onLoanSelected(int i);
+    void onLoanSelected(size_t i);
     QString getSelectedLoan() const;
     void updateDeductionPerPayroll();
     void setDefaults();

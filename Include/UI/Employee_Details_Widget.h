@@ -28,7 +28,9 @@ class EmployeeDetailsWidget : public BaseContentWidget {
 
 public:
     explicit EmployeeDetailsWidget(QWidget *parent = nullptr);
-    ~EmployeeDetailsWidget();   
+    ~EmployeeDetailsWidget();  
+    EmployeeDetailsWidget(const EmployeeDetailsWidget&) = delete; 
+    EmployeeDetailsWidget& operator=(const EmployeeDetailsWidget&) = delete;
 
 private slots:
     void onEmployeeSelected(QString& empID);

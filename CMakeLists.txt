@@ -15,7 +15,19 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -pedantic-errors")
 
+set(BASE_WARNINGS "-Wall -Wextra -pedantic-errors")
+set(DEBUG_FLAGS "-ggdb")
+
+set(WARNING_EFFC "-Weffc++")
+set(WARNING_CONVERSION "-Wconversion -Wsign-conversion")
+
+set(FOCUS_WARNING ${WARNING_EFFC})
+set(FOCUS_WARNING ${WARNING_CONVERSION})
+set(FOCUS_WARNING ${WARNING_EXTRA})
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DEBUG_FLAGS} ${BASE_WARNINGS} ${FOCUS_WARNING}")
 
 # ---------------------------------------------------------
 # Include directories

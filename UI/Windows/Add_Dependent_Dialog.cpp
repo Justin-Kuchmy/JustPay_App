@@ -2,7 +2,7 @@
 #include "UI/Add_Dependent_Dialog.h"
 #include "Services/AppContext.h"
 
-AddDependentDialog::AddDependentDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddDependentDialog)
+AddDependentDialog::AddDependentDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddDependentDialog), m_Dependent{}
 {
     ui->setupUi(this); 
     disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept); //disable auto close after accepted

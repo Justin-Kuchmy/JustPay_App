@@ -2,7 +2,7 @@
 #include "UI/Add_Emergency_Contact_Dialog.h"
 #include "Services/AppContext.h"
 
-EmergencyContactDialog::EmergencyContactDialog(QWidget *parent): QDialog(parent), ui(new Ui::EmergencyContactDialog)
+EmergencyContactDialog::EmergencyContactDialog(QWidget *parent): QDialog(parent), ui(new Ui::EmergencyContactDialog), m_Contact{}
 {
     ui->setupUi(this); 
     disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept); //disable auto close after accepted

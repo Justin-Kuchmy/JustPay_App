@@ -5,7 +5,7 @@
 #include <qfile.h>
 
 
-Parser::Parser()
+Parser::Parser(): menuMap{}
 {
     QFile file(":/resources/menu.json");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -19,12 +19,12 @@ Parser::Parser()
 
     for (auto& [menuKey, menuVal] : j["menus"].items())
     {
-        MenuData m;
+        MenuData m{};
         m.title = QString::fromStdString(menuVal["title"].get<std::string>());
 
         for (auto& optVal : menuVal["options"])
         {
-            MenuOption opt;
+            MenuOption opt{};
             opt.label = QString::fromStdString(optVal["label"].get<std::string>());
 
             if (optVal.contains("submenu")) {

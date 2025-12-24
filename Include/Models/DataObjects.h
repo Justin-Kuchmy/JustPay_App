@@ -111,8 +111,8 @@ struct Date {
         
         return 
         (year > rhs.year) || 
-        (year == rhs.year && month > month) || 
-        (year == rhs.year && month == month && day > rhs.day);
+        (year == rhs.year && month > rhs.month) || 
+        (year == rhs.year && month == rhs.month && day > rhs.day);
     }
 };
 
@@ -132,7 +132,7 @@ struct Date {
 
     int sumMinutes() const
     {
-        int sum = 0.0;
+        double sum = 0.0;
         sum += regular;
         sum += rest_day;
         sum += rest_day_plus;
@@ -143,7 +143,7 @@ struct Date {
         sum += rest_plus_legal;
         sum += rest_plus_special;
         sum += night_shift_diff;
-        return sum;
+        return static_cast<int>(sum);
     }
 
     double calculatePay() const
@@ -223,16 +223,16 @@ struct Date {
 
  struct AttendanceLog
  {
-    int logId;
-    std::string employeeId;
-    Date logDate;
-    int lateByMinute;
-    int underTimeByMinute;
-    int overTimeByMinute;
-    bool isAbsent;
-    std::string overtimeJson;
-    Overtime overtimeObj;
-    std::string notes;
+    int logId{};
+    std::string employeeId{};
+    Date logDate{};
+    int lateByMinute{};
+    int underTimeByMinute{};
+    int overTimeByMinute{};
+    bool isAbsent{};
+    std::string overtimeJson{};
+    Overtime overtimeObj{};
+    std::string notes{};
 
     double getOvertimePay() const {
         Overtime o;
@@ -260,11 +260,11 @@ struct Date {
 
 struct Contact 
 {
-    int contactId;
-    std::string name;
-    std::string relation;
-    std::string address;
-    std::string contactNo;
+    int contactId{};
+    std::string name{};
+    std::string relation{};
+    std::string address{};
+    std::string contactNo{};
 
     std::string to_string() const
     {
@@ -281,16 +281,16 @@ struct Contact
 
 struct LoanLedger
 {
-    int loanLedgerId;
-    std::string employeeId;
-    LoanType loanType;
-    double principalAmount;
-    Date loanDate;
-    int NumOfAmortizations;
-    double deductionsPerPayroll;
-    bool deductionFirstHalf;
-    bool deductionSecondHalf;
-    bool status;
+    int loanLedgerId{};
+    std::string employeeId{};
+    LoanType loanType{};
+    double principalAmount{};
+    Date loanDate{};
+    int NumOfAmortizations{};
+    double deductionsPerPayroll{};
+    bool deductionFirstHalf{};
+    bool deductionSecondHalf{};
+    bool status{};
 
     std::string to_string() const {
         std::ostringstream oss;
@@ -312,9 +312,9 @@ struct LoanLedger
 };
 struct Dependent
 {
-    int dependentId;
-    std::string name;
-    std::string relation;
+    int dependentId{};
+    std::string name{};
+    std::string relation{};
     Date birthday{};
 
     std::string to_string() const
@@ -330,25 +330,25 @@ struct Dependent
 };
 struct Employee 
 {
-    std::string fullName;
-    std::string employeeId;
+    std::string fullName{};
+    std::string employeeId{};
     Department department{};
-    std::string position;
+    std::string position{};
     JobLevel jobLevel{};
     EmploymentStatus status{};
     Date dateHired{};
     Date dateSeparation{};
-    std::string sssNumber;
-    std::string philHealthNumber;
-    std::string hdmfNumber;
-    std::string tin;
-    std::string bankAccountNumber;
-    std::string clockInTimeStr;  
-    std::string clockOutTimeStr; 
+    std::string sssNumber{};
+    std::string philHealthNumber{};
+    std::string hdmfNumber{};
+    std::string tin{};
+    std::string bankAccountNumber{};
+    std::string clockInTimeStr{};  
+    std::string clockOutTimeStr{}; 
     double monthlyBasicSalary{};
     double monthlyAllowances{};
-    std::string personalEmail;
-    std::string personalMobileNumber;
+    std::string personalEmail{};
+    std::string personalMobileNumber{};
     bool isActive{true};
     int contactId{};
     int dependentId{};

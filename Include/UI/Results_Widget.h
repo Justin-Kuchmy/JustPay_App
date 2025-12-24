@@ -13,7 +13,9 @@ class ResultsWidget : public BaseContentWidget {
 
 public:
     explicit ResultsWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
-    ~ResultsWidget();    
+    ~ResultsWidget();   
+    ResultsWidget(const ResultsWidget&) = delete; 
+    ResultsWidget& operator=(const ResultsWidget&) = delete; 
     void calculateValues();            
 
 private slots:

@@ -8,9 +8,9 @@ EmergencyContactService::EmergencyContactService(EmergencyContactRepository& r):
 };
 
 //CREATE
-int EmergencyContactService::addEmergencyContact(const Contact& contact)
+sqlite3_int64 EmergencyContactService::addEmergencyContact(const Contact& contact)
 {
-    int newId = repo.insertContact(contact);
+    sqlite3_int64 newId = repo.insertContact(contact);
     if (newId <= 0) {
         LOG_DEBUG("[EmergencyContactService] Database insert failed.\n");
         return 0;

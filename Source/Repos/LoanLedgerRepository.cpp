@@ -70,7 +70,7 @@ LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt* stmt)
 
 
 //create
-int LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
+sqlite3_int64 LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
 {
     const char* sql = R"(INSERT INTO loan_ledgers (
             employeeId,
@@ -85,7 +85,6 @@ int LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
         ) VALUES (?,?,?,?,?,?,?,?,?)
     )";
     sqlite3_stmt* stmt = nullptr;
-    int result = 0;
     if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {       
         LOG_DEBUG("SQL prepare failed:" << sqlite3_errmsg(db));

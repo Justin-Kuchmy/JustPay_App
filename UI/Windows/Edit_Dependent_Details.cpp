@@ -7,7 +7,8 @@
 #include "Utils/Log.h"
 
 
-EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails)
+EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails),
+m_Dependent{}
 {
 
     ui->setupUi(this); 
@@ -38,7 +39,7 @@ void EditDependentDetails::onSaveClicked()
     m_Dependent->name = ui->nameLineEdit->text().toStdString();
     m_Dependent->relation = ui->relationLineEdit->text().toStdString();
     m_Dependent->birthday = Date::fromString(ui->bdayDateEdit->date().toString("yyyy-MM-dd").toStdString());
-    if(AppContext::instance().dependentService().updateDependent(*m_Dependent));
+    if(AppContext::instance().dependentService().updateDependent(*m_Dependent))
     {
         LOG_DEBUG(m_Dependent->name << " updated!");
     }

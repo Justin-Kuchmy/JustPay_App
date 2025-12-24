@@ -30,7 +30,9 @@ class PayrollWidget : public BaseContentWidget {
 
 public:
     explicit PayrollWidget(QWidget *parent = nullptr);
-    ~PayrollWidget();                
+    ~PayrollWidget();  
+    PayrollWidget(const PayrollWidget&) = delete; 
+    PayrollWidget& operator=(const PayrollWidget&) = delete;              
 
 private slots:
     void previousWindow();
@@ -40,11 +42,11 @@ signals:
 
 private:
     Ui::PayrollWidget *ui;
+    std::vector<PayrollCalculationResults>* payrollResults_ptr = nullptr;
+    std::vector<PayrollCalculationResults> payrollResults;
     EmployeeValidationWidget* employeeValidation;
     PremiumValuesWidget* premiumValue;
     ResultsWidget* results;
-    std::vector<PayrollCalculationResults> payrollResults;
-    std::vector<PayrollCalculationResults>* payrollResults_ptr = nullptr;
 };
 
 #endif

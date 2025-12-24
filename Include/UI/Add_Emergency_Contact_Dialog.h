@@ -15,6 +15,8 @@ class EmergencyContactDialog : public QDialog {
 public:
     explicit EmergencyContactDialog(QWidget *parent = nullptr);
     ~EmergencyContactDialog();
+    EmergencyContactDialog(const EmergencyContactDialog&) = delete; 
+    EmergencyContactDialog& operator=(const EmergencyContactDialog&) = delete;
 
     Contact getContactData() const;
     
