@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     
     // Tools menu
     QMenu *toolsMenu = menuBar->addMenu("&Tools");
+    toolsMenu->addAction("Settings");
     
     // Help menu
     QMenu *helpMenu = menuBar->addMenu("&Help");

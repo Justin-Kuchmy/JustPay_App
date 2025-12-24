@@ -28,7 +28,7 @@ bool EmployeeService::updateEmployee(const Employee& e)
 };
 
 //DELETE
-bool EmployeeService::fireEmployee()
+bool EmployeeService::fireEmployee(std::string id)
 {
-    return this->fireEmployee();
+    return this->repo.deleteEmployee(id);
 };

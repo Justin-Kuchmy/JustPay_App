@@ -22,7 +22,7 @@ void EmployeeValidationWidget::loadEmployees()
     ui->employeeTableWidget->setRowCount(m_Employees.size());
     //ui->employeeTableWidget->setColumnCount(5);
 
-    for(int i{}; i < m_Employees.size(); i++)
+    for(size_t i{}; i < m_Employees.size(); i++)
     {
         Employee empName = m_Employees.at(i);
         QTableWidgetItem* checkItem = new QTableWidgetItem();

@@ -10,3 +10,13 @@ PremiumValuesWidget::~PremiumValuesWidget()
     delete ui;
     delete dataBus;
 }
+
+void PremiumValuesWidget::applyClicked()
+{
+    
+}
+void PremiumValuesWidget::applyValues()
+{
+
+}
+

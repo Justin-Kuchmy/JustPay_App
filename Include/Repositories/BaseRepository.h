@@ -15,6 +15,8 @@ protected:
     sqlite3* db = nullptr;
 public:
     explicit BaseRepository(sqlite3* db);
+    BaseRepository(const BaseRepository&) = delete; 
+    BaseRepository& operator=(const BaseRepository&) = delete;
     virtual ~BaseRepository();
     virtual std::string getCreateTableSQL() const = 0;
     bool createTable();

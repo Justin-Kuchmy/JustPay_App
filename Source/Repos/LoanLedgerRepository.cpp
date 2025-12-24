@@ -85,7 +85,6 @@ int LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
         ) VALUES (?,?,?,?,?,?,?,?,?)
     )";
     sqlite3_stmt* stmt = nullptr;
-    int result = 0;
     if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {       
         LOG_DEBUG("SQL prepare failed:" << sqlite3_errmsg(db));

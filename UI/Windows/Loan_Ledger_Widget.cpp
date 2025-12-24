@@ -69,7 +69,7 @@ void LoanLedgerWidget::populateLoanList()
     }
 
     // Add new loan items
-    for (int i = 0; i < loanLedgers->size(); ++i) 
+    for (size_t i{}; i < loanLedgers->size(); ++i) 
     {
         const auto& lled = loanLedgers->at(i);
         QString label = QString("%1 %2").arg(lled.loanLedgerId).arg(QString::fromStdString(loantype_to_string(static_cast<LoanType>(lled.loanType))));
@@ -88,7 +88,7 @@ void LoanLedgerWidget::populateLoanList()
 };
 
 
-void LoanLedgerWidget::onLoanSelected(int index)
+void LoanLedgerWidget::onLoanSelected(size_t index)
 {
     if (!loanLedgers || index < 0 || index >= loanLedgers->size()) return;
     this->selectedLoanLedger = &this->loanLedgers->at(index);

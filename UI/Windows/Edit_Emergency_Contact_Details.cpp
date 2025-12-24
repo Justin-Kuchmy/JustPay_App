@@ -40,7 +40,7 @@ void EditEmergencyContactDetails::onSaveClicked()
     m_Contact->relation = ui->relationLineEdit->text().toStdString();
     m_Contact->address = ui->addressLineEdit->text().toStdString();
     m_Contact->contactNo = ui->contactNumLineEdit->text().toStdString();
-    if(AppContext::instance().emergencyContactService().updateEmergencyContact(*m_Contact));
+    if(AppContext::instance().emergencyContactService().updateEmergencyContact(*m_Contact))
     {
         LOG_DEBUG(m_Contact->name << " updated!");
     }
