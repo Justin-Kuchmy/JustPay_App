@@ -16,13 +16,17 @@ class MenuManager: public QWidget
     Q_OBJECT
 public:
     explicit MenuManager(Parser& parser, QWidget* parent = nullptr);
+    MenuManager(const MenuManager&) = delete; 
+    MenuManager& operator=(const MenuManager&) = delete;
     void showMenu(const QString& name);
     BaseMenu* getMenu(const QString& name) const;
 
     void showContentWidget(QWidget* widget);
 private: 
     void buildMenus(Parser& parser);
-    QStackedWidget* stacked;
+    std::unique_ptr<QStackedWidget> stacked;
+    QWidget* current;
+    QWidget* previous;
     QStack<QWidget*> history; 
     QHash<QString, BaseMenu*> menuLookup;
 };

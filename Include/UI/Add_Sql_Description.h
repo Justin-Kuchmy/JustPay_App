@@ -13,6 +13,8 @@ Q_OBJECT
 public: 
     explicit AddSqlDescriptionDialog(QWidget *parent = nullptr);
     ~AddSqlDescriptionDialog();
+    AddSqlDescriptionDialog(const AddSqlDescriptionDialog&) = delete; 
+    AddSqlDescriptionDialog& operator=(const AddSqlDescriptionDialog&) = delete;
     std::string getSqlDescription();
 
 

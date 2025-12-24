@@ -11,7 +11,7 @@ DependentService::DependentService(DependentRepository& r): repo(r)
 };
 
 //CREATE
-int DependentService::addDependent(const Dependent& dependent)
+sqlite3_int64 DependentService::addDependent(const Dependent& dependent)
 {
     if (dependent.name.empty() || dependent.relation.empty()) {
         LOG_DEBUG("[DependentService] Name or relation cannot be empty.\n");
@@ -29,7 +29,7 @@ int DependentService::addDependent(const Dependent& dependent)
         return 0;
     }
 
-    int newId = repo.insertDependent(dependent);
+    sqlite3_int64 newId = repo.insertDependent(dependent);
     if (newId <= 0) {
         LOG_DEBUG("[DependentService] Database insert failed.\n");
         return 0;

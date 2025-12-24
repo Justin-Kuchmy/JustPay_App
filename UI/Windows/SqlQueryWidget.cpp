@@ -4,7 +4,17 @@
 #include "UI/Add_Sql_Description.h"
 #include "Utils/DialogFactory.h"
 
-SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::SqlQueryWidget)
+SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), 
+ui(new Ui::SqlQueryWidget),
+m_db(nullptr),
+lastExecutedQuery{},
+sqlQuery{},
+description{},
+savedQueries{},
+listItems{},
+historyFilePath{},
+dict{},
+model{}
 {
     ui->setupUi(this); 
     ui->sqlSplitter->setSizes({300, 900});
@@ -26,7 +36,6 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(n
     {
         QString lineFromFile = "";
         QTextStream historyIn(&historyPath);
-        bool readingSQL = false;
         this->listItems.clear();
         QString key   = QString::fromStdString("");
         std::string v = "";
@@ -37,7 +46,7 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent): BaseContentWidget(parent), ui(n
             lineFromFile = historyIn.readLine();
             if(lineFromFile != "--END--")
             {
-                int index = lineFromFile.indexOf('|');
+                qsizetype index = lineFromFile.indexOf('|');
                 if(index != -1)
                 {
                     key = lineFromFile.left(index);
@@ -100,7 +109,7 @@ void SqlQueryWidget::onExecuteClicked()
         }
         sqlite3_finalize(stmt);
 
-        model = new QStandardItemModel(this);
+        model = std::make_unique<QStandardItemModel>(this);
         model->setHorizontalHeaderLabels(columnNames);
 
         for (const auto& row : rows) {
@@ -125,7 +134,7 @@ void SqlQueryWidget::onExecuteClicked()
             model->appendRow(items);
         }
 
-        ui->tableResults->setModel(model);
+        ui->tableResults->setModel(model.get());
         ui->tableResults->resizeColumnsToContents();
         ui->tableResults->resizeRowsToContents();
         

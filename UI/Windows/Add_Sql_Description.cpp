@@ -3,7 +3,7 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 
-AddSqlDescriptionDialog::AddSqlDescriptionDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddSqlDescriptionDialog)
+AddSqlDescriptionDialog::AddSqlDescriptionDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddSqlDescriptionDialog), sqlDescription{}
 {
     ui->setupUi(this);
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &AddSqlDescriptionDialog::onSaveClicked);

@@ -4,7 +4,8 @@
 #include "Utils/Log.h"
 
 
-AddLoanLedgerDialog::AddLoanLedgerDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddLoanLedgerDialog)
+AddLoanLedgerDialog::AddLoanLedgerDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddLoanLedgerDialog),
+    m_LoanLedger{}, m_employeeId{}
 {
     ui->setupUi(this);
     ui->loanTypeComboBox->addItems({

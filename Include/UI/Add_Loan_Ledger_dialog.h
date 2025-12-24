@@ -15,7 +15,8 @@ Q_OBJECT
 public: 
     explicit AddLoanLedgerDialog(QWidget *parent = nullptr);
     ~AddLoanLedgerDialog();
-
+    AddLoanLedgerDialog(const AddLoanLedgerDialog&) = delete; 
+    AddLoanLedgerDialog& operator=(const AddLoanLedgerDialog&) = delete;
     LoanLedger getLoanLedgerData() const;
 
 private slots: 

@@ -18,6 +18,8 @@ class EmployeeValidationWidget : public BaseContentWidget {
 public:
     explicit EmployeeValidationWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
     ~EmployeeValidationWidget();
+    EmployeeValidationWidget(const EmployeeValidationWidget&) = delete; 
+    EmployeeValidationWidget& operator=(const EmployeeValidationWidget&) = delete;    
     void loadDataBus();                
 
 private slots:
@@ -26,8 +28,8 @@ signals:
     void dataLoaded();
 private:
     Ui::EmployeeValidationWidget *ui;
-    std::vector<Employee> m_Employees;
     std::vector<PayrollCalculationResults>* dataBus = nullptr;
+    std::vector<Employee> m_Employees;
 };
 
 #endif

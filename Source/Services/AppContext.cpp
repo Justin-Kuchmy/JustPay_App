@@ -3,98 +3,78 @@
 #include <QApplication>
 #include <QDir>
 
+sqlite3* openDb(const std::string& dbName) {
+    sqlite3* db = nullptr;
+    QString exeDir = QCoreApplication::applicationDirPath();
+    QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString(dbName));
+    const char* cpath = dbPath.toStdString().c_str();
+
+    if (sqlite3_open(cpath, &db) != SQLITE_OK)
+        throw std::runtime_error("Failed to open database");
+
+    return db;
+}
+
 AppContext& AppContext::instance(const std::string& dbName) 
 {
     static AppContext ctx(dbName);
     return ctx;
 }
 
-AppContext::AppContext(const std::string& dbName)
+AppContext::AppContext(const std::string& dbName):
+m_db(openDb(dbName)),
+m_employeeRepo(m_db),
+m_dependentRepo(m_db),
+m_emergencyContactRepo(m_db),
+m_loanLedgerRepo(m_db),
+m_attendanceLogRepo(m_db),
+m_employeeService(m_employeeRepo),
+m_dependentService(m_dependentRepo),
+m_emergencyContactService(m_emergencyContactRepo),
+m_loanLedgerService(m_loanLedgerRepo),
+m_attendanceLogService(m_attendanceLogRepo)
 {
    
-    QString exeDir = QCoreApplication::applicationDirPath();
-    QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString(dbName));
-    const char* cpath = dbPath.toStdString().c_str();
-
-    LOG_DEBUG("\nAppContext created! Trying to open " << cpath);
-    if (sqlite3_open(cpath, &m_db) != SQLITE_OK)
-        throw std::runtime_error("Failed to open database");
-
-    m_employeeRepo = std::make_unique<EmployeeRepository>(m_db);
-    m_dependentRepo = std::make_unique<DependentRepository>(m_db);
-    m_emergencyContactRepo = std::make_unique<EmergencyContactRepository>(m_db);
-    m_loanLedgerRepo = std::make_unique<LoanLedgerRepository>(m_db);
-    m_attendanceLogRepo = std::make_unique<AttendanceLogRepository>(m_db);
-
-    m_employeeService = std::make_unique<EmployeeService>(*m_employeeRepo);
-    m_dependentService = std::make_unique<DependentService>(*m_dependentRepo);
-    m_emergencyContactService = std::make_unique<EmergencyContactService>(*m_emergencyContactRepo);
-    m_loanLedgerService = std::make_unique<LoanLedgerService>(*m_loanLedgerRepo);
-    m_attendanceLogService = std::make_unique<AttendanceLogService>(*m_attendanceLogRepo);
-    
-    m_employeeRepo->createTable();
-    m_dependentRepo->createTable();
-    m_emergencyContactRepo->createTable();
-    m_loanLedgerRepo->createTable();
-    m_attendanceLogRepo->createTable();
+    m_employeeRepo.createTable();
+    m_dependentRepo.createTable();
+    m_emergencyContactRepo.createTable();
+    m_loanLedgerRepo.createTable();
+    m_attendanceLogRepo.createTable();
 };
 
 AppContext::~AppContext()
 {
     std::cout << "\nAppContext destroyed!";
-    if (this->m_db) {
-        sqlite3_close(this->m_db);
+    if (m_db) {
+        sqlite3_close(m_db);
         std::cout << "\nm_db closed";
     }
 
 };
 
-EmployeeRepository& AppContext::employeeRepo()
+
+
+EmployeeService& AppContext::employeeService() noexcept
 {
-     return *m_employeeRepo; 
+    return m_employeeService;
 };
 
-EmployeeService& AppContext::employeeService()
+DependentService& AppContext::dependentService() noexcept
 {
-    return *m_employeeService;
-};
-  
-DependentRepository& AppContext::dependentRepo()
-{
-    return *m_dependentRepo;
+    return m_dependentService;
 };
 
-LoanLedgerRepository& AppContext::loanLedgerRepo()
+EmergencyContactService& AppContext::emergencyContactService() noexcept
 {
-    return *m_loanLedgerRepo;
+    return m_emergencyContactService;
 };
 
-AttendanceLogRepository& AppContext::attendanceLogRepo()
+LoanLedgerService& AppContext::loanLedgerService() noexcept
 {
-    return *m_attendanceLogRepo;
-}
-
-DependentService& AppContext::dependentService()
-{
-    return *m_dependentService;
+    return m_loanLedgerService;
 };
 
-EmergencyContactRepository& AppContext::emergencyContactRepo()
+AttendanceLogService& AppContext::attendanceLogService() noexcept
 {
-    return *m_emergencyContactRepo;
-};
-
-EmergencyContactService& AppContext::emergencyContactService()
-{
-    return *m_emergencyContactService;
-};
-
-LoanLedgerService& AppContext::loanLedgerService()
-{
-    return *m_loanLedgerService;
-};
-
-AttendanceLogService& AppContext::attendanceLogService()
-{
-    return *m_attendanceLogService;
+    return m_attendanceLogService;
 }

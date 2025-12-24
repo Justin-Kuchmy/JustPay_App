@@ -18,6 +18,8 @@ class AttendanceListWidget: public BaseContentWidget {
 public:
     AttendanceListWidget(QWidget *parent = nullptr);
     ~AttendanceListWidget();
+    AttendanceListWidget(const AttendanceListWidget&) = delete; 
+    AttendanceListWidget& operator=(const AttendanceListWidget&) = delete;
 
 private slots:
     void onEmployeeSearchBoxChanged(const QString& text);

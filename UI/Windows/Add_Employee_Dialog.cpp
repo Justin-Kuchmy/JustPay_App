@@ -9,7 +9,8 @@
 #include "UI/Add_Emergency_Contact_Dialog.h"
 #include "Services/AppContext.h"
 
-AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddEmployeeDialog)
+AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddEmployeeDialog), 
+employees{}, a_Employee{}, m_Contact{}, m_Dependent{}
 {
     ui->setupUi(this); 
     
@@ -110,10 +111,14 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
     if(contactID > 0 && dependentID > 0)
+    {
         this->a_Employee.contactId = contactID;
         this->a_Employee.dependentId = dependentID;
-        if(!AppContext::instance().employeeService().addEmployee(a_Employee).empty());
+        if(!AppContext::instance().employeeService().addEmployee(a_Employee).empty())
+        {
             accepted();
+        }
+    }
 };
 
 void AddEmployeeDialog::onCancelClicked()

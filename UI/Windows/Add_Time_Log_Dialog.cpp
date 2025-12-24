@@ -9,7 +9,8 @@
 #include "Services/AppContext.h"
 #include <iterator>
 
-AddTimeLogDialog::AddTimeLogDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddTimeLogDialog)
+AddTimeLogDialog::AddTimeLogDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddTimeLogDialog),
+jsonDataFromDialog{""}, allEmployees{}, selectedAttendanceLog{}, selectedEmployee{}
 {
     ui->setupUi(this);
     connect(ui->selectOvertimeType,&QPushButton::clicked,this,&AddTimeLogDialog::onSelectTypeClicked); 
@@ -28,18 +29,14 @@ void AddTimeLogDialog::getLogData(int logId)
 
     
     if(optLog.has_value())
-    {
-        
+    { 
         selectedAttendanceLog = optLog.value();
 
-        
         auto it = std::find_if(allEmployees.begin(), allEmployees.end(), [this](Employee emp) {return emp.employeeId == this->selectedAttendanceLog.employeeId;});
         
-        if (it != allEmployees.end()) {
-            
-        std::size_t index = std::distance(allEmployees.begin(), it);
-            
-            ui->empComboBox->setCurrentIndex(index);
+        if (it != allEmployees.end()) 
+        {   
+            ui->empComboBox->setCurrentIndex(static_cast<int>(std::distance(allEmployees.begin(), it)));
         }
     }
     
@@ -69,7 +66,7 @@ void AddTimeLogDialog::getLogData(int logId)
     double minutes = ot.sumMinutes();
     ui->hourLabel->setText(QString::number(minutes) + " Minutes");
 
-    scheduledOutTime = scheduledOutTime.addSecs(minutes*60);
+    scheduledOutTime = scheduledOutTime.addSecs(static_cast<int>(minutes*60.0));
     
     ui->undertimeTimeEdit->setTime(scheduledOutTime);
     ui->latenessTimeEdit->setTime(scheduledInTime);

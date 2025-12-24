@@ -7,7 +7,8 @@
 #include "Utils/Log.h"
 
 
-EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails)
+EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails),
+m_Contact{}
 {
     ui->setupUi(this); 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditEmergencyContactDetails::onSaveClicked);
@@ -40,7 +41,7 @@ void EditEmergencyContactDetails::onSaveClicked()
     m_Contact->relation = ui->relationLineEdit->text().toStdString();
     m_Contact->address = ui->addressLineEdit->text().toStdString();
     m_Contact->contactNo = ui->contactNumLineEdit->text().toStdString();
-    if(AppContext::instance().emergencyContactService().updateEmergencyContact(*m_Contact));
+    if(AppContext::instance().emergencyContactService().updateEmergencyContact(*m_Contact))
     {
         LOG_DEBUG(m_Contact->name << " updated!");
     }

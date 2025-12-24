@@ -2,7 +2,8 @@
 #include "UI/Payroll_Widget.h"
 
 
-PayrollWidget::PayrollWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::PayrollWidget)
+PayrollWidget::PayrollWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::PayrollWidget),
+payrollResults{}, employeeValidation{}, premiumValue{}, results{}
 {
     ui->setupUi(this);
     connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
@@ -28,7 +29,6 @@ PayrollWidget::~PayrollWidget()
     delete employeeValidation;
     delete premiumValue;
     delete results;
-    delete payrollResults_ptr;
 
 }
 

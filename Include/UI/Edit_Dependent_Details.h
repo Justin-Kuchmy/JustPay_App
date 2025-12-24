@@ -18,6 +18,8 @@ class EditDependentDetails : public QWidget {
 public:
     explicit EditDependentDetails(QWidget *parent = nullptr);
     ~EditDependentDetails();
+    EditDependentDetails(const EditDependentDetails&) = delete; 
+    EditDependentDetails& operator=(const EditDependentDetails&) = delete;
     void setDependentContext(std::optional<Dependent> &dependent);
 private slots:
     void onSaveClicked();

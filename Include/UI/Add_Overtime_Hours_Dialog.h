@@ -16,6 +16,8 @@ class AddOvertimeHoursDialog: public QDialog
 public:
     AddOvertimeHoursDialog(QWidget *parent = nullptr);
     ~AddOvertimeHoursDialog();
+    AddOvertimeHoursDialog(const AddOvertimeHoursDialog&) = delete; 
+    AddOvertimeHoursDialog& operator=(const AddOvertimeHoursDialog&) = delete;
     std::string getJsonString();
 private slots:
     void onOkayClicked();

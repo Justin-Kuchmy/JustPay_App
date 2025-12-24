@@ -2,7 +2,6 @@
 #define MainWindow_H
 
 #include <QMainWindow>
-#include <QStackedWidget>
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +15,6 @@ public:
 private slots:
 
 private:
-    QStackedWidget *stackedWidget;
 
 };
 

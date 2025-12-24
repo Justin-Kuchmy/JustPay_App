@@ -8,5 +8,4 @@ ResultsWidget::ResultsWidget(std::vector<PayrollCalculationResults>* dataBus, QW
 ResultsWidget::~ResultsWidget()
 {
     delete ui;
-    delete dataBus;
 }

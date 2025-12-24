@@ -57,11 +57,10 @@ Contact EmergencyContactRepository::mapContact(sqlite3_stmt* stmt)
 
 
 //CREATE
-int EmergencyContactRepository::insertContact(const Contact& contact)
+sqlite3_int64 EmergencyContactRepository::insertContact(const Contact& contact)
 {
     const char* sql = "INSERT INTO emergency_contacts (name, relation, address, contactNo) VALUES (?,?,?,?)";
     sqlite3_stmt* stmt = nullptr;
-    int result = 0;
     //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
         return 0;  // Failed to prepare

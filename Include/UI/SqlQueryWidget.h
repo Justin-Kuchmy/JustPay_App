@@ -27,6 +27,9 @@ class SqlQueryWidget : public BaseContentWidget {
 public:
     explicit SqlQueryWidget(QWidget *parent = nullptr);
     ~SqlQueryWidget();
+    SqlQueryWidget(const SqlQueryWidget&) = delete; 
+    SqlQueryWidget& operator=(const SqlQueryWidget&) = delete;
+
     void setDatabase(const QSqlDatabase &db);         
     void loadSavedQueries();                         
     QString currentQuery() const;                    
@@ -46,22 +49,24 @@ private:
     Ui::SqlQueryWidget *ui;
 
     // SQL & Model:
-    sqlite3* m_db = nullptr;
-    //QSqlDatabase database;
-    //QSqlQueryModel *model;          // Holds the result set
+    sqlite3* m_db;
     QString lastExecutedQuery;
     std::string sqlQuery;
     std::string description;
 
     // Query history:
-    QListWidget* savedQueries = nullptr;  
-    QStringList listItems;     // Optional: stored in file/settings
+    std::unique_ptr<QListWidget> savedQueries;
+     
+    QStringList listItems;    
     QString historyFilePath;
-    std::unordered_map<QString, QString> dict{};
-    QStandardItemModel* model = nullptr;
+    std::unordered_map<QString, QString> dict;
+    std::unique_ptr<QStandardItemModel> model;
+
+    //QListWidget* savedQueries = nullptr;
+    //QStandardItemModel* model = nullptr;
 
     // UI state:
-    bool autoResizeColumns = true;  // User preference
+    bool autoResizeColumns = true; 
 };
 
 
