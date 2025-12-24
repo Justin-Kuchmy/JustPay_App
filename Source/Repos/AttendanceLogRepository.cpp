@@ -73,7 +73,6 @@ int AttendanceLogRepository::insertAttendanceLog(const AttendanceLog& al)
 {
     const char* sql = "INSERT INTO attendance_log (employeeId, log_date, late_min, undertime_min, overtime_min, absent, notes, overtime_json) VALUES (?,?,?,?,?,?,?,?)";
     sqlite3_stmt* stmt = nullptr;
-    int result = 0;
     if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
         return 0;

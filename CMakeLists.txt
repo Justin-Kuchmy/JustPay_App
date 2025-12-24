@@ -15,6 +15,17 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -pedantic-errors")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall")
+
+set(WARNING_EFFC "-Weffc++")
+set(WARNING_CONVERSION "-Wconversion -Wsign-conversion")
+set(WARNING_EXTRA "-Wall -Wextra -pedantic-errors")
+
+set(FOCUS_WARNING ${WARNING_EFFC})
+set(FOCUS_WARNING ${WARNING_CONVERSION})
+set(FOCUS_WARNING ${WARNING_EXTRA})
+
 
 
 # ---------------------------------------------------------

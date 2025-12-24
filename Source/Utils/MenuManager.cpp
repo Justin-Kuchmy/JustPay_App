@@ -5,16 +5,21 @@
 #include <QApplication>
 
 
-MenuManager::MenuManager(Parser& parser, QWidget* parent)
-    : QWidget(parent), stacked(new QStackedWidget(this))
+MenuManager::MenuManager(Parser& parser, QWidget* parent): QWidget(parent), 
+    stacked(std::make_unique<QStackedWidget>(this)), 
+    current(nullptr),
+    previous(nullptr), 
+    history{}, 
+    menuLookup{}
 {
     auto* layout = new QVBoxLayout(this);
-    layout->addWidget(stacked);
+    layout->addWidget(stacked.get());
     setLayout(layout);
 
     buildMenus(parser);
 
-    if (auto* mainMenu = getMenu("main"))
+    auto* mainMenu = getMenu("main");
+    if (mainMenu)
         showMenu("main");
     else
         stacked->setCurrentIndex(0);
@@ -30,7 +35,7 @@ void MenuManager::buildMenus(Parser& parser)
     for (auto& [key, data] : parser.menuMap)
     {
         bool isRootMenu = (key == "main");
-        auto* menuWidget = new BaseMenu(data, isRootMenu, stacked);
+        auto* menuWidget = new BaseMenu(data, isRootMenu, stacked.get());
         menuWidget->setObjectName(QString::fromStdString(key));
         stacked->addWidget(menuWidget);
         menuLookup[QString::fromStdString(key)] = menuWidget;
@@ -79,9 +84,9 @@ void MenuManager::buildMenus(Parser& parser)
                     {
                         connect(content, &BaseContentWidget::backRequested, this, [this]() {
                             if (!history.isEmpty()) {
-                                QWidget* current = stacked->currentWidget();
-                                QWidget* prev = history.pop();
-                                stacked->setCurrentWidget(prev);
+                                current = stacked->currentWidget();
+                                previous = history.pop();
+                                stacked->setCurrentWidget(previous);
                                 stacked->removeWidget(current);
                                 current->deleteLater();
                             } else {
@@ -95,8 +100,8 @@ void MenuManager::buildMenus(Parser& parser)
         // Back navigation
         connect(menuWidget, &BaseMenu::backRequested, this, [this]() {
             if (!history.isEmpty()) {
-                QWidget* current = stacked->currentWidget();
-                QWidget* previous = history.pop();
+                current = stacked->currentWidget();
+                previous = history.pop();
 
                 stacked->setCurrentWidget(previous);
             } else {

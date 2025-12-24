@@ -27,14 +27,16 @@ struct MenuData {
  {
     Q_OBJECT
 public: 
-    AttendanceLogModel(QObject *parent): QAbstractItemModel(parent){};
+    AttendanceLogModel(QObject *parent): QAbstractItemModel(parent), m_model{}{};
     AttendanceLogModel(QObject* parent, std::vector<AttendanceLog>& logs): QAbstractItemModel(parent), m_model(&logs){}
     ~AttendanceLogModel() = default;
+    AttendanceLogModel(const AttendanceLogModel&) = delete; 
+    AttendanceLogModel& operator=(const AttendanceLogModel&) = delete;
 
     //QAbstractItemModel Methods
     QModelIndex index(int row, int column, const QModelIndex&) const {return createIndex(row, column);}
     QModelIndex parent(const QModelIndex&) const {return QModelIndex(); }
-    int rowCount(const QModelIndex&) const {return static_cast<int>(m_model->size());}
+    int rowCount(const QModelIndex&) const {return m_model ? static_cast<qsizetype>(m_model->size()) : 0;}
     int columnCount(const QModelIndex&) const {return m_columnCount;}
     QVariant data(const QModelIndex& index, int role) const
     {
@@ -84,7 +86,7 @@ public:
 private:
     std::vector<AttendanceLog>* m_model;
     const int m_columnCount = 8;  
-    QVariant valueForColumn(int rowIndex, int columnIndex) const
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
     {
         const auto& item = m_model->at(rowIndex);
 

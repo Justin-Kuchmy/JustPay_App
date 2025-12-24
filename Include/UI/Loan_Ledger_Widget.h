@@ -22,7 +22,7 @@ private slots:
     void onSaveClicked();
     void onAddClicked();
     void onDeleteClicked();
-    void onLoanSelected(int i);
+    void onLoanSelected(size_t i);
     QString getSelectedLoan() const;
     void updateDeductionPerPayroll();
     void setDefaults();

@@ -110,10 +110,14 @@ void AddEmployeeDialog::onOKClicked()
     a_Employee.personalMobileNumber = ui->personalMobileNumberLineEdit->text().toStdString();
     a_Employee.isActive = ui->activeStatusCheckBox->isChecked();
     if(contactID > 0 && dependentID > 0)
+    {
         this->a_Employee.contactId = contactID;
         this->a_Employee.dependentId = dependentID;
-        if(!AppContext::instance().employeeService().addEmployee(a_Employee).empty());
+        if(!AppContext::instance().employeeService().addEmployee(a_Employee).empty())
+        {
             accepted();
+        }
+    }
 };
 
 void AddEmployeeDialog::onCancelClicked()

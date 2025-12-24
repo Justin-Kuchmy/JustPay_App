@@ -107,6 +107,8 @@ std::string EmployeeRepository::insertEmployee(const Employee& employee)
     sqlite3_bind_int(stmt, 20, employee.contactId);
     sqlite3_bind_int(stmt, 21, employee.dependentId);
     int rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE)
+        return 0;  // Insert failed
     result = getLastEmployeeId();
     sqlite3_finalize(stmt);
     return result;
