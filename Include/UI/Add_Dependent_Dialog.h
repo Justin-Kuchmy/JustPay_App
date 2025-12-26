@@ -15,6 +15,8 @@ class AddDependentDialog : public QDialog {
 public:
     explicit AddDependentDialog(QWidget *parent = nullptr);
     ~AddDependentDialog();
+    AddDependentDialog(const AddDependentDialog&) = delete; 
+    AddDependentDialog& operator=(const AddDependentDialog&) = delete;
 
     Dependent getDependentData() const;
     

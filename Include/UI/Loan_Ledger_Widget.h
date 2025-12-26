@@ -17,6 +17,8 @@ class LoanLedgerWidget : public QWidget {
 public:
     LoanLedgerWidget(QWidget *parent = nullptr);
     ~LoanLedgerWidget();
+    LoanLedgerWidget(const LoanLedgerWidget&) = delete; 
+    LoanLedgerWidget& operator=(const LoanLedgerWidget&) = delete;    
     void setLoanLedgerContext(std::vector<LoanLedger> *loanLedger, std::string& employeeId);
 private slots:
     void onSaveClicked();

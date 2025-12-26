@@ -10,7 +10,7 @@ class AttendanceLogService
         explicit AttendanceLogService(AttendanceLogRepository& r);
 
         //CREATE
-        int addAttendanceLog(const AttendanceLog& AttendanceLog);
+        sqlite3_int64 addAttendanceLog(const AttendanceLog& AttendanceLog);
 
         //READ
         std::optional<AttendanceLog> getAttendanceLogByID(int id);

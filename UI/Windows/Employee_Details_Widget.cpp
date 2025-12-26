@@ -3,7 +3,18 @@
 
 
 
-EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::EmployeeDetailsWidget)
+EmployeeDetailsWidget::EmployeeDetailsWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::EmployeeDetailsWidget),
+m_Employee{},
+employees{},
+editEmployeeForm{},
+editContactForm{},
+editDependentForm{},
+loanLedgetWidget{},
+employeeAttendanceLogWidget{},
+optContact{},
+optDependent{},
+optLoanLedgers{},
+optAttendanceLogs{}
 {
     ui->setupUi(this); 
     ui->mainSplitter->setSizes({300, 900});

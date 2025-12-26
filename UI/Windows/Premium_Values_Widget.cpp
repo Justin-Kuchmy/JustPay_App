@@ -8,7 +8,6 @@ PremiumValuesWidget::PremiumValuesWidget(std::vector<PayrollCalculationResults>*
 PremiumValuesWidget::~PremiumValuesWidget()
 {
     delete ui;
-    delete dataBus;
 }
 
 void PremiumValuesWidget::applyClicked()

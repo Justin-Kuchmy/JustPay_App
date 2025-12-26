@@ -10,7 +10,7 @@ class EmergencyContactService
         explicit EmergencyContactService(EmergencyContactRepository& r);
 
         //CREATE
-        int addEmergencyContact(const Contact& EmergencyContact);
+        sqlite3_int64 addEmergencyContact(const Contact& EmergencyContact);
 
         //READ
         std::optional<Contact> getEmergencyContactByID(int id);

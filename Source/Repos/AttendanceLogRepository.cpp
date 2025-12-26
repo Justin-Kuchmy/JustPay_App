@@ -69,7 +69,7 @@ AttendanceLog AttendanceLogRepository::mapAttendanceLog(sqlite3_stmt* stmt)
 };
 
 //create
-int AttendanceLogRepository::insertAttendanceLog(const AttendanceLog& al)
+sqlite3_int64 AttendanceLogRepository::insertAttendanceLog(const AttendanceLog& al)
 {
     const char* sql = "INSERT INTO attendance_log (employeeId, log_date, late_min, undertime_min, overtime_min, absent, notes, overtime_json) VALUES (?,?,?,?,?,?,?,?)";
     sqlite3_stmt* stmt = nullptr;
@@ -91,7 +91,7 @@ int AttendanceLogRepository::insertAttendanceLog(const AttendanceLog& al)
 
     if (rc != SQLITE_DONE)
         return 0;  // Insert failed
-    return sqlite3_last_insert_rowid(db);
+    return static_cast<sqlite3_int64>(sqlite3_last_insert_rowid(db));
 };
 
 //read

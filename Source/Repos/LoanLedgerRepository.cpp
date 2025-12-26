@@ -70,7 +70,7 @@ LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt* stmt)
 
 
 //create
-int LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
+sqlite3_int64 LoanLedgerRepository::insertLoanLedger(const LoanLedger& lled)
 {
     const char* sql = R"(INSERT INTO loan_ledgers (
             employeeId,

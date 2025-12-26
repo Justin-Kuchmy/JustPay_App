@@ -10,7 +10,7 @@ class DependentService
         explicit DependentService(DependentRepository& r);
 
         //CREATE
-        int addDependent(const Dependent& Dependent);
+        sqlite3_int64 addDependent(const Dependent& Dependent);
 
         //READ
         std::optional<Dependent> getDependentByID(int id);

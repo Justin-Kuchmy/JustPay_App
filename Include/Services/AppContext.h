@@ -13,39 +13,48 @@
 #include "Repositories/AttendanceLogRepository.h"
 #include <sqlite3.h>
 
+class EmployeeRepository;
+class DependentRepository;
+class EmergencyContactRepository;
+class LoanLedgerRepository;
+class AttendanceLogRepository;
+
+class EmployeeService;
+class DependentService;
+class EmergencyContactService;
+class LoanLedgerService;
+class AttendanceLogService;
+
 class AppContext 
 {
 public:
     static AppContext& instance(const std::string& dbName = "payroll.db");
   
-    EmployeeRepository& employeeRepo();
-    DependentRepository& dependentRepo();
-    EmergencyContactRepository& emergencyContactRepo();
-    LoanLedgerRepository& loanLedgerRepo();
-    AttendanceLogRepository& attendanceLogRepo();
-    EmployeeService& employeeService();
-    DependentService& dependentService();
-    EmergencyContactService& emergencyContactService();
-    LoanLedgerService& loanLedgerService();
-    AttendanceLogService& attendanceLogService();
+
+    EmployeeService& employeeService() noexcept;
+    DependentService& dependentService() noexcept;
+    EmergencyContactService& emergencyContactService() noexcept;
+    LoanLedgerService& loanLedgerService() noexcept;
+    AttendanceLogService& attendanceLogService() noexcept;
 private: 
     sqlite3* m_db = nullptr;
-    std::unique_ptr<EmployeeRepository> m_employeeRepo;
-    std::unique_ptr<DependentRepository> m_dependentRepo;
-    std::unique_ptr<EmergencyContactRepository> m_emergencyContactRepo;
-    std::unique_ptr<LoanLedgerRepository> m_loanLedgerRepo;
-    std::unique_ptr<AttendanceLogRepository> m_attendanceLogRepo;
-    std::unique_ptr<EmployeeService> m_employeeService;
-    std::unique_ptr<DependentService> m_dependentService;
-    std::unique_ptr<EmergencyContactService> m_emergencyContactService;
-    std::unique_ptr<LoanLedgerService> m_loanLedgerService;
-    std::unique_ptr<AttendanceLogService> m_attendanceLogService;
+    EmployeeRepository m_employeeRepo;
+    DependentRepository m_dependentRepo;
+    EmergencyContactRepository m_emergencyContactRepo;
+    LoanLedgerRepository m_loanLedgerRepo;
+    AttendanceLogRepository m_attendanceLogRepo;
+
+    EmployeeService m_employeeService;
+    DependentService m_dependentService;
+    EmergencyContactService m_emergencyContactService;
+    LoanLedgerService m_loanLedgerService;
+    AttendanceLogService m_attendanceLogService;
 
 
     explicit AppContext(const std::string& dbName);
     ~AppContext() noexcept;
     
-    AppContext(const AppContext&) = delete; //cannot be copied or assigned
-    AppContext& operator=(const AppContext&) = delete; //cant assign or reassign
+    AppContext(const AppContext&) = delete; 
+    AppContext& operator=(const AppContext&) = delete;
 };
 #endif

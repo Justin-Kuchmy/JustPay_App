@@ -12,14 +12,14 @@
 #include "Services/EmployeeService.h"
 
 struct MenuOption {
-    QString label;
-    QString action;
-    QString submenu;
+    QString label{};
+    QString action{};
+    QString submenu{};
 };
 
 struct MenuData {
-    QString title;
-    QVector<MenuOption> options;
+    QString title{};
+    QVector<MenuOption> options{};
 };
 
 
@@ -35,21 +35,21 @@ public:
 
     //QAbstractItemModel Methods
     QModelIndex index(int row, int column, const QModelIndex&) const {return createIndex(row, column);}
-    QModelIndex parent(const QModelIndex&) const {return QModelIndex(); }
-    int rowCount(const QModelIndex&) const {return m_model ? static_cast<qsizetype>(m_model->size()) : 0;}
-    int columnCount(const QModelIndex&) const {return m_columnCount;}
-    QVariant data(const QModelIndex& index, int role) const
+    QModelIndex parent(const QModelIndex& = QModelIndex()) const override {return QModelIndex(); }
+    int rowCount(const QModelIndex& = QModelIndex()) const override {return m_model ? static_cast<int>(m_model->size()) : 0;}
+    int columnCount(const QModelIndex& = QModelIndex()) const override {return m_columnCount;}
+    QVariant data(const QModelIndex& index, int role) const override
     {
         if (!index.isValid())
             return QVariant();
 
         if (role == Qt::DisplayRole) 
         {
-            return valueForColumn(index.row(), index.column());
+            return valueForColumn(static_cast<size_t>(index.row()), static_cast<size_t>(index.column()));
         }
         else if (role == Qt::UserRole) 
         {
-            return m_model->at(index.row()).logId;
+            return m_model->at(static_cast<size_t>(index.row())).logId;
         }
         return QVariant();
     }

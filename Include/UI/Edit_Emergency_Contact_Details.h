@@ -18,6 +18,8 @@ class EditEmergencyContactDetails : public QWidget {
 public:
     explicit EditEmergencyContactDetails(QWidget *parent = nullptr);
     ~EditEmergencyContactDetails();
+    EditEmergencyContactDetails(const EditEmergencyContactDetails&) = delete; 
+    EditEmergencyContactDetails& operator=(const EditEmergencyContactDetails&) = delete;
     void setContactContext(std::optional<Contact> &contact);
 private slots:
     void onSaveClicked();

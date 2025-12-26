@@ -5,7 +5,8 @@
 #include "Utils/DialogFactory.h"
 
 
-LoanLedgerWidget::LoanLedgerWidget(QWidget *parent): QWidget(parent), ui(new Ui::LoanLedgerWidget)
+LoanLedgerWidget::LoanLedgerWidget(QWidget *parent): QWidget(parent), ui(new Ui::LoanLedgerWidget),
+m_LoanLedger{}, employeeId{}
 {
     ui->setupUi(this); 
     ui->loanLedgerSplitter->setSizes({300, 900});
@@ -90,7 +91,7 @@ void LoanLedgerWidget::populateLoanList()
 
 void LoanLedgerWidget::onLoanSelected(size_t index)
 {
-    if (!loanLedgers || index < 0 || index >= loanLedgers->size()) return;
+    if (!loanLedgers || index >= loanLedgers->size()) return;
     this->selectedLoanLedger = &this->loanLedgers->at(index);
     if (!this->selectedLoanLedger) return;
 

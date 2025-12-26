@@ -14,7 +14,7 @@ class DependentRepository: public BaseRepository {
         std::string getCreateTableSQL() const override;
 
         //CREATE
-        int insertDependent(const Dependent& Dependent);
+        sqlite3_int64 insertDependent(const Dependent& Dependent);
 
         // READ
         std::optional<Dependent> getById(int id);             

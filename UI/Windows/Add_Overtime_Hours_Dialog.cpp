@@ -3,7 +3,7 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 
-AddOvertimeHoursDialog::AddOvertimeHoursDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddOvertimeHoursDialog)
+AddOvertimeHoursDialog::AddOvertimeHoursDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddOvertimeHoursDialog), jsonString{}
 {
     ui->setupUi(this);
 

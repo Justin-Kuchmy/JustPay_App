@@ -3,7 +3,8 @@
 #include "UI/Employee_Attendance_Widget.h"
 #include "Services/AppContext.h"
 
-EmployeeAttendanceWidget::EmployeeAttendanceWidget(QWidget *parent): QWidget(parent), ui(new Ui::EmployeeAttendanceWidget)
+EmployeeAttendanceWidget::EmployeeAttendanceWidget(QWidget *parent): QWidget(parent), ui(new Ui::EmployeeAttendanceWidget),
+attendanceLogs{},model{},proxyModel{},employeeId{}
 {
     ui->setupUi(this); 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
