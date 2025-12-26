@@ -10,8 +10,11 @@ m_db(nullptr),
 lastExecutedQuery{},
 sqlQuery{},
 description{},
+savedQueries{},
 listItems{},
-historyFilePath{}
+historyFilePath{},
+dict{},
+model{}
 {
     ui->setupUi(this); 
     ui->sqlSplitter->setSizes({300, 900});

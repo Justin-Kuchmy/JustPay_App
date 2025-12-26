@@ -12,7 +12,7 @@ class EmergencyContactRepository: public BaseRepository {
         std::string getCreateTableSQL() const override;
         
         //CREATE
-        int insertContact(const Contact& Contact);
+        sqlite3_int64 insertContact(const Contact& Contact);
 
         // READ
         std::optional<Contact> getById(int id);            

@@ -57,7 +57,7 @@ Contact EmergencyContactRepository::mapContact(sqlite3_stmt* stmt)
 
 
 //CREATE
-int EmergencyContactRepository::insertContact(const Contact& contact)
+sqlite3_int64 EmergencyContactRepository::insertContact(const Contact& contact)
 {
     const char* sql = "INSERT INTO emergency_contacts (name, relation, address, contactNo) VALUES (?,?,?,?)";
     sqlite3_stmt* stmt = nullptr;

@@ -18,6 +18,8 @@ class EditEmployeeDetails : public QWidget {
 public:
     explicit EditEmployeeDetails(QWidget *parent = nullptr);
     ~EditEmployeeDetails();
+    EditEmployeeDetails(const EditEmployeeDetails&) = delete; 
+    EditEmployeeDetails& operator=(const EditEmployeeDetails&) = delete;
     void setEmployeeContext(Employee &m_Employee);
 private slots:
     void onSaveClicked();

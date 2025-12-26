@@ -9,7 +9,8 @@
 #include "UI/Add_Emergency_Contact_Dialog.h"
 #include "Services/AppContext.h"
 
-AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddEmployeeDialog)
+AddEmployeeDialog::AddEmployeeDialog(QWidget *parent): QDialog(parent), ui(new Ui::AddEmployeeDialog), 
+employees{}, a_Employee{}, m_Contact{}, m_Dependent{}
 {
     ui->setupUi(this); 
     

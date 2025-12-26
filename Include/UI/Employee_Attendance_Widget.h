@@ -20,15 +20,17 @@ class EmployeeAttendanceWidget : public QWidget {
 public:
     EmployeeAttendanceWidget(QWidget *parent = nullptr);
     ~EmployeeAttendanceWidget();
+    EmployeeAttendanceWidget(const EmployeeAttendanceWidget&) = delete; 
+    EmployeeAttendanceWidget& operator=(const EmployeeAttendanceWidget&) = delete;
     void setEmployeeAttendanceContext(std::vector<AttendanceLog> *attendanceLog, std::string& employeeId);
 private slots:
 
 private:
     Ui::EmployeeAttendanceWidget *ui;
+    std::vector<AttendanceLog>* attendanceLogs = nullptr;
     AttendanceLogModel* model;
     QSortFilterProxyModel* proxyModel;
 
-    std::vector<AttendanceLog>* attendanceLogs = nullptr;
     // LoanLedger* selectedLoanLedger = nullptr;
     // LoanLedger m_LoanLedger;
     std::string employeeId;

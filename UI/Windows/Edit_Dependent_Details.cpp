@@ -7,7 +7,8 @@
 #include "Utils/Log.h"
 
 
-EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails)
+EditDependentDetails::EditDependentDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditDependentDetails),
+m_Dependent{}
 {
 
     ui->setupUi(this); 

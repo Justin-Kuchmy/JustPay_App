@@ -7,7 +7,8 @@
 #include "Utils/Log.h"
 
 
-EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails)
+EditEmergencyContactDetails::EditEmergencyContactDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmergencyContactDetails),
+m_Contact{}
 {
     ui->setupUi(this); 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditEmergencyContactDetails::onSaveClicked);

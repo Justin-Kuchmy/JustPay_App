@@ -14,6 +14,8 @@ class AddEmployeeDialog : public QDialog {
 public:
     explicit AddEmployeeDialog(QWidget *parent = nullptr);
     ~AddEmployeeDialog();   
+    AddEmployeeDialog(const AddEmployeeDialog&) = delete; 
+    AddEmployeeDialog& operator=(const AddEmployeeDialog&) = delete;
 private slots:
     void onOKClicked();
     void onCancelClicked();
@@ -21,10 +23,10 @@ private slots:
     void openAddDependentDialog();
 private:
     Ui::AddEmployeeDialog *ui;
-    Employee a_Employee;
-    Dependent m_Dependent;
-    Contact m_Contact;
     QVector<Employee>* employees;
+    Employee a_Employee;
+    Contact m_Contact;
+    Dependent m_Dependent;
 };
 
 

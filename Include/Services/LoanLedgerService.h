@@ -10,7 +10,7 @@ class LoanLedgerService
         explicit LoanLedgerService(LoanLedgerRepository& r);
 
         //CREATE
-        int addLoanLedger(const LoanLedger& LoanLedger);
+        sqlite3_int64 addLoanLedger(const LoanLedger& LoanLedger);
 
         //READ
         std::optional<LoanLedger> getLoanLedgerByID(int id);

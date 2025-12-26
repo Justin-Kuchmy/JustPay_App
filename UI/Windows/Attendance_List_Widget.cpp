@@ -7,7 +7,8 @@
 #include "Services/AppContext.h"
 
 
-AttendanceListWidget::AttendanceListWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::AttendanceListWidget)
+AttendanceListWidget::AttendanceListWidget(QWidget *parent): BaseContentWidget(parent), ui(new Ui::AttendanceListWidget),
+attendanceLogs{}, model{}, proxyModel{}
 {
     ui->setupUi(this);
     connect(ui->btnAddEntry,&QPushButton::clicked,this,&AttendanceListWidget::onAddClicked);

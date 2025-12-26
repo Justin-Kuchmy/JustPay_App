@@ -8,7 +8,8 @@
 
 
 
-EditEmployeeDetails::EditEmployeeDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmployeeDetails)
+EditEmployeeDetails::EditEmployeeDetails(QWidget *parent): QWidget(parent), ui(new Ui::EditEmployeeDetails),
+m_Employee{}
 {
     ui->setupUi(this); 
     ui->departmentComboBox->addItems({

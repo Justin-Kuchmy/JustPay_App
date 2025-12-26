@@ -59,7 +59,7 @@ private:
      
     QStringList listItems;    
     QString historyFilePath;
-    std::unordered_map<QString, QString> dict{};
+    std::unordered_map<QString, QString> dict;
     std::unique_ptr<QStandardItemModel> model;
 
     //QListWidget* savedQueries = nullptr;

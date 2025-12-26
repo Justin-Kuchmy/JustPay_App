@@ -62,7 +62,7 @@ Dependent DependentRepository::mapDependent(sqlite3_stmt* stmt)
 
 
 //CREATE
-int DependentRepository::insertDependent(const Dependent& dependent)
+sqlite3_int64 DependentRepository::insertDependent(const Dependent& dependent)
 {
     const char* sql = "INSERT INTO dependents (name, relation, birthday) VALUES (?,?,?)";
     sqlite3_stmt* stmt = nullptr;
