@@ -47,6 +47,7 @@ private:
     EmployeeValidationWidget* employeeValidation;
     PremiumValuesWidget* premiumValue;
     ResultsWidget* results;
+    int pageNumber{0};
 };
 
 #endif
