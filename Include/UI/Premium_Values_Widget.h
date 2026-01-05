@@ -21,6 +21,8 @@ public:
     
 private slots:
     void applyClicked();
+signals:
+    void valuesApplied();
 
 private:
     Ui::PremiumValuesWidget *ui;
