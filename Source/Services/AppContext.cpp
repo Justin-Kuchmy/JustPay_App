@@ -7,7 +7,8 @@ sqlite3* openDb(const std::string& dbName) {
     sqlite3* db = nullptr;
     QString exeDir = QCoreApplication::applicationDirPath();
     QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString(dbName));
-    const char* cpath = dbPath.toStdString().c_str();
+    std::string dbPathStr = dbPath.toStdString();
+    const char* cpath = dbPathStr.c_str();
 
     if (sqlite3_open(cpath, &db) != SQLITE_OK)
         throw std::runtime_error("Failed to open database");
