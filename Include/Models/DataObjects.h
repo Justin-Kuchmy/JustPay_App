@@ -235,9 +235,7 @@ struct Date {
     std::string notes{};
 
     double getOvertimePay() const {
-        Overtime o;
-        o.fromJson(overtimeJson);
-        return o.calculatePay();
+        return overtimeObj.calculatePay();
     }
 
 
@@ -393,19 +391,20 @@ public:
     std::string employeeId{""};
     std::string fullName{""};
     std::string employeeDepartment{""};
-    double monthlyBasicSalary{};
-    double monthlyAllowances{};
-    double adjustments{};
-    double grossIncome{};
-    double sssPremium{};
-    double philHealthPremium{};
-    double hdmfPremium{};
-    double loanDeductionsPerPayroll{};
-    bool deductionFirstHalf{};
-    bool deductionSecondHalf{};
-    double withHoldingTax{};
-    double totalDeductions{};
-    double netPay{};
+    double monthlyBasicSalary{0.0};
+    double monthlyAllowances{0.0};
+    double overTimePay{0.0};
+    double adjustments{0.0};
+    double grossIncome{0.0};
+    double sssPremium{0.0};
+    double philHealthPremium{0.0};
+    double hdmfPremium{0.0};
+    double loanDeductionsPerPayroll{0.0};
+    bool deductionFirstHalf{false};
+    bool deductionSecondHalf{false};
+    double withHoldingTax{0.0};
+    double totalDeductions{0.0};
+    double netPay{0.0};
 
     std::string to_string() const {
     std::ostringstream oss;
@@ -416,6 +415,7 @@ public:
         << "\n employeeDepartment: " << employeeDepartment
         << "\n monthlyBasicSalary: " << monthlyBasicSalary
         << "\n monthlyAllowances: " << monthlyAllowances
+        << "\n overTimePay: " << overTimePay
         << "\n adjustments: " << adjustments
         << "\n grossIncome: " << grossIncome
         << "\n sssPremium: " << sssPremium
