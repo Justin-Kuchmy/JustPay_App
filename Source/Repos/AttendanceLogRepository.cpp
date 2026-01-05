@@ -64,6 +64,8 @@ AttendanceLog AttendanceLogRepository::mapAttendanceLog(sqlite3_stmt* stmt)
 
     const unsigned char* overtime = sqlite3_column_text(stmt, 8);
     al.overtimeJson = overtime ? reinterpret_cast<const char*>(overtime) : "";
+
+    al.overtimeObj =  Overtime::fromJson(al.overtimeJson);
     
     return al;
 };
