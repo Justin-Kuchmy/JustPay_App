@@ -93,7 +93,7 @@
           </attribute>
           <column>
            <property name="text">
-            <string>Emp ID.</string>
+            <string>Employee No.</string>
            </property>
            <property name="font">
             <font>
@@ -103,7 +103,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Name</string>
+            <string>Employee Name</string>
            </property>
            <property name="font">
             <font>
@@ -143,7 +143,7 @@
           </column>
           <column>
            <property name="text">
-            <string>OT Pay</string>
+            <string>Overtime Pay</string>
            </property>
            <property name="font">
             <font>
@@ -213,7 +213,7 @@
           </column>
           <column>
            <property name="text">
-            <string>W-hold Tax</string>
+            <string>Withholding Taxes</string>
            </property>
            <property name="font">
             <font>
