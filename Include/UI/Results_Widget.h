@@ -3,6 +3,7 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"
+#include <qstandarditemmodel.h>
 
 namespace Ui{
 class ResultsWidget;
@@ -16,13 +17,14 @@ public:
     ~ResultsWidget();   
     ResultsWidget(const ResultsWidget&) = delete; 
     ResultsWidget& operator=(const ResultsWidget&) = delete; 
-    void calculateValues();            
-
+    void calculateValues(); 
+    void loadTableData();           
 private slots:
 
 private:
     Ui::ResultsWidget *ui;
     std::vector<PayrollCalculationResults>* dataBus = nullptr;
+    std::unique_ptr<QStandardItemModel> model;
 };
 
 #endif
