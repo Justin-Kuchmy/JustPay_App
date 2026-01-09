@@ -35,5 +35,7 @@ private:
     LoanLedger* selectedLoanLedger = nullptr;
     LoanLedger m_LoanLedger;
     std::string employeeId;
+    int8_t paymentsPerMonth{};
+
 };
 #endif
