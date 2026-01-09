@@ -93,15 +93,34 @@ inline double calcWithholding(double taxableIncome)
 
 void PremiumValuesWidget::applyValues()
 {
+    const int byWeekly = 2;
     for(size_t i{}; i < dataBus->size(); i++)
     {
         auto& emp = dataBus->at(i);
+        std::vector<LoanLedger> empLoans = AppContext::instance().loanLedgerService().getAllLoanLedgers(emp.employeeId);
+        emp.payrollPeriod = ui->payrollPeriodComboBox->currentIndex() == 0 ? "first" : "second";
         emp.deductionFirstHalf = ui->payrollPeriodComboBox->currentIndex() == 0;
         emp.deductionSecondHalf = ui->payrollPeriodComboBox->currentIndex() == 1;
         auto truncateForCurrency = [](double v) { return std::trunc(v * 100.0) / 100.0; };
 
+        for(size_t j{}; j < empLoans.size(); j++)
+        {
+            LOG_DEBUG(empLoans[j].deductionsPerPayroll << " " << empLoans[j].deductionFirstHalf << " " << empLoans[j].deductionSecondHalf);
+            
+            if(emp.deductionFirstHalf && empLoans[j].deductionFirstHalf)
+            {
+                emp.loanDeductionsPerPayroll += empLoans[j].deductionsPerPayroll;
+            }
 
-        emp.grossIncome = emp.monthlyBasicSalary + emp.overTimePay + emp.monthlyAllowances;
+            if(emp.deductionSecondHalf && empLoans[j].deductionSecondHalf)
+            {
+                emp.loanDeductionsPerPayroll += empLoans[j].deductionsPerPayroll;
+            }
+        }
+
+        emp.monthlyBasicSalary /= byWeekly;
+        emp.monthlyAllowances /= byWeekly;
+        emp.grossIncome = (emp.monthlyBasicSalary) + emp.overTimePay + (emp.monthlyAllowances);
 
         emp.sssPremium = truncateForCurrency(calcSSS(emp.monthlyBasicSalary, emp.deductionFirstHalf));
 
@@ -114,6 +133,8 @@ void PremiumValuesWidget::applyValues()
         emp.totalDeductions = emp.sssPremium + emp.philHealthPremium + emp.hdmfPremium + emp.withHoldingTax + emp.loanDeductionsPerPayroll;
 
         emp.netPay = emp.monthlyBasicSalary + emp.overTimePay + emp.monthlyAllowances - emp.totalDeductions;
+
+       
 
         LOG_DEBUG(emp.to_string());
 
