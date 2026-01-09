@@ -20,6 +20,8 @@ public:
     void calculateValues(); 
     void loadTableData();           
 private slots:
+    void submitPayroll();
+    void exportToExcel();
 
 private:
     Ui::ResultsWidget *ui;
