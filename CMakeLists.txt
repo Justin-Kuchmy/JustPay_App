@@ -53,18 +53,20 @@ file(GLOB_RECURSE UI_FILES
     "${CMAKE_SOURCE_DIR}/UI/*.ui"
 )
 
-
+# ---------------------------------------------------------
+# Include resource file if it exists
+# ---------------------------------------------------------
+set(RESOURCE_FILE "${CMAKE_SOURCE_DIR}/Resources/resources.qrc")
+if(EXISTS ${RESOURCE_FILE})
+    list(APPEND APP_SOURCES ${RESOURCE_FILE})
+endif()
 
 #---------------------------------------------------------
 #=== MAIN APP TARGET ===
 #----------------------------------------------------------
-
-
 add_executable(JustPay
-${CMAKE_SOURCE_DIR}/main_qt.cpp
-${CMAKE_SOURCE_DIR}/Resources/resources.qrc
-${APP_SOURCES}
-${UI_FILES}
+    ${APP_SOURCES}
+    ${UI_FILES}
 )
 
 target_include_directories(JustPay PRIVATE
@@ -75,12 +77,22 @@ ${CMAKE_SOURCE_DIR}/Include
 
 set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Generated")
 
-set_target_properties(JustPay PROPERTIES
-    OUTPUT_NAME "JustPay"
-    AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/UI/Dialogs"
+# ---------------------------------------------------------
+# Cross-platform output name
+# ---------------------------------------------------------
+if(WIN32)
+    set_target_properties(JustPay PROPERTIES OUTPUT_NAME "JustPay.exe")
+else()
+    set_target_properties(JustPay PROPERTIES OUTPUT_NAME "JustPay")
+endif()
 
-)
+set_target_properties(JustPay PROPERTIES AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/UI/Dialogs")
+
     
+
+# ---------------------------------------------------------
+# Link Qt and SQLite libraries
+# ---------------------------------------------------------
 target_link_libraries(JustPay
     PRIVATE
         Qt6::Core
@@ -93,9 +105,9 @@ target_link_libraries(JustPay
         sqlite3
 )
 
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_target_properties(JustPay PROPERTIES FOLDER "Apps")
-
 
 # ---------------------------------------------------------
 # === TESTS SUBDIRECTORY ===
@@ -103,6 +115,5 @@ set_target_properties(JustPay PROPERTIES FOLDER "Apps")
 if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/CMakeLists.txt")
     add_subdirectory(Tests)
 endif()
-
 
 
