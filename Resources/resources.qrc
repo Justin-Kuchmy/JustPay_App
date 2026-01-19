@@ -3,4 +3,12 @@
     <file>menu.json</file>
     <file>history.txt</file>
   </qresource>
+
+  <qresource prefix="/QtTheme/">
+    <file>theme/dark.qss</file>
+    <file>theme/light.qss</file>
+    <file>theme/win7.qss</file>
+    <file>theme/win98.qss</file>
+    <file>theme/winxp.qss</file>
+  </qresource>
 </RCC>

@@ -1,0 +1,68 @@
+QWidget {
+    background-color: #dce6f1;
+    color: #000000;
+    font-family: "Tahoma", "Segoe UI";
+    font-size: 10pt;
+}
+
+QPushButton {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #f0f8ff, stop:1 #cce0ff);
+    border: 1px solid #5b9bd5;
+    border-radius: 4px;
+    padding: 5px 10px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #e0f0ff, stop:1 #a0c0ff);
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #a0c0ff, stop:1 #70a0ff);
+}
+
+QLineEdit, QTextEdit {
+    background-color: #ffffff;
+    border: 1px solid #5b9bd5;
+    padding: 3px;
+    border-radius: 2px;
+}
+
+QScrollBar:vertical {
+    background: #dce6f1;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #5b9bd5;
+}
+
+
+QListView::item:selected,
+QTreeView::item:selected,
+QTableView::item:selected {
+    background-color: #ffc000; 
+    color: #000000;
+}
+
+
+QLineEdit:focus,
+QTextEdit:focus {
+    border: 1px solid #ffa500;  
+}
+
+
+QPushButton:focus {
+    border-color: #ffa500;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #ffa500;
+}
+
+QProgressBar::chunk {
+    background-color: #ffb84d;
+}

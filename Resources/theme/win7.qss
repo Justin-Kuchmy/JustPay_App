@@ -1,0 +1,42 @@
+QWidget {
+    background-color: #ececec;
+    color: #000000;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 10pt;
+}
+
+QPushButton {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #ffffff, stop:1 #d0d0d0);
+    border: 1px solid #a0a0a0;
+    border-radius: 5px;
+    padding: 6px 12px;
+    color: #000000;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #f0f0f0, stop:1 #c0c0c0);
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #c0c0c0, stop:1 #a0a0a0);
+}
+
+QLineEdit, QTextEdit {
+    background-color: #ffffff;
+    border: 1px solid #a0a0a0;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QScrollBar:vertical {
+    background: #ececec;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #a0a0a0;
+    border-radius: 6px;
+}

@@ -1,0 +1,58 @@
+QWidget {
+    background-color: #c0c0c0;
+    color: #000000;
+    font-family: "Tahoma", "Segoe UI", monospace;
+    font-size: 10pt;
+}
+
+QPushButton {
+    background-color: #e0e0e0;
+    border: 2px solid #808080;
+    border-radius: 0px;
+    padding: 4px 8px;
+}
+
+QPushButton:pressed {
+    background-color: #c0c0c0;
+    border-style: inset;
+}
+
+QLineEdit, QTextEdit {
+    background-color: #ffffff;
+    border: 2px inset #808080;
+    padding: 2px;
+}
+
+QLineEdit:focus,
+QTextEdit:focus,
+QPushButton:focus {
+    border: 2px solid #008080;
+}
+
+QLabel {
+    color: #000000;
+}
+
+QScrollBar:vertical {
+    background: #c0c0c0;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background: #808080;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #00a0a0;
+}
+
+
+QListView::item:selected,
+QTreeView::item:selected,
+QTableView::item:selected {
+    background-color: #008080; 
+    color: #ffffff;
+}
+
+
+

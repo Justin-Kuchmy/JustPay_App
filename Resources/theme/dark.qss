@@ -1,0 +1,46 @@
+/* QWidget background */
+QWidget {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+}
+
+/* Scroll Area */
+QScrollArea {
+    border: none;
+}
+
+/* Accent color for buttons */
+QPushButton#accentButton {
+    background-color: #0078d7;
+    color: #ffffff;
+    border-radius: 5px;
+}
+
+QPushButton#accentButton:hover {
+    background-color: #005a9e;
+}
+
+QPushButton#accentButton:pressed {
+    background-color: #004080;
+}
+
+/* Line edits and text edits */
+QLineEdit, QTextEdit {
+    background-color: #2d2d2d;
+    border: 1px solid #3c3c3c;
+    border-radius: 4px;
+    padding: 4px;
+    selection-background-color: #0078d7;
+}
+
+/* Labels */
+QLabel {
+    color: #e0e0e0;
+}
+
+/* Dialog button box */
+QDialogButtonBox QPushButton {
+    min-width: 80px;
+}
