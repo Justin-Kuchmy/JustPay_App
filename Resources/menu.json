@@ -5,7 +5,7 @@
             "options": [
                 {
                     "label": "Employee Management Module",
-                    "submenu": "employee-management_menu"
+                    "action": "select_employee"
                 },
                 {
                     "label": "Attendance Tracking Module",
@@ -18,10 +18,6 @@
                 {
                     "label": "Payslip Generation Module",
                     "submenu": "payslip-generation_menu"
-                },
-                {
-                    "label": "Reports & Logs Module",
-                    "submenu": "reports-logs_menu"
                 },
                 {
                     "label": "Admin Settings Module",
@@ -268,20 +264,8 @@
             "title": "Admin Settings Module",
             "options": [
                 {
-                    "label": "Manage Log-in Security",
-                    "action": "manage_login_security"
-                },
-                {
                     "label": "SQL Query Module",
                     "action": "sql_query_module"
-                },
-                {
-                    "label": "Manage User Roles",
-                    "submenu": "manage-roles_menu"
-                },
-                {
-                    "label": "Contribution Tables (Edit Rates)",
-                    "submenu": "contrib-tables_menu"
                 }
             ]
         },

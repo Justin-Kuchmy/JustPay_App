@@ -19,40 +19,42 @@
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"
 
-namespace Ui {
-class EmployeeDetailsWidget;
+namespace Ui
+{
+    class EmployeeDetailsWidget;
 }
 
-class EmployeeDetailsWidget : public BaseContentWidget {
+class EmployeeDetailsWidget : public BaseContentWidget
+{
     Q_OBJECT
 
 public:
     explicit EmployeeDetailsWidget(QWidget *parent = nullptr);
-    ~EmployeeDetailsWidget();  
-    EmployeeDetailsWidget(const EmployeeDetailsWidget&) = delete; 
-    EmployeeDetailsWidget& operator=(const EmployeeDetailsWidget&) = delete;
+    ~EmployeeDetailsWidget();
+    EmployeeDetailsWidget(const EmployeeDetailsWidget &) = delete;
+    EmployeeDetailsWidget &operator=(const EmployeeDetailsWidget &) = delete;
 
 private slots:
-    void onEmployeeSelected(QString& empID);
+    void onEmployeeSelected(QString &empID);
     QString getSelectedEmployee() const;
-    void onEmployeeSearchBoxChanged(const QString& text);
+    void onEmployeeSearchBoxChanged(const QString &text);
+    void openAddEmployeeDialog();
+
 private:
     Ui::EmployeeDetailsWidget *ui;
     Employee m_Employee;
-    std::vector<Employee>* employees;
-    EditEmployeeDetails* editEmployeeForm;
-    EditEmergencyContactDetails* editContactForm;
-    EditDependentDetails* editDependentForm;
-    LoanLedgerWidget* loanLedgetWidget;
-    EmployeeAttendanceWidget* employeeAttendanceLogWidget;
+    std::vector<Employee> *employees;
+    EditEmployeeDetails *editEmployeeForm;
+    EditEmergencyContactDetails *editContactForm;
+    EditDependentDetails *editDependentForm;
+    LoanLedgerWidget *loanLedgetWidget;
+    EmployeeAttendanceWidget *employeeAttendanceLogWidget;
     void refreshEmployeeList(const QString &filter = QString());
-    bool loadEmployeeDetails(QString& empID);
+    bool loadEmployeeDetails(QString &empID);
     std::optional<Contact> optContact;
     std::optional<Dependent> optDependent;
     std::vector<LoanLedger> optLoanLedgers;
     std::vector<AttendanceLog> optAttendanceLogs;
-    
 };
-
 
 #endif
