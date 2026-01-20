@@ -17,7 +17,7 @@
                 },
                 {
                     "label": "Payslip Generation Module",
-                    "submenu": "payslip-generation_menu"
+                    "action": "payslip-generation_menu"
                 },
                 {
                     "label": "Admin Settings Module",

@@ -11,33 +11,41 @@
 #include "UI/Add_Overtime_Hours_Dialog.h"
 #include "UI/Attendance_List_Widget.h"
 #include "UI/Payroll_Widget.h"
-
-
-
+#include "UI/Payslip_Generation_Widget.h"
 
 std::unordered_map<QString, DialogFactory::Creator> DialogFactory::registry;
-
 
 void DialogFactory::registerDialogs()
 {
     registry.clear();
-    registry["add_employee"] = []() { return new AddEmployeeDialog(); };
-    registry["add_contact"] = []() { return new EmergencyContactDialog(); };
-    registry["add_dependent"] = []() { return new AddDependentDialog(); };
-    registry["select_employee"] = []() { return new EmployeeDetailsWidget(); };
-    registry["add_loan_ledger"] = []() { return new AddLoanLedgerDialog(); };
-    registry["sql_query_module"] = []() { return new SqlQueryWidget(); };
-    registry["add_sql_description"] = []() { return new AddSqlDescriptionDialog(); };
-    registry["attendance_list"] = []() { return new AttendanceListWidget(); };
-    registry["Add_Time_Log"] = []() { return new AddTimeLogDialog(); };
-    registry["Add_Overtime_Hours"] = []() { return new AddOvertimeHoursDialog(); };
-    registry["payroll-compute_widget"] = []() { return new PayrollWidget(); };
-
-
-    
+    registry["add_employee"] = []()
+    { return new AddEmployeeDialog(); };
+    registry["add_contact"] = []()
+    { return new EmergencyContactDialog(); };
+    registry["add_dependent"] = []()
+    { return new AddDependentDialog(); };
+    registry["select_employee"] = []()
+    { return new EmployeeDetailsWidget(); };
+    registry["add_loan_ledger"] = []()
+    { return new AddLoanLedgerDialog(); };
+    registry["sql_query_module"] = []()
+    { return new SqlQueryWidget(); };
+    registry["add_sql_description"] = []()
+    { return new AddSqlDescriptionDialog(); };
+    registry["attendance_list"] = []()
+    { return new AttendanceListWidget(); };
+    registry["Add_Time_Log"] = []()
+    { return new AddTimeLogDialog(); };
+    registry["Add_Overtime_Hours"] = []()
+    { return new AddOvertimeHoursDialog(); };
+    registry["payroll-compute_widget"] = []()
+    { return new PayrollWidget(); };
+    registry["payslip-generation_menu"] = []()
+    { return new PayslipWidget(); };
 };
 
-QWidget* DialogFactory::create(const QString& key) {
+QWidget *DialogFactory::create(const QString &key)
+{
     if (registry.contains(key))
         return registry[key]();
     return nullptr;
