@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QDir>
 
-sqlite3 *openDb(const std::string &dbName)
+sqlite3 *AppContext::openDb(const std::string &dbName)
 {
     sqlite3 *db = nullptr;
     QString exeDir = QCoreApplication::applicationDirPath();
