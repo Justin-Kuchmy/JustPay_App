@@ -1,6 +1,6 @@
 /* QWidget background */
 QWidget {
-    background-color: #1e1e1e;
+    background-color: #110f0f; 
     color: #e0e0e0;
     font-family: "Segoe UI", Arial, sans-serif;
     font-size: 11pt;
@@ -9,6 +9,11 @@ QWidget {
 /* Scroll Area */
 QScrollArea {
     border: none;
+}
+
+/* Regular Buttons*/
+QPushButton{
+    background-color: #1e1e1e; 
 }
 
 /* Accent color for buttons */

@@ -1,12 +1,20 @@
 /* QWidget background */
 QWidget {
-    background-color: #f7f7f7;
+    background-color: #e2e2e2;
     color: #333333;
     font-family: "Segoe UI", Arial, sans-serif;
     font-size: 11pt;
 }
 
+
+
 /* Buttons */
+
+/* Regular Buttons*/
+QPushButton{
+    background-color: #f7f7f7; 
+}
+
 /* Accent color for buttons */
 QPushButton#accentButton {
     background-color: #0078d7;

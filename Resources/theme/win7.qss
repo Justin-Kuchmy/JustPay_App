@@ -1,42 +1,154 @@
 QWidget {
-    background-color: #ececec;
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #f0f0f0,
+        stop:1 #d9d9d9
+    );
     color: #000000;
-    font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI", Tahoma, Verdana;
     font-size: 10pt;
 }
 
 QPushButton {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #ffffff, stop:1 #d0d0d0);
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #ffffff,
+        stop:1 #d6d6d6
+    );
     border: 1px solid #a0a0a0;
     border-radius: 5px;
     padding: 6px 12px;
-    color: #000000;
 }
 
 QPushButton:hover {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #f0f0f0, stop:1 #c0c0c0);
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #e5f0ff,
+        stop:1 #c0d8ff
+    );
+    border: 1px solid #5b9bd5;
 }
 
 QPushButton:pressed {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #c0c0c0, stop:1 #a0a0a0);
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #c0d8ff,
+        stop:1 #a0c0ff
+    );
+    border-style: inset;
 }
 
-QLineEdit, QTextEdit {
+QLineEdit, QTextEdit, QComboBox {
     background-color: #ffffff;
     border: 1px solid #a0a0a0;
-    padding: 4px;
     border-radius: 3px;
+    padding: 3px 5px;
+    color: #000000;
 }
 
-QScrollBar:vertical {
-    background: #ececec;
-    width: 12px;
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    color: #000000;
+    selection-background-color: #c0d8ff; /* Win7 highlight */
 }
 
-QScrollBar::handle:vertical {
-    background: #a0a0a0;
-    border-radius: 6px;
+QCheckBox, QRadioButton {
+    color: #000000;
+    background-color: transparent;
 }
+
+QCheckBox, QRadioButton {
+    color: #000000;
+    background-color: transparent;
+}
+
+QMenuBar {
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #f0f0f0,
+        stop:1 #d9d9d9
+    );
+    color: #000000;
+    spacing: 4px;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 4px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: #c0d8ff;
+    color: #000000;
+}
+
+QMenu {
+    background-color: #ffffff;
+    border: 1px solid #a0a0a0;
+    color: #000000;
+}
+
+QMenu::item {
+    padding: 4px 20px;
+}
+
+QMenu::item:selected {
+    background-color: #c0d8ff;
+    color: #000000;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #000000;
+}
+
+/* QTabWidget background */
+QTabWidget {
+    background-color: transparent;  /* main widget gradient shows through */
+    border: none;
+}
+
+/* Tab bar container */
+QTabWidget::pane {
+    border: 1px solid #a0a0a0;      /* subtle gray border */
+    background-color: #ffffff;       /* pane background white */
+    margin-top: -1px;                /* visually connect with selected tab */
+}
+
+/* Individual tabs */
+QTabBar::tab {
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #f8f8f8,
+        stop:1 #e0e0e0
+    );  /* subtle gray gradient like Windows 7 */
+    color: #000000;
+    border: 1px solid #a0a0a0;
+    border-bottom: none;            /* so selected tab blends with pane */
+    padding: 4px 12px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    min-width: 80px;                /* optional min width */
+}
+
+/* Selected tab */
+QTabBar::tab:selected {
+    background-color: #ffffff;       /* white for active tab */
+    border-bottom: 1px solid #ffffff; /* hide bottom border */
+}
+
+/* Hovered tab */
+QTabBar::tab:hover {
+    background-color: #d6e6f5;      /* soft Windows 7 blue highlight */
+}
+
+/* Disabled tab */
+QTabBar::tab:!enabled {
+    color: #a0a0a0;
+}
+
+/* QTabWidget directly — optional for extra styling */
+QTabWidget::tab {
+    padding: 4px;
+}
+

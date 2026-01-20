@@ -1,35 +1,97 @@
 QWidget {
-    background-color: #dce6f1;
-    color: #000000;
-    font-family: "Tahoma", "Segoe UI";
-    font-size: 10pt;
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #5A85B5,  /* lighter top */
+        stop:1 #3A6EA5   /* classic XP blue */
+    );
+    color: #000000;      /* default text color */
 }
 
 QPushButton {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #f0f8ff, stop:1 #cce0ff);
-    border: 1px solid #5b9bd5;
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #7FAF33,
+        stop:1 #5E8C11
+    );
+    color: #FFFFFF;
+    border: 1px solid #3E5A0A;
     border-radius: 4px;
-    padding: 5px 10px;
-    color: #000000;
+    padding: 4px 10px;
 }
 
+/* Hover effect */
 QPushButton:hover {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #e0f0ff, stop:1 #a0c0ff);
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #8FCF44,
+        stop:1 #6E9F11
+    );
 }
 
 QPushButton:pressed {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                      stop:0 #a0c0ff, stop:1 #70a0ff);
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #5E8C11,   
+        stop:1 #4A6F0D    
+    );
+    border-style: inset;  
 }
 
 QLineEdit, QTextEdit {
-    background-color: #ffffff;
-    border: 1px solid #5b9bd5;
-    padding: 3px;
-    border-radius: 2px;
+    background-color: #ffffff;  /* light background */
+    color: #000000;             /* text color */
+    border: 1px solid #808080;
+    border-radius: 4px;
+    padding: 2px 4px;
 }
+
+QComboBox {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+QComboBox QAbstractItemView {
+    background-color: #ffffff;  /* dropdown list background */
+    color: #000000;
+    selection-background-color: #ffc000;  /* XP orange highlight */
+}
+
+QCheckBox, QRadioButton {
+    background-color: transparent;  /* keep parent gradient visible */
+    color: #000000;
+}
+
+QTabWidget {
+    background-color: transparent; /* let parent gradient show */
+    color: #000000;               /* text color */
+    border: none;                 /* optional */
+}
+
+QTabBar::tab {
+    background-color: #cce0ff;   /* normal XP blue tab */
+    color: #000000;
+    border: 1px solid #3A6EA5;
+    padding: 4px 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+QLabel {
+    background-color: transparent;  /* don’t show its own gradient */
+    color: #000000;                 /* or white if needed */
+}
+
+QTabBar::tab:selected {
+    background-color: #3A6EA5;   /* active tab darker blue */
+    color: #ffffff;
+}
+
+QTabBar::tab:hover {
+    background-color: #5A85B5;   /* hover effect */
+}
+
 
 QScrollBar:vertical {
     background: #dce6f1;
@@ -65,4 +127,48 @@ QScrollBar::handle:vertical:hover {
 
 QProgressBar::chunk {
     background-color: #ffb84d;
+}
+
+QMenuBar {
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #5A85B5,   /* lighter top */
+        stop:1 #3A6EA5    /* main XP blue */
+    );
+    color: #000000;       /* text color */
+    spacing: 4px;         /* space between menu items */
+    padding: 2px 4px;
+}
+
+QMenuBar::item {
+    background-color: transparent;  /* so gradient shows through */
+    padding: 4px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: #FFC000;      /* XP orange highlight on hover */
+    color: #000000;
+}
+
+
+QMenu {
+    background-color: qlineargradient(
+        x1:0, y1:0, x2:0, y2:1,
+        stop:0 #73abeb,  /* slightly lighter top */
+        stop:1 #3A6EA5   /* main XP blue */
+    );
+    border: 1px solid #2A4E7A;   /* subtle border for separation */
+    padding: 4px;                 /* padding inside menu */
+}
+
+/* Menu items normal */
+QMenu::item {
+    padding: 4px 20px;
+    color: #FFFFFF;
+}
+
+/* Menu item hover (selection) */
+QMenu::item:selected {
+    background-color: #FFC000; /* classic XP orange highlight */
+    color: #000000;
 }

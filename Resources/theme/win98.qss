@@ -1,5 +1,5 @@
 QWidget {
-    background-color: #c0c0c0;
+    background-color: #008080;
     color: #000000;
     font-family: "Tahoma", "Segoe UI", monospace;
     font-size: 10pt;
@@ -7,52 +7,133 @@ QWidget {
 
 QPushButton {
     background-color: #e0e0e0;
-    border: 2px solid #808080;
-    border-radius: 0px;
-    padding: 4px 8px;
+    border: 2px outset #808080;
+    padding: 4px 10px;
 }
 
 QPushButton:pressed {
-    background-color: #c0c0c0;
     border-style: inset;
 }
 
-QLineEdit, QTextEdit {
+QPushButton:disabled {
+    background-color: #c0c0c0;
+    color: #808080;
+}
+
+QLineEdit, QTextEdit, QComboBox {
     background-color: #ffffff;
+    color: #000000;
     border: 2px inset #808080;
-    padding: 2px;
+    padding: 2px 4px;
 }
 
-QLineEdit:focus,
-QTextEdit:focus,
-QPushButton:focus {
-    border: 2px solid #008080;
+QTimeEdit, QDateEdit {
+    background-color: #ffffff;       /* white input area */
+    color: #000000;                  /* text color */
+    border: 2px inset #808080;       /* classic Windows 98 beveled look */
+    padding: 2px 4px;
+    selection-background-color: #008080;  /* teal selection */
+    selection-color: #ffffff;            /* white text on selection */
 }
 
-QLabel {
+QSpinBox {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px inset #808080;
+    padding: 2px 4px;
+    height: 16px;
+}
+
+QDoubleSpinBox {
+    background-color: #ffffff;       
+    color: #000000;                  
+    border: 1px solid #a0a0a0;     
+    padding: 2px 4px;
+}
+
+QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 16px;
+    border: 1px solid #a0a0a0;
+    background-color: #f0f0f0;     
+}
+
+QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 16px;
+    border: 1px solid #a0a0a0;
+    background-color: #f0f0f0;
+}
+
+/* Up/Down arrows */
+QDoubleSpinBox::up-arrow {
+    image: none;                     /* default arrow drawn by style */
+}
+
+QDoubleSpinBox::down-arrow {
+    image: none;                     /* default arrow drawn by style */
+}
+
+
+
+QCheckBox, QRadioButton {
+    background-color: #fff;
     color: #000000;
 }
 
-QScrollBar:vertical {
-    background: #c0c0c0;
-    width: 12px;
+QTabWidget {
+    background-color: #c0c0c0;
+    border: 1px solid #808080;
 }
 
-QScrollBar::handle:vertical {
-    background: #808080;
+QTabWidget::pane {
+    background-color: #e0e0e0;
+    border: 2px inset #808080;
 }
 
-QScrollBar::handle:vertical:hover {
-    background-color: #00a0a0;
+QTabBar::tab {
+    background-color: #d0d0d0;
+    border: 2px outset #808080;
+    padding: 3px 8px;
 }
 
+QTabBar::tab:selected {
+    background-color: #ffffff;
+    border-style: inset;
+}
 
-QListView::item:selected,
-QTreeView::item:selected,
-QTableView::item:selected {
-    background-color: #008080; 
+QMenuBar {
+    background-color: #c0c0c0;
+    color: #000000;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 4px 12px;
+}
+
+QMenuBar::item:selected {
+    background-color: #008080;  /* Windows 98 teal highlight */
     color: #ffffff;
 }
 
+QMenu {
+    background-color: #e0e0e0;
+    border: 2px inset #808080;
+}
 
+QMenu::item {
+    padding: 3px 20px;
+}
 
+QMenu::item:selected {
+    background-color: #008080;
+    color: #ffffff;
+}
+
+QLabel {
+    background-color: transparent;
+    color: #000000;
+}

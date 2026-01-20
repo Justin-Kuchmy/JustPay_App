@@ -10,5 +10,8 @@
     <file>theme/win7.qss</file>
     <file>theme/win98.qss</file>
     <file>theme/winxp.qss</file>
+    <file>icons/downarrow.png</file>
+    <file>icons/uparrow.png</file>
   </qresource>
+
 </RCC>
