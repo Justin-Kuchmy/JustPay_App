@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iomanip>
-#include <cstdio> 
+#include <cstdio>
 #include <locale>
 #include <chrono>
 #include <ctime>
@@ -18,14 +18,14 @@ enum Department
     Finance,
     IT,
     Operations,
-    Sales,       
-    Marketing,   
-    Admin,       
-    Legal,       
+    Sales,
+    Marketing,
+    Admin,
+    Legal,
     Engineering,
 
 };
-enum JobLevel 
+enum JobLevel
 {
     RankAndFile,
     Supervisory,
@@ -33,19 +33,19 @@ enum JobLevel
     Executive,
     BoardOwnership
 };
-enum EmploymentStatus 
+enum EmploymentStatus
 {
-    Regular,       
-    Probationary,  
-    Contractual,   
-    ProjectBased,  
-    Seasonal,      
-    Casual,        
-    PartTime,      
-    InternOJT,     
-    Consultant,    
+    Regular,
+    Probationary,
+    Contractual,
+    ProjectBased,
+    Seasonal,
+    Casual,
+    PartTime,
+    InternOJT,
+    Consultant,
 };
-enum LoanType 
+enum LoanType
 {
     HDMF_Salary_Loan,
     HDMF_Housing_Loan,
@@ -53,28 +53,26 @@ enum LoanType
     SSS_Salary_Loan,
     SSS_Calamity_Loan,
     Personal_Cash_Advance,
-    Other,     
+    Other,
 };
-
-
 
 // =========================
 // CONVERSION ENUM DECLARATIONS
 // =========================
 
+inline std::string loantype_to_string(int i);
+inline std::string department_to_string(int i);
+inline std::string joblevel_to_string(int i);
+inline std::string status_to_string(int i);
 
- inline std::string loantype_to_string(int i);
- inline std::string department_to_string(int i);
- inline std::string joblevel_to_string(int i);
- inline std::string status_to_string(int i);
-
-
-struct Date {
+struct Date
+{
     int year{};
     int month{};
     int day{};
-    
-    static Date fromString(const std::string& s) {
+
+    static Date fromString(const std::string &s)
+    {
         Date d;
         char dash;
         std::istringstream iss(s);
@@ -82,7 +80,7 @@ struct Date {
         return d;
     }
 
-    std::string to_string() const 
+    std::string to_string() const
     {
         std::ostringstream oss;
         oss << std::setw(4) << std::setfill('0') << year << '-'
@@ -90,35 +88,31 @@ struct Date {
             << std::setw(2) << std::setfill('0') << day;
         return oss.str();
     }
-    
+
     static Date getTodayDate()
     {
-        
+
         const auto now = std::chrono::system_clock::now();
         std::time_t t = std::chrono::system_clock::to_time_t(now);
         std::tm localTime = *std::localtime(&t);
-        
-        return Date {
-            localTime.tm_year+1900,
-            localTime.tm_mon+1,
-            localTime.tm_mday
-        };
-        
+
+        return Date{
+            localTime.tm_year + 1900,
+            localTime.tm_mon + 1,
+            localTime.tm_mday};
     }
-    
-    bool operator>(const Date& rhs) const
+
+    bool operator>(const Date &rhs) const
     {
-        
-        return 
-        (year > rhs.year) || 
-        (year == rhs.year && month > rhs.month) || 
-        (year == rhs.year && month == rhs.month && day > rhs.day);
+
+        return (year > rhs.year) ||
+               (year == rhs.year && month > rhs.month) ||
+               (year == rhs.year && month == rhs.month && day > rhs.day);
     }
 };
 
-
- struct Overtime
- {
+struct Overtime
+{
     double regular = 0.0;
     double rest_day = 0.0;
     double rest_day_plus = 0.0;
@@ -160,22 +154,25 @@ struct Date {
         sum += (rest_plus_special / 60.0 * 3.38);
         sum += (night_shift_diff / 60.0 * 0.10);
 
-        //this value is multiplied by the rate of pay
+        // this value is multiplied by the rate of pay
         return sum;
     }
 
-    static double calculatePay(const std::string& json) {
+    static double calculatePay(const std::string &json)
+    {
         Overtime ot = fromJson(json);
         return ot.calculatePay();
     }
 
-    static double extractNumber(const std::string& json, const std::string& key) 
+    static double extractNumber(const std::string &json, const std::string &key)
     {
         auto pos = json.find("\'" + key + "\'");
-        if (pos == std::string::npos) return 0.0;
-        
+        if (pos == std::string::npos)
+            return 0.0;
+
         pos = json.find(":", pos);
-        if (pos == std::string::npos) return 0.0;
+        if (pos == std::string::npos)
+            return 0.0;
 
         std::stringstream ss(json.substr(pos + 1));
         double value = 0;
@@ -183,22 +180,23 @@ struct Date {
         return value;
     }
 
-    static Overtime fromJson(const std::string& json) {
+    static Overtime fromJson(const std::string &json)
+    {
         Overtime ot;
-        ot.regular             = extractNumber(json, "regular");
-        ot.rest_day            = extractNumber(json, "rest_day");
-        ot.rest_day_plus       = extractNumber(json, "rest_day_plus");
-        ot.legal_holiday       = extractNumber(json, "legal_holiday");
-        ot.legal_holiday_plus  = extractNumber(json, "legal_holiday_plus");
-        ot.special_holiday     = extractNumber(json, "special_holiday");
-        ot.special_holiday_plus= extractNumber(json, "special_holiday_plus");
-        ot.rest_plus_legal     = extractNumber(json, "rest_plus_legal");
-        ot.rest_plus_special   = extractNumber(json, "rest_plus_special");
-        ot.night_shift_diff    = extractNumber(json, "night_shift_diff");
+        ot.regular = extractNumber(json, "regular");
+        ot.rest_day = extractNumber(json, "rest_day");
+        ot.rest_day_plus = extractNumber(json, "rest_day_plus");
+        ot.legal_holiday = extractNumber(json, "legal_holiday");
+        ot.legal_holiday_plus = extractNumber(json, "legal_holiday_plus");
+        ot.special_holiday = extractNumber(json, "special_holiday");
+        ot.special_holiday_plus = extractNumber(json, "special_holiday_plus");
+        ot.rest_plus_legal = extractNumber(json, "rest_plus_legal");
+        ot.rest_plus_special = extractNumber(json, "rest_plus_special");
+        ot.night_shift_diff = extractNumber(json, "night_shift_diff");
         return ot;
     }
 
-    std::string to_string() const 
+    std::string to_string() const
     {
         return std::format(
             "{{'regular':{},'rest_day':{},'rest_day_plus':{},"
@@ -215,14 +213,12 @@ struct Date {
             special_holiday_plus,
             rest_plus_legal,
             rest_plus_special,
-            night_shift_diff
-        );
+            night_shift_diff);
     }
+};
 
- };
-
- struct AttendanceLog
- {
+struct AttendanceLog
+{
     int logId{};
     std::string employeeId{};
     Date logDate{};
@@ -234,29 +230,28 @@ struct Date {
     Overtime overtimeObj{};
     std::string notes{};
 
-    double getOvertimePay() const {
+    double getOvertimePay() const
+    {
         return overtimeObj.calculatePay();
     }
-
 
     std::string to_string() const
     {
         std::ostringstream oss;
         oss << "logId: " << logId
-        << "\n employeeId: " << employeeId
-        << "\n logDate: " << logDate.to_string()
-        << "\n lateByMinute: " << lateByMinute
-        << "\n underTimeByMinute: " << underTimeByMinute
-        << "\n overTimeByMinute: " << overTimeByMinute
-        << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
-        << "\n Notes: " << notes;
+            << "\n employeeId: " << employeeId
+            << "\n logDate: " << logDate.to_string()
+            << "\n lateByMinute: " << lateByMinute
+            << "\n underTimeByMinute: " << underTimeByMinute
+            << "\n overTimeByMinute: " << overTimeByMinute
+            << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
+            << "\n Notes: " << notes;
 
         return oss.str();
     }
+};
 
- };
-
-struct Contact 
+struct Contact
 {
     int contactId{};
     std::string name{};
@@ -268,10 +263,10 @@ struct Contact
     {
         std::ostringstream oss;
         oss << "contactId: " << contactId
-        << "\n name: " << name
-        << "\n relation: " << relation
-        << "\n address: " << address
-        << "\n contactNo: " << contactNo;
+            << "\n name: " << name
+            << "\n relation: " << relation
+            << "\n address: " << address
+            << "\n contactNo: " << contactNo;
 
         return oss.str();
     }
@@ -290,7 +285,8 @@ struct LoanLedger
     bool deductionSecondHalf{};
     bool status{};
 
-    std::string to_string() const {
+    std::string to_string() const
+    {
         std::ostringstream oss;
         oss << "LoanLedger { "
             << "loanLedgerId: " << loanLedgerId
@@ -306,7 +302,6 @@ struct LoanLedger
             << " }";
         return oss.str();
     }
-
 };
 struct Dependent
 {
@@ -319,14 +314,14 @@ struct Dependent
     {
         std::ostringstream oss;
         oss << "dependentId: " << dependentId
-        << "\n name: " << name
-        << "\n relation: " << relation
-        << "\n birthday: " << birthday.to_string();
+            << "\n name: " << name
+            << "\n relation: " << relation
+            << "\n birthday: " << birthday.to_string();
 
         return oss.str();
     }
 };
-struct Employee 
+struct Employee
 {
     std::string fullName{};
     std::string employeeId{};
@@ -341,8 +336,8 @@ struct Employee
     std::string hdmfNumber{};
     std::string tin{};
     std::string bankAccountNumber{};
-    std::string clockInTimeStr{};  
-    std::string clockOutTimeStr{}; 
+    std::string clockInTimeStr{};
+    std::string clockOutTimeStr{};
     double monthlyBasicSalary{};
     double monthlyAllowances{};
     std::string personalEmail{};
@@ -352,7 +347,8 @@ struct Employee
     int dependentId{};
 
     // Instance method for debugging
-    std::string to_string() const {
+    std::string to_string() const
+    {
         std::ostringstream oss;
         oss << "Employee { "
             << "fullName: " << fullName
@@ -379,15 +375,15 @@ struct Employee
             << ", dependentId: " << dependentId
             << " }";
         return oss.str();
-    
     };
 };
 
 class PayrollCalculationResults
 {
-public: 
+public:
+    int id{};
     std::string payrollPeriod{"first"};
-    Date dateProcessed{Date(2025,12,18)};
+    Date dateProcessed{Date(2025, 12, 18)};
     std::string employeeId{""};
     std::string fullName{""};
     std::string employeeDepartment{""};
@@ -406,34 +402,32 @@ public:
     double totalDeductions{0.0};
     double netPay{0.0};
 
-    std::string to_string() const {
-    std::ostringstream oss;
-    oss << "PayrollCalculationResults { "
-        << "\n dateProcessed: " << dateProcessed.to_string()
-        << "\n employeeId: " << employeeId
-        << "\n fullName: " << fullName
-        << "\n employeeDepartment: " << employeeDepartment
-        << "\n monthlyBasicSalary: " << monthlyBasicSalary
-        << "\n monthlyAllowances: " << monthlyAllowances
-        << "\n overTimePay: " << overTimePay
-        << "\n adjustments: " << adjustments
-        << "\n grossIncome: " << grossIncome
-        << "\n sssPremium: " << sssPremium
-        << "\n philHealthPremium: " << philHealthPremium
-        << "\n hdmfPremium: " <<hdmfPremium
-        << "\n loanDeductionsPerPayroll: " <<loanDeductionsPerPayroll
-        << "\n deductionFirstHalf: " <<deductionFirstHalf
-        << "\n deductionSecondHalf: " << deductionSecondHalf
-        << "\n totalDeductions: " << totalDeductions
-        << "\n withHoldingTax: " << withHoldingTax
-        << "\n netPay: " << netPay
-        << " }";
-    return oss.str();
-
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "PayrollCalculationResults { "
+            << "\n dateProcessed: " << dateProcessed.to_string()
+            << "\n employeeId: " << employeeId
+            << "\n fullName: " << fullName
+            << "\n employeeDepartment: " << employeeDepartment
+            << "\n monthlyBasicSalary: " << monthlyBasicSalary
+            << "\n monthlyAllowances: " << monthlyAllowances
+            << "\n overTimePay: " << overTimePay
+            << "\n adjustments: " << adjustments
+            << "\n grossIncome: " << grossIncome
+            << "\n sssPremium: " << sssPremium
+            << "\n philHealthPremium: " << philHealthPremium
+            << "\n hdmfPremium: " << hdmfPremium
+            << "\n loanDeductionsPerPayroll: " << loanDeductionsPerPayroll
+            << "\n deductionFirstHalf: " << deductionFirstHalf
+            << "\n deductionSecondHalf: " << deductionSecondHalf
+            << "\n totalDeductions: " << totalDeductions
+            << "\n withHoldingTax: " << withHoldingTax
+            << "\n netPay: " << netPay
+            << " }";
+        return oss.str();
+    };
 };
-};
-
-
 
 // =========================
 // CONVERSION ENUM HELPERS
@@ -443,65 +437,102 @@ public:
 
 inline std::string loantype_to_string(int i)
 {
-    switch(static_cast<LoanType>(i))
+    switch (static_cast<LoanType>(i))
     {
-        case LoanType::HDMF_Salary_Loan:        return "HDMF_Salary_Loan";
-        case LoanType::HDMF_Housing_Loan:       return "HDMF_Housing_Loan";
-        case LoanType::HDMF_Calamity_Loan:      return "HDMF_Calamity_Loan";
-        case LoanType::SSS_Salary_Loan:         return "SSS_Salary_Loan";
-        case LoanType::SSS_Calamity_Loan:       return "SSS_Calamity_Loan";
-        case LoanType::Personal_Cash_Advance:   return "Personal_Cash_Advance";
-        case LoanType::Other:                   return "Other";
-        default:                                return "unknown";
+    case LoanType::HDMF_Salary_Loan:
+        return "HDMF_Salary_Loan";
+    case LoanType::HDMF_Housing_Loan:
+        return "HDMF_Housing_Loan";
+    case LoanType::HDMF_Calamity_Loan:
+        return "HDMF_Calamity_Loan";
+    case LoanType::SSS_Salary_Loan:
+        return "SSS_Salary_Loan";
+    case LoanType::SSS_Calamity_Loan:
+        return "SSS_Calamity_Loan";
+    case LoanType::Personal_Cash_Advance:
+        return "Personal_Cash_Advance";
+    case LoanType::Other:
+        return "Other";
+    default:
+        return "unknown";
     }
 }
 
-
 // --- Department ---
 
-
-inline std::string department_to_string(int i) {
-    switch (static_cast<Department>(i)) {
-        case Department::HR:            return "HR";                
-        case Department::Finance:       return "Finance";                
-        case Department::IT:            return "IT";               
-        case Department::Operations:    return "Operations";             
-        case Department::Sales:         return "Sales";                   
-        case Department::Marketing:     return "Marketing";               
-        case Department::Admin:         return "Admin";                   
-        case Department::Legal:         return "Legal";                   
-        case Department::Engineering:   return "Engineering";             
-        default:                        return "Unknown";
+inline std::string department_to_string(int i)
+{
+    switch (static_cast<Department>(i))
+    {
+    case Department::HR:
+        return "HR";
+    case Department::Finance:
+        return "Finance";
+    case Department::IT:
+        return "IT";
+    case Department::Operations:
+        return "Operations";
+    case Department::Sales:
+        return "Sales";
+    case Department::Marketing:
+        return "Marketing";
+    case Department::Admin:
+        return "Admin";
+    case Department::Legal:
+        return "Legal";
+    case Department::Engineering:
+        return "Engineering";
+    default:
+        return "Unknown";
     }
 }
 
 // --- JobLevel ---
-                   
-                        
-inline std::string joblevel_to_string(int i) {
-    switch (static_cast<JobLevel>(i)) {
-        case JobLevel::RankAndFile:     return "RankAndFile";                
-        case JobLevel::Supervisory:     return "Supervisory";                
-        case JobLevel::Managerial:      return "Managerial";               
-        case JobLevel::Executive:       return "Executive";             
-        case JobLevel::BoardOwnership:  return "BoardOwnership";                      
-        default:                        return "Unknown";
+
+inline std::string joblevel_to_string(int i)
+{
+    switch (static_cast<JobLevel>(i))
+    {
+    case JobLevel::RankAndFile:
+        return "RankAndFile";
+    case JobLevel::Supervisory:
+        return "Supervisory";
+    case JobLevel::Managerial:
+        return "Managerial";
+    case JobLevel::Executive:
+        return "Executive";
+    case JobLevel::BoardOwnership:
+        return "BoardOwnership";
+    default:
+        return "Unknown";
     }
 }
 
 // --- EmploymentStatus ---
-inline std::string status_to_string(int i) {
-    switch (static_cast<EmploymentStatus>(i)) {
-        case EmploymentStatus::Regular:         return "Regular";
-        case EmploymentStatus::Probationary:    return "Probationary";
-        case EmploymentStatus::Contractual:     return "Contractual";
-        case EmploymentStatus::ProjectBased:    return "ProjectBased";
-        case EmploymentStatus::Seasonal:        return "Seasonal";
-        case EmploymentStatus::Casual:          return "Casual";
-        case EmploymentStatus::PartTime:        return "PartTime";
-        case EmploymentStatus::InternOJT:       return "InternOJT";
-        case EmploymentStatus::Consultant:      return "Consultant";
-        default:                        return "Unknown";
+inline std::string status_to_string(int i)
+{
+    switch (static_cast<EmploymentStatus>(i))
+    {
+    case EmploymentStatus::Regular:
+        return "Regular";
+    case EmploymentStatus::Probationary:
+        return "Probationary";
+    case EmploymentStatus::Contractual:
+        return "Contractual";
+    case EmploymentStatus::ProjectBased:
+        return "ProjectBased";
+    case EmploymentStatus::Seasonal:
+        return "Seasonal";
+    case EmploymentStatus::Casual:
+        return "Casual";
+    case EmploymentStatus::PartTime:
+        return "PartTime";
+    case EmploymentStatus::InternOJT:
+        return "InternOJT";
+    case EmploymentStatus::Consultant:
+        return "Consultant";
+    default:
+        return "Unknown";
     }
 }
 
