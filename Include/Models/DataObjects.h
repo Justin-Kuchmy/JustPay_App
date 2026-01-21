@@ -382,11 +382,11 @@ class PayrollCalculationResults
 {
 public:
     int id{};
-    std::string payrollPeriod{"first"};
-    Date dateProcessed{Date(2025, 12, 18)};
     std::string employeeId{""};
     std::string fullName{""};
     std::string employeeDepartment{""};
+    std::string payPeriodText{"August 2025"};
+    int payPeriodHalf{1};
     double monthlyBasicSalary{0.0};
     double monthlyAllowances{0.0};
     double overTimePay{0.0};
@@ -401,6 +401,7 @@ public:
     double withHoldingTax{0.0};
     double totalDeductions{0.0};
     double netPay{0.0};
+    Date dateProcessed{Date(2025, 12, 18)};
 
     std::string to_string() const
     {
