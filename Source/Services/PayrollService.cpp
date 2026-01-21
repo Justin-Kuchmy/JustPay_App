@@ -18,9 +18,14 @@ std::optional<PayrollCalculationResults> PayrollService::getPayrollByID(int id)
     return this->repo.getById(id);
 }
 
-std::vector<PayrollCalculationResults> PayrollService::getAllPayrolls(std::string id)
+std::vector<PayrollCalculationResults> PayrollService::getAllPayrolls(std::string &id)
 {
     return this->repo.getAllById(id);
+}
+
+std::optional<PayrollCalculationResults> PayrollService::getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf)
+{
+    return this->repo.getPayrollByEmployeeAndPeriod(employeeId, payPeriodText, payPeriodHalf);
 }
 
 // UPDATE
