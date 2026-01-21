@@ -3,7 +3,8 @@
 #include <qfiledialog.h>
 #include <qmessagebox.h>
 
-enum TableColumn {
+enum TableColumn
+{
     COL_EMPLOYEE_ID = 0,
     COL_FULL_NAME,
     COL_DEPARTMENT,
@@ -20,16 +21,15 @@ enum TableColumn {
     COL_DED,
     COL_NET_PAY,
 
-    COL_COUNT  
+    COL_COUNT
 };
 
-ResultsWidget::ResultsWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent): BaseContentWidget(parent), ui(new Ui::ResultsWidget), dataBus(dataBus)
+ResultsWidget::ResultsWidget(std::vector<PayrollCalculationResults> *dataBus, QWidget *parent) : BaseContentWidget(parent), ui(new Ui::ResultsWidget), dataBus(dataBus)
 {
     ui->setupUi(this);
     model = std::make_unique<QStandardItemModel>(this);
     connect(ui->submitButton, &QPushButton::clicked, this, &ResultsWidget::submitPayroll);
     connect(ui->exportButton, &QPushButton::clicked, this, &ResultsWidget::exportToExcel);
-    
 }
 ResultsWidget::~ResultsWidget()
 {
@@ -40,7 +40,7 @@ void ResultsWidget::loadTableData()
 {
     ui->table_results->setRowCount(dataBus->size());
     ui->table_results->setColumnCount(COL_COUNT);
-    ui->value_payPeriod->setText(QString::fromStdString(dataBus->at(0).payrollPeriod));
+    ui->value_payPeriod->setText(QString::fromStdString(dataBus->at(0).payPeriodText));
     ui->value_dateProcessed->setText(QString::fromStdString(dataBus->at(0).dateProcessed.to_string()));
     for (size_t i{}; i < dataBus->size(); i++)
     {
@@ -75,7 +75,6 @@ void ResultsWidget::loadTableData()
         ui->table_results->setItem(i, COL_TAX, TAX);
         ui->table_results->setItem(i, COL_DED, DED);
         ui->table_results->setItem(i, COL_NET_PAY, NET_PAY);
-
     }
 }
 
@@ -84,25 +83,25 @@ void ResultsWidget::submitPayroll()
     std::string currentPeriod = ui->value_payPeriod->text().toStdString();
     for (size_t i{}; i < dataBus->size(); i++)
     {
-        auto& results = dataBus->at(i);
+        auto &results = dataBus->at(i);
         std::vector<LoanLedger> loans = AppContext::instance().loanLedgerService().getAllLoanLedgers(results.employeeId);
-        for(size_t j{}; j < loans.size(); j++)
+        for (size_t j{}; j < loans.size(); j++)
         {
-            if(loans[j].status == false)
+            if (loans[j].status == false)
             {
                 continue;
             }
             const double loanDeductionsPerPayroll = loans[j].deductionsPerPayroll;
 
-            bool firstHalf  = loans[j].deductionFirstHalf;
+            bool firstHalf = loans[j].deductionFirstHalf;
             bool secondHalf = loans[j].deductionSecondHalf;
-            
-            if ((firstHalf && !secondHalf && currentPeriod == "first") || 
-                ( secondHalf && currentPeriod == "second"))   
+
+            if ((firstHalf && !secondHalf && currentPeriod == "first") ||
+                (secondHalf && currentPeriod == "second"))
             {
                 loans[j].principalAmount -= loanDeductionsPerPayroll;
                 loans[j].NumOfAmortizations--;
-                if(loans[j].principalAmount <= 0)
+                if (loans[j].principalAmount <= 0)
                 {
                     loans[j].principalAmount = 0;
                     loans[j].deductionFirstHalf = false;
@@ -110,9 +109,8 @@ void ResultsWidget::submitPayroll()
                     loans[j].status = false;
                 }
             }
-            
-            AppContext::instance().loanLedgerService().updateLoanLedger(loans[j]);
 
+            AppContext::instance().loanLedgerService().updateLoanLedger(loans[j]);
         }
     }
 }
@@ -122,11 +120,10 @@ void ResultsWidget::exportToExcel()
     if (!model)
         return;
     QString fileName = QFileDialog::getSaveFileName(
-            this,
-            "Save CSV",
-            "",
-            "CSV files (*.csv);;All files (*)"
-        );
+        this,
+        "Save CSV",
+        "",
+        "CSV files (*.csv);;All files (*)");
     if (fileName.isEmpty())
         return;
     if (!fileName.endsWith(".csv", Qt::CaseInsensitive))
@@ -148,17 +145,19 @@ void ResultsWidget::exportToExcel()
     {
         QString header = ui->table_results->horizontalHeaderItem(j) ? ui->table_results->horizontalHeaderItem(j)->text() : "";
         out << "\"" << header << "\"";
-        if (j < columns - 1) out << ",";
+        if (j < columns - 1)
+            out << ",";
     }
     out << "\n";
-    for(int i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for(int j = 0; j < columns; j++)
+        for (int j = 0; j < columns; j++)
         {
-            QTableWidgetItem * item = ui->table_results->item(i, j);
+            QTableWidgetItem *item = ui->table_results->item(i, j);
             QString text = item ? item->text() : "";
-            out << "\"" << text << "\""; 
-            if (j < columns - 1) out << ",";
+            out << "\"" << text << "\"";
+            if (j < columns - 1)
+                out << ",";
         }
         out << "\n";
     }
