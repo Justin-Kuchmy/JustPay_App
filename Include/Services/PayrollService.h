@@ -16,7 +16,9 @@ public:
     // READ
     std::optional<PayrollCalculationResults> getPayrollByID(int id);
 
-    std::vector<PayrollCalculationResults> getAllPayrolls(std::string id);
+    std::vector<PayrollCalculationResults> getAllPayrolls(std::string &id);
+
+    std::optional<PayrollCalculationResults> getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf);
 
     // UPDATE
     bool updatePayroll(const PayrollCalculationResults &e);
