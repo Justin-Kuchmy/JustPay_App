@@ -2,6 +2,7 @@
   <qresource prefix="/resources">
     <file>menu.json</file>
     <file>history.txt</file>
+    <file>docs/payslip.html</file>
   </qresource>
 
   <qresource prefix="/QtTheme/">
