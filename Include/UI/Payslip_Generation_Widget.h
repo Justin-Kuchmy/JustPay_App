@@ -25,12 +25,16 @@ public:
     void sendEmailWithAttachment(const QString &recipientEmail, const QString &attachmentPath, const QString &subject = "Payslip", const QString &body = "Please find your payslip attached.");
     void printPayslip(const PayrollCalculationResults &payslip);
     void printPayslip(const QString &pdfPath);
+    QString htmlFileToQString(const PayrollCalculationResults &payslip);
+    PayrollCalculationResults getPayslipForEmployeeAndPeriod(QString &employeeId);
+    QString payrollPeriod(const QString &monthYear, bool firstHalf);
 
 private slots:
     void onGenerateAllClicked();
     void onGenerateOneClicked();
     void onPrintClicked();
     void onEmailClicked();
+    void onPreviewClicked();
 
 signals:
 
