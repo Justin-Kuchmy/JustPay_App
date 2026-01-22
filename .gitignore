@@ -48,6 +48,7 @@
 # others
 .vscode/
 history.txt
+generated_payslips/
 
 #tests
 Tests/TestRunner.cpp
