@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body style="font-family: sans-serif; font-size: 12pt">
+    <!-- Company Title -->
+    <p
+      align="center"
+      style="font-size: 18pt; font-weight: bold; margin-bottom: 2px"
+    >
+      JustPay, Inc.
+    </p>
+    <p align="center" style="font-size: 14pt; margin-top: 0px">
+      Payslip: {{PayPeriod}}
+    </p>
+
+    <br />
+
+    <!-- Employee Info: Using a table because DIV borders/backgrounds fail in Qt -->
+    <table
+      width="100%"
+      border="1"
+      cellspacing="0"
+      cellpadding="8"
+      style="margin-bottom: 15px"
+    >
+      <tr>
+        <td bgcolor="#e0e0e0" align="center">
+          Employee No.: <b>{{EmployeeID}}</b><br />
+          Employee Name: <b>{{EmployeeName}}</b>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Main Container Table for Earnings/Deductions -->
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <!-- Earnings Column -->
+        <td width="48%" valign="top">
+          <table width="100%" border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <td colspan="2" bgcolor="#dce6f1" align="center">
+                <b>Earnings</b>
+              </td>
+            </tr>
+            <tr>
+              <td align="left">Basic Salary</td>
+              <td align="right">₱ {{BasicSalary}}</td>
+            </tr>
+            <tr>
+              <td align="left">Allowances</td>
+              <td align="right">₱ {{Allowances}}</td>
+            </tr>
+            <tr>
+              <td align="left">Overtime Pay</td>
+              <td align="right">₱ {{OvertimePay}}</td>
+            </tr>
+            <tr>
+              <td align="left">Others</td>
+              <td align="right">₱ {{Others}}</td>
+            </tr>
+            <tr>
+              <td align="left"><b>Gross Pay</b></td>
+              <td align="right"><b>₱ {{GrossPay}}</b></td>
+            </tr>
+          </table>
+        </td>
+
+        <!-- Spacer Column (Qt doesn't support margin-right on TDs well) -->
+        <td width="4%"></td>
+
+        <!-- Deductions Column -->
+        <td width="48%" valign="top">
+          <table width="100%" border="1" cellspacing="0" cellpadding="4">
+            <tr>
+              <td colspan="2" bgcolor="#dce6f1" align="center">
+                <b>Deductions</b>
+              </td>
+            </tr>
+            <tr>
+              <td align="left">SSS Share</td>
+              <td align="right">₱ {{SSS}}</td>
+            </tr>
+            <tr>
+              <td align="left">PHIC Share</td>
+              <td align="right">₱ {{PHIC}}</td>
+            </tr>
+            <tr>
+              <td align="left">HDMF Share</td>
+              <td align="right">₱ {{HDMF}}</td>
+            </tr>
+            <tr>
+              <td colspan="2" bgcolor="#dce6f1" align="center">
+                <b>Loans / Taxes</b>
+              </td>
+            </tr>
+            <tr>
+              <td align="left">Withholding Tax</td>
+              <td align="right">₱ {{WithholdingTaxes}}</td>
+            </tr>
+            <tr>
+              <td align="left"><b>Total Deductions</b></td>
+              <td align="right"><b>₱ {{TotalDeductions}}</b></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <br />
+
+    <!-- Net Pay: Again, using a table cell for the border and background -->
+    <table width="100%" border="2" cellspacing="0" cellpadding="10">
+      <tr>
+        <td align="center" bgcolor="#ffffcc">
+          <font size="+2"><b>Net Pay: ₱ {{NetPay}}</b></font>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
