@@ -51,21 +51,18 @@
        </item>
        <item>
         <widget class="QDateEdit" name="payrollDateEdit">
-         <property name="dateTime">
-          <datetime>
+         <property name="time">
+          <time>
            <hour>8</hour>
            <minute>0</minute>
            <second>0</second>
-           <year>2025</year>
-           <month>8</month>
-           <day>1</day>
-          </datetime>
+          </time>
          </property>
          <property name="currentSection">
           <enum>QDateTimeEdit::MonthSection</enum>
          </property>
          <property name="displayFormat">
-          <string>M/yyyy</string>
+          <string>MMMM/yyyy</string>
          </property>
          <property name="calendarPopup">
           <bool>true</bool>
@@ -75,8 +72,8 @@
          </property>
          <property name="date">
           <date>
-           <year>2025</year>
-           <month>8</month>
+           <year>2000</year>
+           <month>1</month>
            <day>1</day>
           </date>
          </property>
@@ -151,21 +148,14 @@
          <item>
           <widget class="QPushButton" name="generateAllButton">
            <property name="text">
-            <string>Generate All</string>
+            <string>Save All To PDF</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="generateSelectedButton">
+          <widget class="QPushButton" name="generateOrPrintButton">
            <property name="text">
-            <string>Generate Selected</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="printButton">
-           <property name="text">
-            <string>Print</string>
+            <string>Save Selected as PDF / Print</string>
            </property>
           </widget>
          </item>
