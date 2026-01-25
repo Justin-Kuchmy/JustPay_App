@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.16)
+    cmake_minimum_required(VERSION 3.16)
 
-project(JustPay LANGUAGES CXX)
+    project(JustPay LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ---------------------------------------------------------
-# Qt Setup
-# ---------------------------------------------------------
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport)
+    # ---------------------------------------------------------
+    # Qt Setup
+    # ---------------------------------------------------------
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -pedantic-errors")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -pedantic-errors")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb -Wall")
 
-set(WARNING_EFFC "-Weffc++")
-set(WARNING_CONVERSION "-Wconversion -Wsign-conversion")
-set(WARNING_EXTRA "-Wall -Wextra -pedantic-errors")
+    set(WARNING_EFFC "-Weffc++")
+    set(WARNING_CONVERSION "-Wconversion -Wsign-conversion")
+    set(WARNING_EXTRA "-Wall -Wextra -pedantic-errors")
 
-set(FOCUS_WARNING ${WARNING_EFFC})
-set(FOCUS_WARNING ${WARNING_CONVERSION})
-set(FOCUS_WARNING ${WARNING_EXTRA})
+    set(FOCUS_WARNING ${WARNING_EFFC})
+    set(FOCUS_WARNING ${WARNING_CONVERSION})
+    set(FOCUS_WARNING ${WARNING_EXTRA})
 
 
 
