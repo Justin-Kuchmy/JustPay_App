@@ -3,10 +3,14 @@
 
 #include <QWidget>
 #include <QTextDocument>
+#include <QMessageBox>
+#include <QPrintDialog>
 #include <QPrinter>
+#include <QSslSocket>
 #include "Utils/BaseContentWidget.h"
 #include "Models/DataObjects.h"
 #include <QDir>
+#include <fstream>
 
 namespace Ui
 {
@@ -31,8 +35,7 @@ public:
 
 private slots:
     void onGenerateAllClicked();
-    void onGenerateOneClicked();
-    void onPrintClicked();
+    void onGenerateOneOrPrint();
     void onEmailClicked();
     void onPreviewClicked();
 
