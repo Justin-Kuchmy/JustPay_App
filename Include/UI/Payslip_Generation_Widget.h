@@ -38,8 +38,6 @@ public:
     PayrollCalculationResults getPayslipForEmployeeAndPeriod(QString &employeeId);
     QString payrollPeriod(const QString &monthYear, bool firstHalf);
 
-    QTextDocument &loadFromMemory();
-    QTextDocument &createPDFForEmployee(QString employeeId);
     QString generatePdfFromHtmlInMemory(QString &html);
     void handleEmployeeOrUpload(ActionType action);
     void sendEmail(const QString &pdfFilePath);
