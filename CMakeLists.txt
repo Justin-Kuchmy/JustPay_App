@@ -8,7 +8,7 @@
     # ---------------------------------------------------------
     # Qt Setup
     # ---------------------------------------------------------
-    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport)
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport Pdf)
 
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTOUIC ON)
@@ -103,6 +103,7 @@ target_link_libraries(JustPay
         Qt6::QuickWidgets
         Qt6::Sql 
         Qt6::PrintSupport
+        Qt6::Pdf
         sqlite3
 )
 
