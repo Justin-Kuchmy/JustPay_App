@@ -2,6 +2,7 @@
 #include "UI/Payslip_Generation_Widget.h"
 #include "UI/Payslip_Preview_Dialog.h"
 #include "Utils/Log.h"
+#include <QStandardPaths>
 
 PayslipWidget::PayslipWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PayslipWidget)
 {
@@ -16,8 +17,7 @@ PayslipWidget::PayslipWidget(QWidget *parent) : BaseContentWidget(parent), ui(ne
         ui->employeeComboBox->addItem(QString::fromStdString(e.fullName), QVariant::fromValue(QString::fromStdString(e.employeeId)));
     }
     connect(ui->generateAllButton, &QPushButton::clicked, this, &PayslipWidget::onGenerateAllClicked);
-    connect(ui->generateSelectedButton, &QPushButton::clicked, this, &PayslipWidget::onGenerateOneClicked);
-    connect(ui->printButton, &QPushButton::clicked, this, &PayslipWidget::onPrintClicked);
+    connect(ui->generateOrPrintButton, &QPushButton::clicked, this, &PayslipWidget::onGenerateOneOrPrint);
     connect(ui->emailButton, &QPushButton::clicked, this, &PayslipWidget::onEmailClicked);
     connect(ui->pdfPreviewButton, &QPushButton::clicked, this, &PayslipWidget::onPreviewClicked);
 }
@@ -116,88 +116,192 @@ void PayslipWidget::onGenerateAllClicked()
     auto allEmployees = AppContext::instance().employeeService().getAllEmployees();
     if (!allEmployees.empty())
     {
+        QString folderPath = QFileDialog::getExistingDirectory(this, "Select Folder to Save PDFs", QDir::homePath());
         for (auto &emp : allEmployees)
         {
             QString selectedEmployeeId = QString::fromStdString(emp.employeeId);
-            auto payrollForEmployee = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
-            qDebug() << "Generated payslip saved to:" << generatePDF(payrollForEmployee);
+            QString tempPath = generatePdfFromHtmlInMemory(selectedEmployeeId);
+            QString fileName = QFileInfo(tempPath).fileName();
+            QString realPdfPath = QDir(folderPath).filePath(fileName);
+            if (!realPdfPath.endsWith(".pdf", Qt::CaseInsensitive))
+            {
+                realPdfPath += ".pdf";
+            }
+            QPrinter printer(QPrinter::HighResolution);
+            printer.setOutputFormat(QPrinter::PdfFormat);
+            printer.setOutputFileName(realPdfPath);
+
+            printer.setPageSize(QPageSize(QPageSize::A4));
+            printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+            pdfDoc.print(&printer);
+            QFile::remove(tempPath);
         }
     }
 }
 
-void PayslipWidget::onGenerateOneClicked()
+void PayslipWidget::sendEmail(const QString &pdfPath)
 {
+    /// TODO: read PDF file as binary
+    /// Doc: https://doc.qt.io/qt-6/qfile.html or std::ifstream
 
-    QString selectedEmployeeId = ui->employeeComboBox->currentData().toString();
-    auto payrollForEmployee = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
-    qDebug() << "Generated payslip saved to:" << generatePDF(payrollForEmployee);
+    /// TODO: convert file to QByteArray safely
+    /// Doc: https://doc.qt.io/qt-6/qbytearray.html
+
+    /// TODO: base64 encode the data
+    /// Doc: https://doc.qt.io/qt-6/qbytearray.html#toBase64
+
+    /// TODO: connect to SMTP server (SSL)
+    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+
+    /// TODO: send EHLO, AUTH LOGIN, MAIL FROM, RCPT TO, DATA
+    /// Doc: https://www.rfc-editor.org/rfc/rfc5321.html
+
+    /// TODO: construct MIME message with text + attachment
+    /// Docs:
+    /// MIME standard: https://www.rfc-editor.org/rfc/rfc2045
+    /// Email format: https://www.rfc-editor.org/rfc/rfc5322.html
+
+    /// TODO: split base64 into 76-char lines
+    /// Doc: https://www.rfc-editor.org/rfc/rfc2045.html#section-6.8
+
+    /// TODO: send message over socket
+    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+
+    /// TODO: QUIT and disconnect socket
+    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+
+    /// TODO: delete temp PDF if needed
+    /// Doc: https://doc.qt.io/qt-6/qfile.html#remove
 }
 
-void PayslipWidget::onPrintClicked()
+QString PayslipWidget::generatePdfFromHtmlInMemory(QString &selectedEmployeeId)
 {
-    // Option 1: Let the user select one or more existing PDF files and print them
-    // Option 2: Generate the payslip for the selected employee on the fly and print it directly
-    //  - Handle printer selection and page setup
-    //  - Optionally show print success/failure
+
+    PayrollCalculationResults payrollForEmployee = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
+    QString suggestedName = getSuggestedFileName(payrollForEmployee);
+    pdfDoc.setHtml(htmlFileToQString(payrollForEmployee));
+
+    // Save to a temporary file
+    QString tempPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/" + suggestedName + ".pdf";
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(tempPath);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+
+    pdfDoc.print(&printer);
+
+    return tempPath;
+}
+
+QString PayslipWidget::getSuggestedFileName(PayrollCalculationResults &payslip)
+{
+    std::string payPeriodHalf = (payslip.payPeriodHalf == 1) ? "FirstHalf" : "SecondHalf";
+    std::string baseFileName = payslip.payPeriodText;
+    std::replace(baseFileName.begin(), baseFileName.end(), ' ', '_');
+    QString suggestedFileName = QString::fromStdString(baseFileName + "_" + payPeriodHalf + "_" + payslip.employeeId);
+    return suggestedFileName;
+}
+
+void PayslipWidget::handleEmployeeOrUpload(ActionType action)
+{
+
+    QString option;
+    if (action == ActionType::PrintOrSave)
+        option = "Selected Employee";
+    else
+    {
+        option = showOptionDialog("Print Payslip", "Select Source of Payslip to Print: ", "Selected Employee", "Upload");
+    }
+    QString pdfPath{};
+    if (option == "Selected Employee")
+    {
+        // creating the pdf in memory first,
+        QString selectedEmployeeId = ui->employeeComboBox->currentData().toString();
+        auto payrollInfo = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
+        QString suggestedFileName = getSuggestedFileName(payrollInfo);
+        QString pdfPath = generatePdfFromHtmlInMemory(selectedEmployeeId);
+
+        if (action == ActionType::PrintOrSave)
+        {
+            QString choice = showOptionDialog("Print or Save", "Save as PDF or Print? ", "Save As PDF", "Print");
+
+            if (choice == "Save As PDF")
+            {
+
+                QString filePath = QFileDialog::getSaveFileName(this, "Save PDF", suggestedFileName, "PDF Files (*.pdf)");
+                if (!filePath.isEmpty())
+                {
+                    if (!filePath.endsWith(".pdf", Qt::CaseInsensitive))
+                    {
+                        filePath += ".pdf";
+                    }
+                    QPrinter printer(QPrinter::HighResolution);
+                    printer.setOutputFormat(QPrinter::PdfFormat);
+                    printer.setOutputFileName(filePath);
+
+                    printer.setPageSize(QPageSize(QPageSize::A4));
+                    printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+                    pdfDoc.print(&printer);
+                }
+            }
+            else if (choice == "Print")
+            {
+                QPrinter printer;
+                QPrintDialog printDialog(&printer, this);
+                if (printDialog.exec() == QDialog::Accepted)
+                {
+                    pdfDoc.print(&printer);
+                }
+            }
+        }
+        else if (action == ActionType::Email)
+        {
+            sendEmail(pdfPath);
+            QFile::remove(pdfPath);
+        }
+    }
+    else if (option == "Upload")
+    {
+        QString filePath = QFileDialog::getOpenFileName(this, "Select PDF", QString(), "PDF Files (*.pdf)");
+        if (filePath.isEmpty())
+            return;
+        if (action == ActionType::Email)
+        {
+            sendEmail(filePath);
+        }
+    }
+}
+
+void PayslipWidget::onGenerateOneOrPrint()
+{
+    handleEmployeeOrUpload(ActionType::PrintOrSave);
 }
 
 void PayslipWidget::onEmailClicked()
 {
-    // Option 1: Let the user select one or more existing PDF files and email them
-    // Option 2: Generate the payslip for the selected employee on the fly and email it directly
-    //  - Prepare email content (recipient, subject, body)
-    //  - Attach the PDF(s)
-    //  - Optionally handle success/failure
+    handleEmployeeOrUpload(ActionType::Email);
 }
-
-QString PayslipWidget::generatePDF(const PayrollCalculationResults &payslip, const QString &outputDir)
+QString PayslipWidget::showOptionDialog(QString title, QString text, QString opt1, QString opt2)
 {
-    QString defaultOutputDir = QDir(QCoreApplication::applicationDirPath()).filePath("../generated_payslips");
-
-    QDir dir(defaultOutputDir);
-    if (!dir.exists())
+    QMessageBox msgBox{this};
+    msgBox.setWindowTitle(title);
+    msgBox.setText(text);
+    QPushButton *opt1Btn = msgBox.addButton(opt1, QMessageBox::AcceptRole);
+    QPushButton *opt2Btn = msgBox.addButton(opt2, QMessageBox::AcceptRole);
+    msgBox.exec();
+    QString result{};
+    if (msgBox.clickedButton() == opt1Btn)
     {
-        dir.mkpath(".");
+        return opt1;
     }
-
-    std::string payPeriodHalf = (payslip.payPeriodHalf == 1) ? "FirstHalf" : "SecondHalf";
-
-    std::string forFileName = payslip.payPeriodText;
-    std::replace(forFileName.begin(), forFileName.end(), ' ', '_');
-
-    QString fileName = QString::fromStdString(forFileName + "_" + payPeriodHalf + "_" + payslip.employeeId) + ".pdf";
-    QString fullPath = dir.filePath(fileName);
-
-    qDebug() << "Generating PDF for" << QString::fromStdString(payslip.employeeId) << "at" << fullPath;
-
-    QString html = htmlFileToQString(payslip);
-
-    QTextDocument document;
-    document.setHtml(html);
-
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(fullPath);
-
-    printer.setPageSize(QPageSize(QPageSize::A4));
-    printer.setPageMargins(QMarginsF(15, 15, 15, 15));
-
-    document.print(&printer);
-
-    return fullPath;
-}
-
-void PayslipWidget::sendEmailWithAttachment(const QString &recipientEmail, const QString &attachmentPath, const QString &subject, const QString &body)
-{
-    qDebug() << "Sending email to" << recipientEmail << "with attachment" << attachmentPath;
-}
-
-void PayslipWidget::printPayslip(const PayrollCalculationResults &payslip)
-{
-    qDebug() << "Printing payslip for" << QString::fromStdString(payslip.fullName);
-}
-
-void PayslipWidget::printPayslip(const QString &pdfPath)
-{
-    qDebug() << "Printing payslip from PDF:" << pdfPath;
+    else if (msgBox.clickedButton() == opt2Btn)
+    {
+        pdfPath return opt2;
+    }
+    else
+    {
+        return "";
+    }
 }

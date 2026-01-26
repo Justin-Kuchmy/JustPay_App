@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QTextDocument>
+#include <QPdfDocument>
+#include <QPdfPageRenderer>
 #include <QMessageBox>
 #include <QPrintDialog>
 #include <QPrinter>
@@ -11,11 +13,18 @@
 #include "Models/DataObjects.h"
 #include <QDir>
 #include <fstream>
+#include <QFileDialog>
 
 namespace Ui
 {
     class PayslipWidget;
 }
+
+enum class ActionType
+{
+    PrintOrSave,
+    Email
+};
 
 class PayslipWidget : public BaseContentWidget
 {
@@ -25,13 +34,17 @@ public:
     ~PayslipWidget();
     PayslipWidget(const PayslipWidget &) = delete;
     PayslipWidget &operator=(const PayslipWidget &) = delete;
-    QString generatePDF(const PayrollCalculationResults &payslip, const QString &outputDir = QString());
-    void sendEmailWithAttachment(const QString &recipientEmail, const QString &attachmentPath, const QString &subject = "Payslip", const QString &body = "Please find your payslip attached.");
-    void printPayslip(const PayrollCalculationResults &payslip);
-    void printPayslip(const QString &pdfPath);
     QString htmlFileToQString(const PayrollCalculationResults &payslip);
     PayrollCalculationResults getPayslipForEmployeeAndPeriod(QString &employeeId);
     QString payrollPeriod(const QString &monthYear, bool firstHalf);
+
+    QTextDocument &loadFromMemory();
+    QTextDocument &createPDFForEmployee(QString employeeId);
+    QString generatePdfFromHtmlInMemory(QString &html);
+    void handleEmployeeOrUpload(ActionType action);
+    void sendEmail(const QString &pdfFilePath);
+    QString getSuggestedFileName(PayrollCalculationResults &payslip);
+    QString showOptionDialog(QString title, QString text, QString opt1, QString opt2);
 
 private slots:
     void onGenerateAllClicked();
@@ -46,6 +59,7 @@ private:
     std::vector<Employee> employees{};
     Employee selectedEmployee{};
     QString payPeriod{};
+    QTextDocument pdfDoc{};
 };
 
 #endif
