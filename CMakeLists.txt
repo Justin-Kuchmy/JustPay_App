@@ -8,7 +8,7 @@
     # ---------------------------------------------------------
     # Qt Setup
     # ---------------------------------------------------------
-    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport Pdf)
+    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport)
 
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTOUIC ON)
@@ -77,14 +77,6 @@ ${CMAKE_SOURCE_DIR}/Include
 
 set(CMAKE_AUTOUIC_OUTPUT_DIR "${CMAKE_BINARY_DIR}/Generated")
 
-# ---------------------------------------------------------
-# Cross-platform output name
-# ---------------------------------------------------------
-if(WIN32)
-    set_target_properties(JustPay PROPERTIES OUTPUT_NAME "JustPay.exe")
-else()
-    set_target_properties(JustPay PROPERTIES OUTPUT_NAME "JustPay")
-endif()
 
 set_target_properties(JustPay PROPERTIES AUTOUIC_SEARCH_PATHS "${CMAKE_SOURCE_DIR}/UI/Dialogs")
 
@@ -103,7 +95,6 @@ target_link_libraries(JustPay
         Qt6::QuickWidgets
         Qt6::Sql 
         Qt6::PrintSupport
-        Qt6::Pdf
         sqlite3
 )
 
