@@ -69,7 +69,7 @@ struct EmailCrudentials
 {
     std::string companyEmail{};
     std::string appPassword{};
-}
+};
 
 struct Date
 {
