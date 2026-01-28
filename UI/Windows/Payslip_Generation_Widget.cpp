@@ -298,10 +298,7 @@ QString PayslipWidget::showOptionDialog(QString title, QString text, QString opt
     }
     else if (msgBox.clickedButton() == opt2Btn)
     {
-        pdfPath return opt2;
+        return opt2;
     }
-    else
-    {
-        return "";
-    }
+    return "";
 }
