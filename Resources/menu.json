@@ -266,6 +266,10 @@
                 {
                     "label": "SQL Query Module",
                     "action": "sql_query_module"
+                },
+                {
+                    "label": "Email Auth Module",
+                    "action": "email_auth_module"
                 }
             ]
         },
