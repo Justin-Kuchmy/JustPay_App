@@ -3,8 +3,6 @@
 
 #include <QWidget>
 #include <QTextDocument>
-#include <QPdfDocument>
-#include <QPdfPageRenderer>
 #include <QMessageBox>
 #include <QPrintDialog>
 #include <QPrinter>
