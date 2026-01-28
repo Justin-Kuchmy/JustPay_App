@@ -65,6 +65,12 @@ inline std::string department_to_string(int i);
 inline std::string joblevel_to_string(int i);
 inline std::string status_to_string(int i);
 
+struct EmailCrudentials
+{
+    std::string companyEmail{};
+    std::string appPassword{};
+}
+
 struct Date
 {
     int year{};
