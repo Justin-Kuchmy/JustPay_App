@@ -69,6 +69,11 @@ struct EmailCrudentials
 {
     std::string companyEmail{};
     std::string appPassword{};
+
+    std::string to_string() const
+    {
+        return {"companyEmail " + companyEmail + "\nappPassword: " + appPassword};
+    }
 };
 
 struct Date
@@ -159,7 +164,6 @@ struct Overtime
         sum += (rest_plus_legal / 60.0 * 2.60);
         sum += (rest_plus_special / 60.0 * 3.38);
         sum += (night_shift_diff / 60.0 * 0.10);
-
         // this value is multiplied by the rate of pay
         return sum;
     }
