@@ -240,6 +240,34 @@ QPushButton:pressed {
           </item>
          </layout>
         </item>
+        <item>
+         <widget class="QPushButton" name="backButton">
+          <property name="styleSheet">
+           <string notr="true">
+/* Buttons */
+QPushButton {
+    border-radius: 6px;         
+    border: 1px solid #808080;
+    padding: 6px 12px;   
+    max-width: 60em;        
+    background-color: #ffffff;  /* subtle neutral background for button */
+}
+
+QPushButton:hover {
+    border-width: 2px;
+    border-color: #606060;
+}
+
+QPushButton:pressed {
+    border-style: inset;      
+}
+</string>
+          </property>
+          <property name="text">
+           <string>Back</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
