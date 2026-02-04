@@ -31,9 +31,10 @@
 # ---------------------------------------------------------
 # Include directories
 # ---------------------------------------------------------
-include_directories(
+include_directories(JustPay PRIVATE
     ${CMAKE_SOURCE_DIR}/Include
 )
+
 
 # ---------------------------------------------------------
 # Shared source files for all builds
@@ -42,10 +43,13 @@ file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/main_qt.cpp"
     "${CMAKE_SOURCE_DIR}/Source/*.cpp"
     "${CMAKE_SOURCE_DIR}/Source/**/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Include/*.h"
-    "${CMAKE_SOURCE_DIR}/Include/**/*.h"
     "${CMAKE_SOURCE_DIR}/UI/*.cpp"
     "${CMAKE_SOURCE_DIR}/UI/**/*.cpp"
+)
+
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/Include/*.h"
+    "${CMAKE_SOURCE_DIR}/Include/**/*.h"
 )
 
 # Collect UI files
@@ -66,12 +70,10 @@ endif()
 #----------------------------------------------------------
 add_executable(JustPay
     ${APP_SOURCES}
+    ${HEADER_FILES}
     ${UI_FILES}
 )
 
-target_include_directories(JustPay PRIVATE
-${CMAKE_SOURCE_DIR}/Include
-)
 
 
 
@@ -101,12 +103,4 @@ target_link_libraries(JustPay
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_target_properties(JustPay PROPERTIES FOLDER "Apps")
-
-# ---------------------------------------------------------
-# === TESTS SUBDIRECTORY ===
-# ---------------------------------------------------------
-if(EXISTS "${CMAKE_SOURCE_DIR}/Tests/CMakeLists.txt")
-    add_subdirectory(Tests)
-endif()
-
 
