@@ -18,6 +18,7 @@ PayslipWidget::PayslipWidget(QWidget *parent) : BaseContentWidget(parent), ui(ne
     }
     connect(ui->generateAllButton, &QPushButton::clicked, this, &PayslipWidget::onGenerateAllClicked);
     connect(ui->generateOrPrintButton, &QPushButton::clicked, this, &PayslipWidget::onGenerateOneOrPrint);
+    connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
     connect(ui->emailButton, &QPushButton::clicked, this, &PayslipWidget::onEmailClicked);
     connect(ui->pdfPreviewButton, &QPushButton::clicked, this, &PayslipWidget::onPreviewClicked);
 }
