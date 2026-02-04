@@ -16,6 +16,7 @@
      <property name="font">
       <font>
        <pointsize>14</pointsize>
+       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -37,8 +38,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>780</width>
-        <height>552</height>
+        <width>776</width>
+        <height>541</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="scrollAreaLayout">
@@ -53,7 +54,7 @@
         <widget class="QDateEdit" name="payrollDateEdit">
          <property name="time">
           <time>
-           <hour>8</hour>
+           <hour>0</hour>
            <minute>0</minute>
            <second>0</second>
           </time>
@@ -167,6 +168,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="backButton">
+         <property name="text">
+          <string>Back</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
