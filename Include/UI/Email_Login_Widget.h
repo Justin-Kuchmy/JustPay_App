@@ -6,13 +6,15 @@
 #include <QString>
 #include <QLabel>
 #include <QPushButton>
+#include "Utils/BaseContentWidget.h"
+#include "Utils/AuthService.h"
 
 namespace Ui
 {
     class EmailLoginWidget;
 }
 
-class EmailLoginWidget : public QWidget
+class EmailLoginWidget : public BaseContentWidget
 {
     Q_OBJECT
 
@@ -22,11 +24,12 @@ public:
     EmailLoginWidget(const EmailLoginWidget &) = delete;
     EmailLoginWidget &operator=(const EmailLoginWidget &) = delete;
 private slots:
-    void onLoginButtonClicked();
+    void onSaveButtonClicked();
     void onPassCheckBoxClicked();
 
 private:
     Ui::EmailLoginWidget *ui;
+    EmailCrudentials emailCrudentials;
 };
 
 #endif
