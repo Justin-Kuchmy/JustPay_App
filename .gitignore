@@ -49,6 +49,7 @@
 .vscode/
 history.txt
 generated_payslips/
+emailCrudentials.json
 
 #tests
 Tests/TestRunner.cpp
