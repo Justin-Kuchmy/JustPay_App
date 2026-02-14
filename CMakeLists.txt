@@ -8,6 +8,7 @@
     # ---------------------------------------------------------
     # Qt Setup
     # ---------------------------------------------------------
+    find_package(CURL REQUIRED)
     find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets Sql PrintSupport)
 
     set(CMAKE_AUTOMOC ON)
@@ -97,6 +98,7 @@ target_link_libraries(JustPay
         Qt6::QuickWidgets
         Qt6::Sql 
         Qt6::PrintSupport
+        CURL::libcurl
         sqlite3
 )
 
