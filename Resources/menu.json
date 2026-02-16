@@ -20,7 +20,7 @@
                     "action": "payslip-generation_menu"
                 },
                 {
-                    "label": "Reports & Logs Module",
+                    "label": "Reports and Logs Module",
                     "action": "reports-logs_menu"
                 },
                 {
