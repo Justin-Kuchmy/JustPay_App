@@ -20,6 +20,10 @@
                     "action": "payslip-generation_menu"
                 },
                 {
+                    "label": "Reports & Logs Module",
+                    "action": "reports-logs_menu"
+                },
+                {
                     "label": "Admin Settings Module",
                     "submenu": "admin-settings_menu"
                 }
@@ -193,117 +197,24 @@
                 }
             ]
         },
-        "reports-logs_menu": {
-            "title": "Reports & Logs Module",
-            "options": [
-                {
-                    "label": "View Payroll Registers",
-                    "action": "view_payroll_registers"
-                },
-                {
-                    "label": "View Payroll Journal Entries",
-                    "action": "view_payroll_journals"
-                },
-                {
-                    "label": "Government Remittance Reports",
-                    "submenu": "gov-remittance_menu"
-                },
-                {
-                    "label": "Budget Utilization Reports",
-                    "action": "view_budget_reports"
-                },
-                {
-                    "label": "Year-end Benefits Computation",
-                    "submenu": "yearend-benefits_menu"
-                }
-            ]
-        },
-        "gov-remittance_menu": {
-            "title": "Government Remittance Reports",
-            "options": [
-                {
-                    "label": "SSS Premium",
-                    "action": "sss_premium"
-                },
-                {
-                    "label": "PHIC Premium",
-                    "action": "phic_premium"
-                },
-                {
-                    "label": "HDMF Premium",
-                    "action": "hdmf_premium"
-                },
-                {
-                    "label": "SSS Loans",
-                    "action": "sss_loans"
-                },
-                {
-                    "label": "HDMF Loans",
-                    "action": "hdmf_loans"
-                },
-                {
-                    "label": "Withholding Taxes",
-                    "action": "withholding_taxes"
-                }
-            ]
-        },
-        "yearend-benefits_menu": {
-            "title": "Year-end Benefits Computation",
-            "options": [
-                {
-                    "label": "13th Month Pay",
-                    "action": "compute_13th_month"
-                },
-                {
-                    "label": "Monetized Vacation Leave Credits",
-                    "action": "monetized_leave"
-                }
-            ]
-        },
         "admin-settings_menu": {
             "title": "Admin Settings Module",
             "options": [
+                {
+                    "label": "Manage Log-in Security",
+                    "action": "manage_login_security"
+                },
                 {
                     "label": "SQL Query Module",
                     "action": "sql_query_module"
                 },
                 {
-                    "label": "Email Auth Module",
-                    "action": "email_auth_module"
-                }
-            ]
-        },
-        "manage-roles_menu": {
-            "title": "Manage User Roles",
-            "options": [
-                {
-                    "label": "Admin Role Settings",
-                    "action": "role_admin"
+                    "label": "Manage User Roles",
+                    "submenu": "manage-roles_menu"
                 },
                 {
-                    "label": "HR Staff Role Settings",
-                    "action": "role_hr"
-                }
-            ]
-        },
-        "contrib-tables_menu": {
-            "title": "Contribution Tables",
-            "options": [
-                {
-                    "label": "Edit SSS Rates",
-                    "action": "edit_sss_rates"
-                },
-                {
-                    "label": "Edit PHIC Rates",
-                    "action": "edit_phic_rates"
-                },
-                {
-                    "label": "Edit HDMF Rates",
-                    "action": "edit_hdmf_rates"
-                },
-                {
-                    "label": "Edit Withholding Tax Table",
-                    "action": "edit_tax_table"
+                    "label": "Contribution Tables (Edit Rates)",
+                    "submenu": "contrib-tables_menu"
                 }
             ]
         }

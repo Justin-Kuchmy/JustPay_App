@@ -13,6 +13,7 @@
 #include "UI/Payroll_Widget.h"
 #include "UI/Payslip_Generation_Widget.h"
 #include "UI/Email_Login_Widget.h"
+#include "UI/Reports_Logs_Widget.h"
 
 std::unordered_map<QString, DialogFactory::Creator> DialogFactory::registry;
 
@@ -45,6 +46,10 @@ void DialogFactory::registerDialogs()
     { return new PayslipWidget(); };
     registry["email_auth_module"] = []()
     { return new EmailLoginWidget(); };
+    registry["reports-logs_menu"] = []()
+    { return new ReportsLogsWidget(); };
+    registry["admin-settings_menu"] = []()
+    { return new ReportsLogsWidget(); };
 };
 
 QWidget *DialogFactory::create(const QString &key)
