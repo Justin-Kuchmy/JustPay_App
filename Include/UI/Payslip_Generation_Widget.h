@@ -47,6 +47,7 @@ private slots:
     void onGenerateOneOrPrint();
     void onEmailClicked();
     void onPreviewClicked();
+    void onComboBoxChanged();
 
 signals:
 
@@ -54,6 +55,7 @@ private:
     Ui::PayslipWidget *ui;
     std::vector<Employee> employees{};
     Employee selectedEmployee{};
+    QString selectedEmployeeId{};
     QString payPeriod{};
     QTextDocument pdfDoc{};
 };
