@@ -3,6 +3,8 @@
 #include "UI/Payslip_Preview_Dialog.h"
 #include "Utils/Log.h"
 #include <QStandardPaths>
+#include <curl/curl.h>
+#include "Utils/AuthService.h"
 
 PayslipWidget::PayslipWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PayslipWidget)
 {
@@ -21,6 +23,13 @@ PayslipWidget::PayslipWidget(QWidget *parent) : BaseContentWidget(parent), ui(ne
     connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
     connect(ui->emailButton, &QPushButton::clicked, this, &PayslipWidget::onEmailClicked);
     connect(ui->pdfPreviewButton, &QPushButton::clicked, this, &PayslipWidget::onPreviewClicked);
+    connect(ui->employeeComboBox, &QComboBox::currentIndexChanged, this, &PayslipWidget::onComboBoxChanged);
+}
+
+void PayslipWidget::onComboBoxChanged()
+{
+    selectedEmployeeId = ui->employeeComboBox->currentData().toString();
+    qDebug() << selectedEmployeeId;
 }
 
 PayslipWidget::~PayslipWidget()
@@ -105,7 +114,6 @@ QString PayslipWidget::htmlFileToQString(const PayrollCalculationResults &paysli
 
 void PayslipWidget::onPreviewClicked()
 {
-    QString selectedEmployeeId = ui->employeeComboBox->currentData().toString();
     PayrollCalculationResults payrollForEmployee = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
     QString html = htmlFileToQString(payrollForEmployee);
     PayslipPreviewDialog preview(html);
@@ -120,7 +128,7 @@ void PayslipWidget::onGenerateAllClicked()
         QString folderPath = QFileDialog::getExistingDirectory(this, "Select Folder to Save PDFs", QDir::homePath());
         for (auto &emp : allEmployees)
         {
-            QString selectedEmployeeId = QString::fromStdString(emp.employeeId);
+            selectedEmployeeId = QString::fromStdString(emp.employeeId);
             QString tempPath = generatePdfFromHtmlInMemory(selectedEmployeeId);
             QString fileName = QFileInfo(tempPath).fileName();
             QString realPdfPath = QDir(folderPath).filePath(fileName);
@@ -142,37 +150,80 @@ void PayslipWidget::onGenerateAllClicked()
 
 void PayslipWidget::sendEmail(const QString &pdfPath)
 {
-    /// TODO: read PDF file as binary
-    /// Doc: https://doc.qt.io/qt-6/qfile.html or std::ifstream
+    qDebug() << "sending email.. ";
 
-    /// TODO: convert file to QByteArray safely
-    /// Doc: https://doc.qt.io/qt-6/qbytearray.html
+    std::optional<Employee> empOpt = AppContext::instance().employeeService().getEmployeeByID(selectedEmployeeId.toStdString());
+    std::string emailString;
+    std::string confMessage{};
+    if (!empOpt.has_value())
+    {
+        confMessage = "Employee not found. Email was not sent.";
+    }
+    else
+    {
+        selectedEmployee = empOpt.value();
+        emailString = "<" + selectedEmployee.personalEmail + ">";
 
-    /// TODO: base64 encode the data
-    /// Doc: https://doc.qt.io/qt-6/qbytearray.html#toBase64
+        CURL *curl = curl_easy_init();
+        curl_mime *mime = curl_mime_init(curl);
+        curl_mimepart *part;
+        EmailCrudentials details = AuthService::getInstance().createOrReadSettingsFile();
 
-    /// TODO: connect to SMTP server (SSL)
-    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+        const char *companyEmail = details.companyEmail.c_str();
+        const char *appPassword = details.appPassword.c_str();
 
-    /// TODO: send EHLO, AUTH LOGIN, MAIL FROM, RCPT TO, DATA
-    /// Doc: https://www.rfc-editor.org/rfc/rfc5321.html
+        curl_easy_setopt(curl, CURLOPT_USERNAME, companyEmail);
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, appPassword);
+        curl_easy_setopt(curl, CURLOPT_URL, "smtps://smtp.gmail.com:465");
 
-    /// TODO: construct MIME message with text + attachment
-    /// Docs:
-    /// MIME standard: https://www.rfc-editor.org/rfc/rfc2045
-    /// Email format: https://www.rfc-editor.org/rfc/rfc5322.html
+        curl_easy_setopt(curl, CURLOPT_MAIL_FROM, companyEmail);
+        struct curl_slist *recipients = nullptr;
+        std::string emailString = "<" + selectedEmployee.personalEmail + ">";
+        recipients = curl_slist_append(recipients, emailString.c_str());
+        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
 
-    /// TODO: split base64 into 76-char lines
-    /// Doc: https://www.rfc-editor.org/rfc/rfc2045.html#section-6.8
+        // email body
+        part = curl_mime_addpart(mime);
+        curl_mime_data(part, "Please find your payslip attached.", CURL_ZERO_TERMINATED);
+        curl_mime_type(part, "text/plain");
 
-    /// TODO: send message over socket
-    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+        // pdf attachment
+        part = curl_mime_addpart(mime);
+        curl_mime_filedata(part, pdfPath.toStdString().c_str());
+        curl_mime_type(part, "application/pdf");
+        curl_mime_encoder(part, "base64");
 
-    /// TODO: QUIT and disconnect socket
-    /// Doc: https://doc.qt.io/qt-6/qsslsocket.html
+        curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
 
-    /// TODO: delete temp PDF if needed
-    /// Doc: https://doc.qt.io/qt-6/qfile.html#remove
+        struct curl_slist *headers = nullptr;
+        headers = curl_slist_append(headers, "Subject: Payslip Test");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        CURLcode result;
+        result = curl_easy_perform(curl);
+        if (result != CURLE_OK)
+        {
+            confMessage = "Email failed to send to " + selectedEmployee.personalEmail + "!";
+        }
+        else
+        {
+            confMessage = "Email Sent Successfully to " + selectedEmployee.personalEmail + "!";
+        }
+
+        // clean up
+        curl_slist_free_all(recipients);
+        curl_slist_free_all(headers);
+        curl_mime_free(mime);
+        curl_easy_cleanup(curl);
+    }
+
+    QMessageBox msgBox{this};
+    msgBox.setFixedWidth(150);
+    msgBox.setWindowTitle("Confirmation");
+
+    msgBox.setText(QString::fromStdString(confMessage));
+    msgBox.addButton("Okay", QMessageBox::AcceptRole);
+    msgBox.exec();
 }
 
 QString PayslipWidget::generatePdfFromHtmlInMemory(QString &selectedEmployeeId)
@@ -219,7 +270,7 @@ void PayslipWidget::handleEmployeeOrUpload(ActionType action)
     if (option == "Selected Employee")
     {
         // creating the pdf in memory first,
-        QString selectedEmployeeId = ui->employeeComboBox->currentData().toString();
+        selectedEmployeeId = ui->employeeComboBox->currentData().toString();
         auto payrollInfo = getPayslipForEmployeeAndPeriod(selectedEmployeeId);
         QString suggestedFileName = getSuggestedFileName(payrollInfo);
         QString pdfPath = generatePdfFromHtmlInMemory(selectedEmployeeId);
