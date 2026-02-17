@@ -31,113 +31,47 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>5</number>
        </property>
-       <widget class="QWidget" name="tabPayrollRegisters">
+       <widget class="QWidget" name="payrollRegistersTab">
         <attribute name="title">
          <string>Payroll Registers</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <widget class="QTableView" name="payrollRegistersTable"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnExportPayroll">
-             <property name="text">
-              <string>Export Payroll</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <layout class="QVBoxLayout" name="verticalLayout_2"/>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabJournalEntries">
+       <widget class="QWidget" name="journalEntriesTab">
         <attribute name="title">
          <string>Payroll Journal Entries</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayoutJournal">
-         <item>
-          <widget class="QTableView" name="journalEntriesTable"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExportJournal">
-           <property name="text">
-            <string>Export Journal</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QVBoxLayout" name="verticalLayoutJournal"/>
        </widget>
-       <widget class="QWidget" name="tabGovRemittances">
+       <widget class="QWidget" name="govRemittancesTab">
         <attribute name="title">
          <string>Gov Remittances</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayoutGov">
-         <item>
-          <widget class="QTableView" name="govRemittancesTable"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExportGov">
-           <property name="text">
-            <string>Export Gov Reports</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QVBoxLayout" name="verticalLayoutGov"/>
        </widget>
-       <widget class="QWidget" name="tabBudget">
+       <widget class="QWidget" name="budgetTab">
         <attribute name="title">
          <string>Budget Utilization</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayoutBudget">
-         <item>
-          <widget class="QTableView" name="budgetTable"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExportBudget">
-           <property name="text">
-            <string>Export Budget</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QVBoxLayout" name="verticalLayoutBudget"/>
        </widget>
-       <widget class="QWidget" name="tabAnnualTax">
+       <widget class="QWidget" name="annualTaxTab">
         <attribute name="title">
          <string>Annualized Tax Reconciliation</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayoutAnnualTax">
-         <item>
-          <widget class="QTableView" name="annualTaxTable"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExportAnnualTax">
-           <property name="text">
-            <string>Export Annual Tax</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QVBoxLayout" name="verticalLayoutAnnualTax"/>
        </widget>
-       <widget class="QWidget" name="tabYearEndBenefits">
+       <widget class="QWidget" name="yearEndBenefitsTab">
         <attribute name="title">
          <string>Year-End Benefits</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayoutYearEnd">
-         <item>
-          <widget class="QTableView" name="yearEndTable"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExportYearEnd">
-           <property name="text">
-            <string>Export Benefits</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <layout class="QVBoxLayout" name="verticalLayoutYearEnd"/>
        </widget>
       </widget>
      </item>
