@@ -52,6 +52,7 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent) : BaseContentWidget(parent),
                     key = lineFromFile.left(index);
                 }
                 v += lineFromFile.mid(index + 1).toStdString() + " ";
+                this->listItems.append(key);
             }
             else
             {
@@ -60,8 +61,7 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent) : BaseContentWidget(parent),
             }
         }
 
-        this->listItems.append(key);
-        LoadListItems();
+                LoadListItems();
     }
 
     connect(ui->btnRun, &QPushButton::clicked, this, &SqlQueryWidget::onExecuteClicked);

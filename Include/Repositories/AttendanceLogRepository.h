@@ -4,23 +4,22 @@
 #include "../Models/DataObjects.h"
 #include <sqlite3.h>
 
-class AttendanceLogRepository: public BaseRepository
+class AttendanceLogRepository : public BaseRepository
 {
-    static AttendanceLog mapAttendanceLog(sqlite3_stmt* stmt);
+    static AttendanceLog mapAttendanceLog(sqlite3_stmt *stmt);
 
-    public:
-        
-    explicit AttendanceLogRepository(sqlite3* db);
+public:
+    explicit AttendanceLogRepository(sqlite3 *db);
     std::string getCreateTableSQL() const override;
-    //create
-    sqlite3_int64 insertAttendanceLog(const AttendanceLog& attendanceLog);
-    //read
+    // create
+    sqlite3_int64 insertAttendanceLog(const AttendanceLog &attendanceLog);
+    // read
     std::optional<AttendanceLog> getById(int id);
     std::vector<AttendanceLog> getAllById(std::string id);
     std::vector<AttendanceLog> getAll();
-    //update
-    bool updateAttendanceLog(const AttendanceLog& emp);
-    //delete
+    // update
+    bool updateAttendanceLog(const AttendanceLog &emp);
+    // delete
     bool deleteAttendanceLog(int id);
     std::string getLastAttendanceLogId();
 };

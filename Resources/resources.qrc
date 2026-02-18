@@ -3,6 +3,12 @@
     <file>menu.json</file>
     <file>history.txt</file>
     <file>docs/payslip.html</file>
+    <file>sql/attendancelog.sql</file>
+    <file>sql/dependent.sql</file>
+    <file>sql/emergencycontact.sql</file>
+    <file>sql/employee.sql</file>
+    <file>sql/loanledger.sql</file>
+    <file>sql/payroll.sql</file>
   </qresource>
 
   <qresource prefix="/QtTheme/">

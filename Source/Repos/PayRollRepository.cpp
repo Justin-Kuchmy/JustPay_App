@@ -10,55 +10,17 @@ PayrollRepository::PayrollRepository(sqlite3 *db) : BaseRepository(db)
 
 std::string PayrollRepository::getCreateTableSQL() const
 {
-    return R"(
+    QFile file(":/resources/sql/payroll.sql");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        LOG_DEBUG("Failed to open file");
+        return "";
+    }
+    QTextStream in(&file);
+    QString content = in.readAll();
+    file.close();
 
-            PRAGMA foreign_keys = OFF;
-            DROP TABLE IF EXISTS payroll_records;
-
-            CREATE TABLE payroll_records (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, -- or SERIAL / AUTO_INCREMENT
-
-            employee_id        VARCHAR(50)  NOT NULL,
-            full_name          VARCHAR(100) NOT NULL,
-            department         VARCHAR(100) NOT NULL,
-
-            pay_period_text   VARCHAR(50)  NOT NULL, -- "August 2025"
-            pay_period_half  INTEGER      NOT NULL CHECK (pay_period_half IN (1, 2)),
-
-            basic_salary       DECIMAL(12, 2) NOT NULL,
-            allowances         DECIMAL(12, 2) NOT NULL,
-            overtime_pay       DECIMAL(12, 2) NOT NULL,
-            adjustments        DECIMAL(12, 2) NOT NULL,
-
-            gross_income       DECIMAL(12, 2) NOT NULL,
-
-            sss_premium        DECIMAL(12, 2) NOT NULL,
-            philhealth_premium DECIMAL(12, 2) NOT NULL,
-            hdmf_premium       DECIMAL(12, 2) NOT NULL,
-            loan_deductions    DECIMAL(12, 2) NOT NULL,
-            withholding_tax    DECIMAL(12, 2) NOT NULL,
-
-            total_deductions   DECIMAL(12, 2) NOT NULL,
-            net_pay            DECIMAL(12, 2) NOT NULL,
-
-            created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-
-        INSERT INTO payroll_records (employee_id, full_name, department, pay_period_text, pay_period_half, basic_salary, allowances, overtime_pay, adjustments, gross_income, sss_premium, philhealth_premium, hdmf_premium, loan_deductions, withholding_tax, total_deductions, net_pay ) 
-        VALUES
-        ('00-0001','Alice Santos','HR','August 2025',1,22500.00,2500.00,0.00,0.00,25000.00,1125.00,0.00,0.00,2083.33,1879.10,5087.43,19912.57),
-        ('01-0002','Bob Reyes','Finance','August 2025',1,14000.00,1000.00,0.00,0.00,15000.00,700.00,0.00,0.00,5000.00,432.44,6132.44,8867.56),
-        ('01-0003','Mary Mabulay','Finance','August 2025',1,40000.00,2500.00,1729.29,0.00,44229.29,1750.00,0.00,0.00,2500.00,5932.27,10182.27,34047.02),
-        ('02-0004','Carlos Dela Cruz','IT','August 2025',1,27500.00,1500.00,0.00,0.00,29000.00,1375.00,0.00,0.00,0.00,2829.10,4204.10,24795.90),
-        ('02-0005','Janine Uy','IT','August 2025',1,21000.00,1250.00,67.71,0.00,22317.71,1050.00,0.00,0.00,0.00,1607.64,2657.64,19660.07),
-        ('03-0006','Patrick Gomez','Operations','August 2025',1,19000.00,750.00,0.00,0.00,19750.00,950.00,0.00,0.00,0.00,1214.09,2164.09,17585.91),
-        ('03-0007','Lea Navarro','Operations','August 2025',1,32500.00,2500.00,0.00,0.00,35000.00,1625.00,0.00,0.00,0.00,3779.10,5404.10,29595.90),
-        ('04-0008','Jasmine Co','Sales','August 2025',1,12500.00,600.00,53.74,0.00,13153.74,625.00,0.00,0.00,0.00,226.75,851.75,12301.99),
-        ('04-0009','Miguel Tan','Sales','August 2025',1,23500.00,1500.00,0.00,0.00,25000.00,1175.00,0.00,0.00,0.00,2069.10,3244.10,21755.90),
-        ('05-0010','Katrina Ramos','Marketing','August 2025',1,15000.00,750.00,0.00,0.00,15750.00,750.00,0.00,0.00,0.00,574.94,1324.94,14425.06);
-
-
-    )";
+    return content.toStdString();
 };
 
 PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)

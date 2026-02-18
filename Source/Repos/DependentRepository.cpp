@@ -1,75 +1,59 @@
 #include "Repositories/DependentRepository.h"
 #include <format>
 
-
-DependentRepository::DependentRepository(sqlite3* db): BaseRepository(db)
+DependentRepository::DependentRepository(sqlite3 *db) : BaseRepository(db)
 {
     std::cout << "\n DependentRepository created" << std::endl;
 };
 
-std::string DependentRepository::getCreateTableSQL()const
+std::string DependentRepository::getCreateTableSQL() const
 {
-    return R"(
-        PRAGMA foreign_keys = OFF;
-        DROP TABLE IF EXISTS dependents;
+    QFile file(":/resources/sql/dependent.sql");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        LOG_DEBUG("Failed to open file");
+        return "";
+    }
+    QTextStream in(&file);
+    QString content = in.readAll();
+    file.close();
 
-        CREATE TABLE IF NOT EXISTS dependents (
-            dependentId INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            relation TEXT NOT NULL,
-            birthday TEXT NOT NULL
-
-        );
-
-        -- DEPENDENTS
-        INSERT INTO dependents (name, relation, birthday) VALUES
-        ('Lara Mendoza', 'Daughter', '2016-03-14'),
-        ('Ethan Cruz', 'Son', '2018-09-21'),
-        ('Sofia Reyes', 'Spouse', '1992-07-10'),
-        ('Jacob Tan', 'Son', '2013-11-05'),
-        ('Angela Lim', 'Mother', '1964-01-28'),
-        ('Miguel Torres', 'Father', '1960-06-19'),
-        ('Chloe Navarro', 'Daughter', '2017-12-02'),
-        ('Lucas Ramos', 'Son', '2015-05-09'),
-        ('Bianca Uy', 'Spouse', '1990-10-15'),
-        ('Daniel Bautista', 'Brother', '1995-04-04');
-
-    )";
+    return content.toStdString();
 };
 
-bool DependentRepository::exists(const std::string& name, const Date& birthday)
+bool DependentRepository::exists(const std::string &name, const Date &birthday)
 {
     std::string sql = std::format("select * from dependents where name = '{}' and birthday = '{}';", name, birthday.to_string());
     std::vector<Dependent> results = this->query<Dependent>(sql, mapDependent);
     return !results.empty();
 }
 
-Dependent DependentRepository::mapDependent(sqlite3_stmt* stmt)
+Dependent DependentRepository::mapDependent(sqlite3_stmt *stmt)
 {
     Dependent d;
     d.dependentId = sqlite3_column_int(stmt, 0);
-    d.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-    d.relation = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-    const unsigned char* text = sqlite3_column_text(stmt, 3);
-    if (text) {
-        d.birthday = Date::fromString(reinterpret_cast<const char*>(text));
+    d.name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+    d.relation = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+    const unsigned char *text = sqlite3_column_text(stmt, 3);
+    if (text)
+    {
+        d.birthday = Date::fromString(reinterpret_cast<const char *>(text));
     }
-    else {
+    else
+    {
         d.birthday = Date{1900, 1, 1};
     }
     return d;
 };
 
-
-//CREATE
-sqlite3_int64 DependentRepository::insertDependent(const Dependent& dependent)
+// CREATE
+sqlite3_int64 DependentRepository::insertDependent(const Dependent &dependent)
 {
-    const char* sql = "INSERT INTO dependents (name, relation, birthday) VALUES (?,?,?)";
-    sqlite3_stmt* stmt = nullptr;
-    //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
+    const char *sql = "INSERT INTO dependents (name, relation, birthday) VALUES (?,?,?)";
+    sqlite3_stmt *stmt = nullptr;
+    // database, sql_statement, max_length, out_statement, ptr to unused part of sql string
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-        return 0;  // Failed to prepare
-
+        return 0; // Failed to prepare
 
     // Binds a text value to the 1st parameter (the first ? placeholder) in the prepared statement.
     // Params:
@@ -86,17 +70,17 @@ sqlite3_int64 DependentRepository::insertDependent(const Dependent& dependent)
     sqlite3_finalize(stmt);
 
     if (rc != SQLITE_DONE)
-        return 0;  // Insert failed
+        return 0; // Insert failed
     return sqlite3_last_insert_rowid(db);
 };
 
 // READ
 std::optional<Dependent> DependentRepository::getById(int dependentId)
 {
-    const char* sql = "SELECT * from dependents where dependentId == ?";
-    sqlite3_stmt* stmt = nullptr;
+    const char *sql = "SELECT * from dependents where dependentId == ?";
+    sqlite3_stmt *stmt = nullptr;
     std::optional<Dependent> result = std::nullopt;
-    if(sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
         std::cerr << "Failed to prepare: " << sqlite3_errmsg(db) << std::endl;
         return result;
@@ -110,30 +94,28 @@ std::optional<Dependent> DependentRepository::getById(int dependentId)
     }
     sqlite3_finalize(stmt);
     return result;
-};             
+};
 
 // UPDATE
-bool DependentRepository::updateDependent(const Dependent& d)
+bool DependentRepository::updateDependent(const Dependent &d)
 {
     std::string sql = std::format("update Dependents set name='{}', relation='{}', birthday='{}' where dependentId = '{}'",
-        d.name,
-        d.relation,
-        d.birthday.to_string(),
-        d.dependentId
-        );
+                                  d.name,
+                                  d.relation,
+                                  d.birthday.to_string(),
+                                  d.dependentId);
     return DependentRepository::execute(sql);
-}; 
+};
 
 // DELETE
 bool DependentRepository::deleteDependent(int id)
 {
-    std::string sql = std::format("DELETE from dependents where dependentId = '{}'",id);
+    std::string sql = std::format("DELETE from dependents where dependentId = '{}'", id);
     return DependentRepository::execute(sql);
 };
 
-
 std::string DependentRepository::getLastDependentId()
-{    LOG_DEBUG("DependentRepository::getLastDependentId not implemented");
+{
+    LOG_DEBUG("DependentRepository::getLastDependentId not implemented");
     return "";
-
 };

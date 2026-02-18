@@ -9,40 +9,44 @@
 #include <functional>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
+#include <QFile>
+#include <QTextStream>
 
-class BaseRepository {
-protected: 
-    sqlite3* db = nullptr;
+class BaseRepository
+{
+protected:
+    sqlite3 *db = nullptr;
+
 public:
-    explicit BaseRepository(sqlite3* db);
-    BaseRepository(const BaseRepository&) = delete; 
-    BaseRepository& operator=(const BaseRepository&) = delete;
+    explicit BaseRepository(sqlite3 *db);
+    BaseRepository(const BaseRepository &) = delete;
+    BaseRepository &operator=(const BaseRepository &) = delete;
     virtual ~BaseRepository();
     virtual std::string getCreateTableSQL() const = 0;
     bool createTable();
-    
+
 protected:
-    bool execute(const std::string& sql);
+    bool execute(const std::string &sql);
     template <typename T>
-    std::vector<T> query(const std::string& sql,std::function<T(sqlite3_stmt*)> mapper)
+    std::vector<T> query(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper)
     {
         std::vector<T> results;
-        sqlite3_stmt* stmt; /* OUT: Statement handle */
+        sqlite3_stmt *stmt; /* OUT: Statement handle */
 
-        
-        //database, sql_statement, max_length, out_statement, ptr to unused part of sql string
-        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        // database, sql_statement, max_length, out_statement, ptr to unused part of sql string
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
             std::cerr << "Failed to prepare: " << sqlite3_errmsg(db) << std::endl;
             return results;
         }
-        while (sqlite3_step(stmt) == SQLITE_ROW) {
+        while (sqlite3_step(stmt) == SQLITE_ROW)
+        {
             results.push_back(mapper(stmt));
         }
-        
+
         sqlite3_finalize(stmt);
         return results;
     }
 };
-
 
 #endif
