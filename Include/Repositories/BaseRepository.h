@@ -22,11 +22,11 @@ public:
     BaseRepository(const BaseRepository &) = delete;
     BaseRepository &operator=(const BaseRepository &) = delete;
     virtual ~BaseRepository();
-    virtual std::string getCreateTableSQL() const = 0;
-    bool createTable();
+    virtual bool createTable() const = 0;
 
 protected:
-    bool execute(const std::string &sql);
+    bool execute(const std::string &sql) const;
+    bool executeFile(const QString &filePath) const;
     template <typename T>
     std::vector<T> query(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper)
     {

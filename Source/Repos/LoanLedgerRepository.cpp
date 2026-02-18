@@ -7,20 +7,9 @@ LoanLedgerRepository::LoanLedgerRepository(sqlite3 *db) : BaseRepository(db)
 {
     LOG_DEBUG("\n LoanLedgerRepository created");
 };
-
-std::string LoanLedgerRepository::getCreateTableSQL() const
+bool LoanLedgerRepository::createTable() const
 {
-    QFile file(":/resources/sql/loanledger.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/loanledger.sql");
 };
 
 LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt *stmt)

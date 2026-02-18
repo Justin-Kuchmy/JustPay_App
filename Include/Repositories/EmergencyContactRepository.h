@@ -4,26 +4,27 @@
 #include "../Models/DataObjects.h"
 #include <sqlite3.h>
 
-class EmergencyContactRepository: public BaseRepository {
-    static Contact mapContact(sqlite3_stmt* stmt);
+class EmergencyContactRepository : public BaseRepository
+{
+    static Contact mapContact(sqlite3_stmt *stmt);
 
-    public:
-        explicit EmergencyContactRepository(sqlite3* db);
-        std::string getCreateTableSQL() const override;
-        
-        //CREATE
-        sqlite3_int64 insertContact(const Contact& Contact);
+public:
+    explicit EmergencyContactRepository(sqlite3 *db);
 
-        // READ
-        std::optional<Contact> getById(int id);            
+    bool createTable() const override;
 
-        // UPDATE
-        bool updateContact(const Contact& emp); 
+    // CREATE
+    sqlite3_int64 insertContact(const Contact &Contact);
 
-        // DELETE
-        bool deleteContact(int id);        
-        int getLastContactId();
+    // READ
+    std::optional<Contact> getById(int id);
 
+    // UPDATE
+    bool updateContact(const Contact &emp);
+
+    // DELETE
+    bool deleteContact(int id);
+    int getLastContactId();
 };
 
 #endif

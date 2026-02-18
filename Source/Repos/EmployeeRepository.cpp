@@ -11,20 +11,11 @@ EmployeeRepository::EmployeeRepository(sqlite3 *db) : BaseRepository(db)
 }
 
 // CREATE
-std::string EmployeeRepository::getCreateTableSQL() const
+bool EmployeeRepository::createTable() const
 {
-    QFile file(":/resources/sql/employee.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/employee.sql");
 };
+
 std::string EmployeeRepository::insertEmployee(const Employee &employee)
 {
     std::string sqlA = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");

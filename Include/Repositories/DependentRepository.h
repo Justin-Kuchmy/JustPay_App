@@ -4,30 +4,29 @@
 #include "../Models/DataObjects.h"
 #include <sqlite3.h>
 
-class DependentRepository: public BaseRepository {
-    static Dependent mapDependent(sqlite3_stmt* stmt);
-    
-    public:
-        
-        explicit DependentRepository(sqlite3* db);
+class DependentRepository : public BaseRepository
+{
+    static Dependent mapDependent(sqlite3_stmt *stmt);
 
-        std::string getCreateTableSQL() const override;
+public:
+    explicit DependentRepository(sqlite3 *db);
 
-        //CREATE
-        sqlite3_int64 insertDependent(const Dependent& Dependent);
+    bool createTable() const override;
 
-        // READ
-        std::optional<Dependent> getById(int id);             
+    // CREATE
+    sqlite3_int64 insertDependent(const Dependent &Dependent);
 
-        // UPDATE
-        bool updateDependent(const Dependent& emp); 
+    // READ
+    std::optional<Dependent> getById(int id);
 
-        // DELETE
-        bool deleteDependent(int id);        
-        std::string getLastDependentId();
+    // UPDATE
+    bool updateDependent(const Dependent &emp);
 
-        bool exists(const std::string& name, const Date& birthday);
+    // DELETE
+    bool deleteDependent(int id);
+    std::string getLastDependentId();
 
+    bool exists(const std::string &name, const Date &birthday);
 };
 
 #endif

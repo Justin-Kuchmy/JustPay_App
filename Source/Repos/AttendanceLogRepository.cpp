@@ -6,19 +6,9 @@ AttendanceLogRepository::AttendanceLogRepository(sqlite3 *db) : BaseRepository(d
     std::cout << "\n AttendanceLogRepository created" << std::endl;
 };
 
-std::string AttendanceLogRepository::getCreateTableSQL() const
+bool AttendanceLogRepository::createTable() const
 {
-    QFile file(":/resources/sql/attendancelog.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/attendancelog.sql");
 };
 
 AttendanceLog AttendanceLogRepository::mapAttendanceLog(sqlite3_stmt *stmt)

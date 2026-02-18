@@ -6,19 +6,9 @@ EmergencyContactRepository::EmergencyContactRepository(sqlite3 *db) : BaseReposi
     std::cout << "\n EmergencyContactRepository created" << std::endl;
 };
 
-std::string EmergencyContactRepository::getCreateTableSQL() const
+bool EmergencyContactRepository::createTable() const
 {
-    QFile file(":/resources/sql/emergencycontact.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/emergencycontact.sql");
 };
 
 Contact EmergencyContactRepository::mapContact(sqlite3_stmt *stmt)

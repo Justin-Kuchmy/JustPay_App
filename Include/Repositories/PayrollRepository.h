@@ -11,7 +11,7 @@ class PayrollRepository : public BaseRepository
 public:
     explicit PayrollRepository(sqlite3 *db);
 
-    std::string getCreateTableSQL() const override;
+    bool createTable() const override;
 
     // create
     sqlite3_int64 insertPayroll(const PayrollCalculationResults &payRoll);

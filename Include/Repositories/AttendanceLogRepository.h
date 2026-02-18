@@ -10,7 +10,8 @@ class AttendanceLogRepository : public BaseRepository
 
 public:
     explicit AttendanceLogRepository(sqlite3 *db);
-    std::string getCreateTableSQL() const override;
+
+    bool createTable() const override;
     // create
     sqlite3_int64 insertAttendanceLog(const AttendanceLog &attendanceLog);
     // read

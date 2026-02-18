@@ -7,20 +7,9 @@ PayrollRepository::PayrollRepository(sqlite3 *db) : BaseRepository(db)
 {
     LOG_DEBUG("\n PayrollRepository created");
 };
-
-std::string PayrollRepository::getCreateTableSQL() const
+bool PayrollRepository::createTable() const
 {
-    QFile file(":/resources/sql/payroll.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/payroll.sql");
 };
 
 PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)

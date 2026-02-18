@@ -5,20 +5,9 @@ DependentRepository::DependentRepository(sqlite3 *db) : BaseRepository(db)
 {
     std::cout << "\n DependentRepository created" << std::endl;
 };
-
-std::string DependentRepository::getCreateTableSQL() const
+bool DependentRepository::createTable() const
 {
-    QFile file(":/resources/sql/dependent.sql");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        LOG_DEBUG("Failed to open file");
-        return "";
-    }
-    QTextStream in(&file);
-    QString content = in.readAll();
-    file.close();
-
-    return content.toStdString();
+    return BaseRepository::executeFile(":/resources/sql/dependent.sql");
 };
 
 bool DependentRepository::exists(const std::string &name, const Date &birthday)
