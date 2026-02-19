@@ -1,5 +1,5 @@
 #include "include/Generated/ui_results_widget.h"
-#include "UI/PayslipGeneration/Results_Widget.h"
+#include "UI/PayrollComputation/Results_Widget.h"
 #include <qfiledialog.h>
 #include <qmessagebox.h>
 

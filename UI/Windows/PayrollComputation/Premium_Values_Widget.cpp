@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "include/Generated/ui_premium_values_widget.h"
-#include "UI/PayslipGeneration/Premium_Values_Widget.h"
+#include "UI/PayrollComputation/Premium_Values_Widget.h"
 
 struct TaxBracket
 {

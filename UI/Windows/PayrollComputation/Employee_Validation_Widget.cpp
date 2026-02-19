@@ -1,5 +1,5 @@
 #include "include/Generated/ui_employee_validation_widget.h"
-#include "UI/PayslipGeneration/Employee_Validation_Widget.h"
+#include "UI/PayrollComputation/Employee_Validation_Widget.h"
 #include "Services/AppContext.h"
 
 constexpr int MONTHS_PER_YEAR = 12;

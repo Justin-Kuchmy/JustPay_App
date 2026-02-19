@@ -16,9 +16,9 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"
-#include "UI/PayslipGeneration/Premium_Values_Widget.h"
-#include "UI/PayslipGeneration/Results_Widget.h"
-#include "UI/PayslipGeneration/Employee_Validation_Widget.h"
+#include "UI/PayrollComputation/Premium_Values_Widget.h"
+#include "UI/PayrollComputation/Results_Widget.h"
+#include "UI/PayrollComputation/Employee_Validation_Widget.h"
 
 namespace Ui
 {
