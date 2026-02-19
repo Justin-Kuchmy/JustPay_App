@@ -9,6 +9,8 @@
 #include <nlohmann/json.hpp>
 #include <QTextStream>
 #include <QLineEdit>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 class AuthService
 {

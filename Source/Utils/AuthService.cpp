@@ -28,6 +28,12 @@ EmailCrudentials AuthService::createOrReadSettingsFile()
             qDebug() << "Could not open the file: " << file.errorString();
             return {};
         }
+        QJsonObject obj;
+        obj["companyEmail"] = "";
+        obj["appPassword"] = "";
+
+        QJsonDocument doc(obj);
+        file.write(doc.toJson(QJsonDocument::Indented));
         file.close();
     }
     else
