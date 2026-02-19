@@ -14,9 +14,11 @@ public:
     sqlite3_int64 addPayroll(const PayrollCalculationResults &payrollCalculationResults);
 
     // READ
+    std::vector<PayrollCalculationResults> getAllPayrolls();
+
     std::optional<PayrollCalculationResults> getPayrollByID(int id);
 
-    std::vector<PayrollCalculationResults> getAllPayrolls(std::string &id);
+    std::vector<PayrollCalculationResults> getAllPayrollsByEmployeeID(std::string &id);
 
     std::optional<PayrollCalculationResults> getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf);
 

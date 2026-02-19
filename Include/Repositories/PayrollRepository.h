@@ -17,6 +17,7 @@ public:
     sqlite3_int64 insertPayroll(const PayrollCalculationResults &payRoll);
 
     // read
+    std::vector<PayrollCalculationResults> getAll();
     std::optional<PayrollCalculationResults> getById(int id);
     std::vector<PayrollCalculationResults> getAllById(std::string &id);
     std::optional<PayrollCalculationResults> getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf);

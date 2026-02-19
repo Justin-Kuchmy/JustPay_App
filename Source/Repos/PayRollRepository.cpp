@@ -198,6 +198,23 @@ std::vector<PayrollCalculationResults> PayrollRepository::getAllById(std::string
     }
 };
 
+std::vector<PayrollCalculationResults> PayrollRepository::getAll()
+{
+    std::string sql = std::format("SELECT * FROM payroll_records");
+
+    auto results = this->query<PayrollCalculationResults>(sql, mapPayroll);
+
+    if (!results.empty())
+    {
+        return results;
+    }
+    else
+    {
+        LOG_DEBUG("Failed to get payroll records from the db");
+        return {};
+    }
+};
+
 // update
 bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 {
