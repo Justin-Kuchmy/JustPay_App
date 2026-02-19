@@ -1,19 +1,19 @@
 
 #include "Utils/DialogFactory.h"
-#include "UI/Add_Employee_Dialog.h"
-#include "UI/Add_Dependent_Dialog.h"
-#include "UI/Add_Emergency_Contact_Dialog.h"
-#include "UI/Employee_Details_Widget.h"
-#include "UI/Add_Loan_Ledger_dialog.h"
-#include "UI/SqlQueryWidget.h"
-#include "UI/Add_Sql_Description.h"
-#include "UI/Add_Time_Log_Dialog.h"
-#include "UI/Add_Overtime_Hours_Dialog.h"
-#include "UI/Attendance_List_Widget.h"
-#include "UI/Payroll_Widget.h"
-#include "UI/Payslip_Generation_Widget.h"
-#include "UI/Email_Login_Widget.h"
-#include "UI/Reports_Logs_Widget.h"
+#include "UI/Employee_Management/Add_Employee_Dialog.h"
+#include "UI/Employee_Management/Add_Dependent_Dialog.h"
+#include "UI/Employee_Management/Add_Emergency_Contact_Dialog.h"
+#include "UI/Employee_Management/Employee_Details_Widget.h"
+#include "UI/Employee_Management/Add_Loan_Ledger_dialog.h"
+#include "UI/AdminSettings/SqlQueryWidget.h"
+#include "UI/AdminSettings/Add_Sql_Description.h"
+#include "UI/AdminSettings/Email_Login_Widget.h"
+#include "UI/AttendanceTracking/Add_Time_Log_Dialog.h"
+#include "UI/AttendanceTracking/Add_Overtime_Hours_Dialog.h"
+#include "UI/AttendanceTracking/Attendance_List_Widget.h"
+#include "UI/PayrollComputation/Payroll_Widget.h"
+#include "UI/PayslipGeneration/Payslip_Generation_Widget.h"
+#include "UI/Reports-Logs/Reports_Logs_Widget.h"
 
 std::unordered_map<QString, DialogFactory::Creator> DialogFactory::registry;
 
@@ -47,8 +47,6 @@ void DialogFactory::registerDialogs()
     registry["email_auth_module"] = []()
     { return new EmailLoginWidget(); };
     registry["reports-logs_menu"] = []()
-    { return new ReportsLogsWidget(); };
-    registry["admin-settings_menu"] = []()
     { return new ReportsLogsWidget(); };
 };
 
