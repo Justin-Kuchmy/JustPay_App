@@ -201,20 +201,12 @@
             "title": "Admin Settings Module",
             "options": [
                 {
-                    "label": "Manage Log-in Security",
-                    "action": "manage_login_security"
+                    "label": "Email Authentication",
+                    "action": "email_auth_module"
                 },
                 {
                     "label": "SQL Query Module",
                     "action": "sql_query_module"
-                },
-                {
-                    "label": "Manage User Roles",
-                    "submenu": "manage-roles_menu"
-                },
-                {
-                    "label": "Contribution Tables (Edit Rates)",
-                    "submenu": "contrib-tables_menu"
                 }
             ]
         }
