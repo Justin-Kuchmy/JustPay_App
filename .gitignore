@@ -47,6 +47,7 @@
 
 # others
 .vscode/
+sqlite/
 history.txt
 generated_payslips/
 emailCrudentials.json
