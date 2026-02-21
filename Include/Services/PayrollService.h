@@ -16,6 +16,8 @@ public:
     // READ
     std::vector<PayrollCalculationResults> getAllPayrolls();
 
+    std::vector<PayrollCalculationResults> getAllPayrollsAggregatedToMonthly();
+
     std::optional<PayrollCalculationResults> getPayrollByID(int id);
 
     std::vector<PayrollCalculationResults> getAllPayrollsByEmployeeID(std::string &id);
