@@ -23,14 +23,15 @@ public:
 public slots:
     void onGranularityChanged();
     void onEmployeeSearchChanged(const QString &filter);
-    void onApplyClicked();
     void onResetClicked();
     void onPayrollPeriodChanged();
     void onDepartmentChanged();
 
 private:
     Ui::PayrollRegisterWidget *ui;
-    std::vector<PayrollCalculationResults> payrollVec;
+    std::vector<PayrollCalculationResults> payrollVecMonthly;
+    std::vector<PayrollCalculationResults> payrollFortNight;
+    std::vector<PayrollCalculationResults> *activePayroll = nullptr;
     QStringList payrollByMonth;
     QStringList payrollByfortnight;
     QStringList departments;
