@@ -25,6 +25,8 @@ ReportsLogsWidget::ReportsLogsWidget(QWidget *parent) : BaseContentWidget(parent
     ui->journalEntriesTab->layout()->addWidget(journalEntryWidget);
     ui->payrollRegistersTab->layout()->addWidget(payrollRegisterWidget);
     ui->yearEndBenefitsTab->layout()->addWidget(yearEndBenefitWidget);
+
+    ui->tabWidget->setCurrentIndex(0);
 }
 ReportsLogsWidget::~ReportsLogsWidget()
 {
