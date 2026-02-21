@@ -131,7 +131,7 @@ class PayrollRegisterModel : public QAbstractTableModel
     Q_OBJECT
 public:
     PayrollRegisterModel(QObject *parent) : QAbstractTableModel(parent), m_model{} {};
-    PayrollRegisterModel(QObject *parent, std::vector<PayrollCalculationResults> &payroll) : QAbstractTableModel(parent), m_model(&payroll) {}
+    PayrollRegisterModel(QObject *parent, std::vector<PayrollCalculationResults> *payroll) : QAbstractTableModel(parent), m_model(payroll) {}
     ~PayrollRegisterModel() = default;
     PayrollRegisterModel(const PayrollRegisterModel &) = delete;
     PayrollRegisterModel &operator=(const PayrollRegisterModel &) = delete;
@@ -203,10 +203,12 @@ public:
         }
         return QVariant();
     }
-    void reloadData(const std::vector<PayrollCalculationResults> &newPayrollData)
+    void reloadData(std::vector<PayrollCalculationResults> *payroll)
     {
+        if (!m_model)
+            return;
         beginResetModel();
-        *m_model = newPayrollData;
+        m_model = payroll;
         endResetModel();
     }
 
