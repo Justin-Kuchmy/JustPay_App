@@ -135,6 +135,10 @@ public:
     ~PayrollRegisterModel() = default;
     PayrollRegisterModel(const PayrollRegisterModel &) = delete;
     PayrollRegisterModel &operator=(const PayrollRegisterModel &) = delete;
+    std::vector<PayrollCalculationResults> *getFiltered_Model()
+    {
+        return this->m_model;
+    }
 
     // https://doc.qt.io/qt-6/qabstractitemmodel.html#rowCount
     int rowCount(const QModelIndex &parent = QModelIndex()) const override

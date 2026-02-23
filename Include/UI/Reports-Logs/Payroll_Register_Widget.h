@@ -6,6 +6,9 @@
 #include "Models/DataObjects.h"
 #include "Models/QObjects.h"
 #include <QSortFilterProxyModel>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QModelIndex>
 
 namespace Ui
 {
@@ -26,6 +29,7 @@ public slots:
     void onResetClicked();
     void onPayrollPeriodChanged();
     void onDepartmentChanged();
+    void exportCSVClicked();
 
 private:
     Ui::PayrollRegisterWidget *ui;

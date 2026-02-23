@@ -24,6 +24,7 @@ PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidge
     connect(ui->payrollPeriodFilter, &QComboBox::currentIndexChanged, this, &PayrollRegisterWidget::onPayrollPeriodChanged);
     connect(ui->departmentFilter, &QComboBox::currentIndexChanged, this, &PayrollRegisterWidget::onDepartmentChanged);
     connect(ui->resetButton, &QPushButton::clicked, this, &PayrollRegisterWidget::onResetClicked);
+    connect(ui->exportCSVButton, &QPushButton::clicked, this, &PayrollRegisterWidget::exportCSVClicked);
 
     model = new PayrollRegisterModel(this, activePayroll);
     // load the combo box options
@@ -35,6 +36,62 @@ PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidge
     ui->payrollTableView->hideColumn(4);
     ui->payrollTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->payrollTableView->setSortingEnabled(true);
+}
+
+void PayrollRegisterWidget::exportCSVClicked()
+{
+    if (!this->m_proxy)
+        return;
+    QString fileName = QFileDialog::getSaveFileName(
+        this,
+        "Save CSV",
+        "",
+        "CSV files (*.csv);;All files (*)");
+    if (fileName.isEmpty())
+        return;
+    if (!fileName.endsWith(".csv", Qt::CaseInsensitive))
+    {
+        fileName += ".csv";
+    }
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this, "Error", "Failed to open file for writing");
+        return;
+    }
+
+    QTextStream out(&file);
+    int columns = this->m_proxy->columnCount();
+    int rows = this->m_proxy->rowCount();
+
+    for (int j = 0; j < columns; ++j)
+    {
+        QString header = this->m_proxy->headerData(j, Qt::Horizontal).toString();
+        if (!ui->payrollTableView->isColumnHidden(j))
+        {
+            out << "\"" << header << "\"";
+            if (j < columns - 1)
+                out << ",";
+        }
+    }
+    out << "\n";
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            QModelIndex index = m_proxy->index(i, j);
+            QString data = m_proxy->data(index, Qt::DisplayRole).toString();
+            if (!ui->payrollTableView->isColumnHidden(j))
+            {
+                out << "\"" << data << "\"";
+                if (j < columns - 1)
+                    out << ",";
+            }
+        }
+        out << "\n";
+    }
+    file.close();
+    QMessageBox::information(this, "Export CSV", "CSV file saved successfully!");
 }
 
 void PayrollRegisterWidget::onPayrollPeriodChanged()
