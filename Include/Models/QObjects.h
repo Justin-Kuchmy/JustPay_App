@@ -129,6 +129,7 @@ private:
 class PayrollRegisterModel : public QAbstractTableModel
 {
     Q_OBJECT
+
 public:
     PayrollRegisterModel(QObject *parent) : QAbstractTableModel(parent), m_model{} {};
     PayrollRegisterModel(QObject *parent, std::vector<PayrollCalculationResults> *payroll) : QAbstractTableModel(parent), m_model(payroll) {}
@@ -154,7 +155,7 @@ public:
     // https://doc.qt.io/qt-6/qabstractitemmodel.html#columnCount
     int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
-        return m_columnCount;
+        return COLUMN_COUNT;
     };
 
     // https://doc.qt.io/qt-6/qabstractitemmodel.html#data
@@ -198,8 +199,24 @@ public:
             case 6:
                 return QString("Allowances");
             case 7:
-                return QString("Deductions");
+                return QString("OT Pay");
             case 8:
+                return QString("Adjustments");
+            case 9:
+                return QString("Gross Income");
+            case 10:
+                return QString("SSS Premium EE");
+            case 11:
+                return QString("PHIC Premium EE");
+            case 12:
+                return QString("HDMF Premium EE");
+            case 13:
+                return QString("Loans");
+            case 14:
+                return QString("Withholding Tax");
+            case 15:
+                return QString("Deductions");
+            case 16:
                 return QString("Net Pay");
             default:
                 return QString("");
@@ -218,7 +235,7 @@ public:
 
 private:
     std::vector<PayrollCalculationResults> *m_model;
-    const int m_columnCount = 9;
+    static constexpr int COLUMN_COUNT = 17;
     QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
     {
         // get the row
@@ -242,8 +259,24 @@ private:
         case 6:
             return item.monthlyAllowances;
         case 7:
-            return item.totalDeductions;
+            return item.overTimePay;
         case 8:
+            return item.adjustments;
+        case 9:
+            return item.grossIncome;
+        case 10:
+            return item.sssPremium;
+        case 11:
+            return item.philHealthPremium;
+        case 12:
+            return item.hdmfPremium;
+        case 13:
+            return item.loanDeductionsPerPayroll;
+        case 14:
+            return item.withHoldingTax;
+        case 15:
+            return item.totalDeductions;
+        case 16:
             return item.netPay;
         }
         return QVariant();

@@ -55,6 +55,14 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsAggregatedT
             combined.payPeriodText = firstHalfObj.payPeriodText;
             combined.monthlyBasicSalary = firstHalfObj.monthlyBasicSalary + secondHalfObj.monthlyBasicSalary;
             combined.monthlyAllowances = firstHalfObj.monthlyAllowances + secondHalfObj.monthlyAllowances;
+            combined.overTimePay = firstHalfObj.overTimePay + secondHalfObj.overTimePay;
+            combined.adjustments = firstHalfObj.adjustments + secondHalfObj.adjustments;
+            combined.grossIncome = firstHalfObj.grossIncome + secondHalfObj.grossIncome;
+            combined.sssPremium = firstHalfObj.sssPremium + secondHalfObj.sssPremium;
+            combined.philHealthPremium = firstHalfObj.philHealthPremium + secondHalfObj.philHealthPremium;
+            combined.hdmfPremium = firstHalfObj.hdmfPremium + secondHalfObj.hdmfPremium;
+            combined.loanDeductionsPerPayroll = firstHalfObj.loanDeductionsPerPayroll + secondHalfObj.loanDeductionsPerPayroll;
+            combined.withHoldingTax = firstHalfObj.withHoldingTax + secondHalfObj.withHoldingTax;
             combined.totalDeductions = firstHalfObj.totalDeductions + secondHalfObj.totalDeductions;
             combined.netPay = firstHalfObj.netPay + secondHalfObj.netPay;
         }
