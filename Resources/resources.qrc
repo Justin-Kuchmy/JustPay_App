@@ -9,6 +9,7 @@
     <file>sql/employee.sql</file>
     <file>sql/loanledger.sql</file>
     <file>sql/payroll.sql</file>
+    <file>sql/journalentry.sql</file>
   </qresource>
 
   <qresource prefix="/QtTheme/">

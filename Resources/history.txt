@@ -12,3 +12,5 @@ loanledger|  select * from loan_ledgers
 --END--
 payroll|  select * from payroll_records
 --END--
+journalEntry|  select * from journal_entries
+--END--

@@ -4,25 +4,25 @@
 
 class LoanLedgerService
 {
-    protected:
-        LoanLedgerRepository& repo;
-    public:
-        explicit LoanLedgerService(LoanLedgerRepository& r);
+protected:
+    LoanLedgerRepository &repo;
 
-        //CREATE
-        sqlite3_int64 addLoanLedger(const LoanLedger& LoanLedger);
+public:
+    explicit LoanLedgerService(LoanLedgerRepository &r);
 
-        //READ
-        std::optional<LoanLedger> getLoanLedgerByID(int id);
+    // CREATE
+    sqlite3_int64 addLoanLedger(const LoanLedger &LoanLedger);
 
-        std::vector<LoanLedger> getAllLoanLedgers(std::string id);
+    // READ
+    std::optional<LoanLedger> getLoanLedgerByID(int id);
 
-        //UPDATE
-        bool updateLoanLedger(const LoanLedger& e);
-        
-        //DELETE
-        bool deleteLoanLedger(int id);
- 
+    std::vector<LoanLedger> getAllLoanLedgers(std::string id);
+
+    // UPDATE
+    bool updateLoanLedger(const LoanLedger &e);
+
+    // DELETE
+    bool deleteLoanLedger(int id);
 };
 
 #endif
