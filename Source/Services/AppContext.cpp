@@ -30,12 +30,14 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
                                                     m_loanLedgerRepo(m_db),
                                                     m_attendanceLogRepo(m_db),
                                                     m_payrollRepo(m_db),
+                                                    m_journalEntryRepo(m_db),
                                                     m_employeeService(m_employeeRepo),
                                                     m_dependentService(m_dependentRepo),
                                                     m_emergencyContactService(m_emergencyContactRepo),
                                                     m_loanLedgerService(m_loanLedgerRepo),
                                                     m_attendanceLogService(m_attendanceLogRepo),
-                                                    m_payrollService(m_payrollRepo)
+                                                    m_payrollService(m_payrollRepo),
+                                                    m_journalEntryService(m_journalEntryRepo)
 {
 
     m_employeeRepo.createTable();
@@ -44,6 +46,7 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
     m_loanLedgerRepo.createTable();
     m_attendanceLogRepo.createTable();
     m_payrollRepo.createTable();
+    m_journalEntryRepo.createTable();
 };
 
 AppContext::~AppContext()
@@ -84,4 +87,9 @@ AttendanceLogService &AppContext::attendanceLogService() noexcept
 PayrollService &AppContext::payrollService() noexcept
 {
     return m_payrollService;
+}
+
+JournalEntryService &AppContext::journalEntryService() noexcept
+{
+    return m_journalEntryService;
 }

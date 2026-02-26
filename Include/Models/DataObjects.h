@@ -33,6 +33,7 @@ enum JobLevel
     Executive,
     BoardOwnership
 };
+
 enum EmploymentStatus
 {
     Regular,
@@ -56,6 +57,18 @@ enum LoanType
     Other,
 };
 
+enum class AccountType
+{
+    Expense,
+    Liability,
+    Asset
+};
+enum class EntryType
+{
+    Debit,
+    Credit
+};
+
 // =========================
 // CONVERSION ENUM DECLARATIONS
 // =========================
@@ -64,6 +77,17 @@ inline std::string loantype_to_string(int i);
 inline std::string department_to_string(int i);
 inline std::string joblevel_to_string(int i);
 inline std::string status_to_string(int i);
+inline std::string AccountType_to_string(int i);
+inline std::string EntryType_to_string(int i);
+
+struct JournalEntry
+{
+    AccountType accountType;
+    QString accountName;
+    EntryType entryType;
+    double amount;
+    QString sourceDescription; // "Basic Salary", "SSS Premium ER", etc
+};
 
 struct EmailCrudentials
 {
@@ -546,6 +570,29 @@ inline std::string status_to_string(int i)
         return "Consultant";
     default:
         return "Unknown";
+    }
+}
+
+inline std::string AccountType_to_string(int i)
+{
+    switch (static_cast<AccountType>(i))
+    {
+    case AccountType::Expense:
+        return "Expense";
+    case AccountType::Liability:
+        return "Liability";
+    case AccountType::Asset:
+        return "Asset";
+    }
+}
+inline std::string EntryType_to_string(int i)
+{
+    switch (static_cast<EntryType>(i))
+    {
+    case EntryType::Debit:
+        return "Debit";
+    case EntryType::Credit:
+        return "Credit";
     }
 }
 
