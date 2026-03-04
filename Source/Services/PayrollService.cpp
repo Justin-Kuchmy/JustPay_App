@@ -58,13 +58,16 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsAggregatedT
             combined.overTimePay = firstHalfObj.overTimePay + secondHalfObj.overTimePay;
             combined.adjustments = firstHalfObj.adjustments + secondHalfObj.adjustments;
             combined.grossIncome = firstHalfObj.grossIncome + secondHalfObj.grossIncome;
-            combined.sssPremium = firstHalfObj.sssPremium + secondHalfObj.sssPremium;
-            combined.philHealthPremium = firstHalfObj.philHealthPremium + secondHalfObj.philHealthPremium;
-            combined.hdmfPremium = firstHalfObj.hdmfPremium + secondHalfObj.hdmfPremium;
+            combined.sssPremium_EE = firstHalfObj.sssPremium_EE + secondHalfObj.sssPremium_EE;
+            combined.philHealthPremium_EE = firstHalfObj.philHealthPremium_EE + secondHalfObj.philHealthPremium_EE;
+            combined.hdmfPremium_EE = firstHalfObj.hdmfPremium_EE + secondHalfObj.hdmfPremium_EE;
             combined.loanDeductionsPerPayroll = firstHalfObj.loanDeductionsPerPayroll + secondHalfObj.loanDeductionsPerPayroll;
             combined.withHoldingTax = firstHalfObj.withHoldingTax + secondHalfObj.withHoldingTax;
             combined.totalDeductions = firstHalfObj.totalDeductions + secondHalfObj.totalDeductions;
             combined.netPay = firstHalfObj.netPay + secondHalfObj.netPay;
+            combined.sssPremium_ER = firstHalfObj.sssPremium_ER + secondHalfObj.sssPremium_ER;
+            combined.philHealthPremium_ER = firstHalfObj.philHealthPremium_ER + secondHalfObj.philHealthPremium_ER;
+            combined.hdmfPremium_ER = firstHalfObj.hdmfPremium_ER + secondHalfObj.hdmfPremium_ER;
         }
         else
         {
