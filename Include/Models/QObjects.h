@@ -11,6 +11,7 @@
 #include "Services/AppContext.h"
 #include "./DataObjects.h"
 #include "Services/EmployeeService.h"
+#include <QLocale>
 
 struct MenuOption
 {
@@ -265,11 +266,11 @@ private:
         case 9:
             return item.grossIncome;
         case 10:
-            return item.sssPremium;
+            return item.sssPremium_EE;
         case 11:
-            return item.philHealthPremium;
+            return item.philHealthPremium_EE;
         case 12:
-            return item.hdmfPremium;
+            return item.hdmfPremium_EE;
         case 13:
             return item.loanDeductionsPerPayroll;
         case 14:
@@ -282,7 +283,144 @@ private:
         return QVariant();
     }
 };
+class JournalEntryModel : public QAbstractTableModel
+{
+public:
+    JournalEntryModel(QObject *parent) : QAbstractTableModel(parent), m_model{} {};
+    JournalEntryModel(QObject *parent, std::vector<JournalEntry> *journalEntry) : QAbstractTableModel(parent), m_model(journalEntry) {}
+    ~JournalEntryModel() = default;
+    JournalEntryModel(const JournalEntryModel &) = delete;
+    JournalEntryModel &operator=(const JournalEntryModel &) = delete;
+    std::vector<JournalEntry> *getFiltered_Model()
+    {
+        return this->m_model;
+    }
 
+    // https://doc.qt.io/qt-6/qabstractitemmodel.html#rowCount
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override
+    {
+        if (m_model)
+        {
+            // cast from size_t to int
+            return static_cast<int>(m_model->size());
+        }
+        return 0;
+    };
+
+    // https://doc.qt.io/qt-6/qabstractitemmodel.html#columnCount
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override
+    {
+        return COLUMN_COUNT;
+    };
+
+    // https://doc.qt.io/qt-6/qabstractitemmodel.html#data
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+
+        // check for valid index
+        if (!index.isValid())
+        {
+            return QVariant();
+        }
+        // make sure its a displayroll and call valueforcolumn
+        if (role == Qt::DisplayRole)
+        {
+            return valueForColumn(index.row(), index.column());
+        }
+        if (role == Qt::TextAlignmentRole)
+        {
+            // Center all columns
+            return Qt::AlignCenter;
+        }
+        // check if its a userrole then return the id
+        if (role == Qt::UserRole)
+        {
+            return QVariant(m_model->at(static_cast<size_t>(index.row())).entryId);
+        }
+        return QVariant();
+    };
+
+    // https://doc.qt.io/qt-6/qabstractitemmodel.html#headerData
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {
+
+        // if its not a display roll then return default?
+        if (role != Qt::DisplayRole)
+        {
+            return QVariant();
+        }
+        // if orientation is horizontal enter switch case for the section and check columns, then return qstrings
+        if (orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+            case 0:
+                return QString("Account Type");
+            case 1:
+                return QString("Account Name");
+            case 2:
+                return QString("Debit");
+            case 3:
+                return QString("Credit");
+            case 4:
+                return QString("Pay Period Text");
+            case 5:
+                return QString("Pay Period Half");
+            }
+        }
+        return QVariant();
+    }
+    void reloadData(std::vector<JournalEntry> *journalEntry)
+    {
+        if (!m_model)
+            return;
+        beginResetModel();
+        m_model = journalEntry;
+        endResetModel();
+    }
+
+private:
+    std::vector<JournalEntry> *m_model;
+    static constexpr int COLUMN_COUNT = 6;
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
+    {
+        // use the row and column index to search m_model to get the data
+        auto &item = m_model->at(rowIndex);
+
+        switch (columnIndex)
+        {
+        case 0:
+            return QVariant(QString::fromStdString(AccountType_to_string(static_cast<int>(item.accountType))));
+        case 1:
+            return QVariant(QString::fromStdString(item.accountName));
+        case 2:
+        {
+            if (item.debit == 0.0)
+                return QVariant(QString::fromStdString("---"));
+            else
+            {
+                return QVariant(QString("₱%1").arg(phLocale.toString(item.debit, 'f', 2)));
+            }
+        }
+        case 3:
+        {
+            if (item.credit == 0.0)
+                return QVariant(QString::fromStdString("---"));
+            else
+            {
+                return QVariant(QString("₱%1").arg(phLocale.toString(item.credit, 'f', 2)));
+            }
+        }
+        case 4:
+            return QVariant(QString::fromStdString(item.periodHalf));
+        case 5:
+            return QVariant(QString::fromStdString(item.periodText));
+        }
+        // row is the model index and use column in the switch
+        return QVariant();
+    }
+};
 class PayrollFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -349,5 +487,43 @@ private:
     QString m_payPeriodHalf;
     QString m_department;
 };
+class JournalEntryFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
 
+public:
+    JournalEntryFilterProxyModel(QObject *parent) {};
+    ~JournalEntryFilterProxyModel() {};
+    void setPayPeriodFilter(const QString &period)
+    {
+
+        m_payPeriod = period;
+        QSortFilterProxyModel::invalidateFilter();
+    }
+    void setPayPeriodHalfFilter(const QString &periodhalf)
+    {
+
+        m_payPeriodHalf = periodhalf;
+        QSortFilterProxyModel::invalidateFilter();
+    }
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
+        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 4, sourceParent);
+        QModelIndex periodHalfIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 5, sourceParent);
+        QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
+        QString periodHalf = QSortFilterProxyModel::sourceModel()->data(periodHalfIndex).toString();
+
+        if (!m_payPeriod.isEmpty() && period != m_payPeriod)
+            return false;
+        if (!m_payPeriodHalf.isEmpty() && periodHalf != m_payPeriodHalf)
+            return false;
+        return true;
+    };
+
+private:
+    QString m_payPeriod;
+    QString m_payPeriodHalf;
+};
 #endif
