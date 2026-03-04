@@ -24,6 +24,10 @@ constexpr long HDMF_SALARY_CAP = 10000;
 constexpr double SSS_EMP_RATE = 0.05;
 constexpr double PHIC_EMP_RATE = 0.025;
 constexpr double HDMF_EMP_RATE = 0.02;
+
+constexpr double SSS_ER_RATE = 0.0795;
+constexpr double PHIC_ER_RATE = 0.025;
+constexpr double HDMF_ER_RATE = 0.02;
 PremiumValuesWidget::PremiumValuesWidget(std::vector<PayrollCalculationResults> *dataBus, QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PremiumValuesWidget), dataBus(dataBus)
 {
     ui->setupUi(this);
@@ -41,7 +45,7 @@ void PremiumValuesWidget::applyClicked()
     applyValues();
 }
 
-inline double calcSSS(double gross, bool firstHalf)
+inline double calcSSS_EE(double gross, bool firstHalf)
 {
     if (!firstHalf)
         return 0.0;
@@ -50,7 +54,7 @@ inline double calcSSS(double gross, bool firstHalf)
            SSS_EMP_RATE;
 }
 
-inline double calcPhilHealth(double gross, bool firstHalf)
+inline double calcPhilHealth_EE(double gross, bool firstHalf)
 {
     if (firstHalf)
         return 0.0;
@@ -60,7 +64,7 @@ inline double calcPhilHealth(double gross, bool firstHalf)
            PHIC_EMP_RATE;
 }
 
-inline double calcHDMF(double gross, bool firstHalf)
+inline double calcHDMF_EE(double gross, bool firstHalf)
 {
     if (firstHalf)
         return 0.0;
@@ -71,8 +75,36 @@ inline double calcHDMF(double gross, bool firstHalf)
 
 inline double calcTaxableIncome(PayrollCalculationResults &emp)
 {
-    double taxableIncome = emp.monthlyBasicSalary + emp.overTimePay - emp.sssPremium - emp.philHealthPremium - emp.hdmfPremium;
+    double taxableIncome = emp.monthlyBasicSalary + emp.overTimePay - emp.sssPremium_EE - emp.philHealthPremium_EE - emp.hdmfPremium_EE;
     return taxableIncome;
+}
+
+inline double calcSSS_ER(double gross, bool firstHalf)
+{
+    if (!firstHalf)
+        return 0.0;
+    return std::min(gross,
+                    static_cast<double>(SSS_SALARY_CAP)) *
+           SSS_ER_RATE;
+}
+
+inline double calcPhilHealth_ER(double gross, bool firstHalf)
+{
+    if (firstHalf)
+        return 0.0;
+    return std::clamp(gross,
+                      static_cast<double>(PHIC_SALARY_FLOOR),
+                      static_cast<double>(PHIC_SALARY_CAP)) *
+           PHIC_ER_RATE;
+}
+
+inline double calcHDMF_ER(double gross, bool firstHalf)
+{
+    if (firstHalf)
+        return 0.0;
+    return std::min(gross,
+                    static_cast<double>(HDMF_SALARY_CAP)) *
+           HDMF_ER_RATE;
 }
 
 inline double calcWithholding(double taxableIncome)
@@ -128,17 +160,23 @@ void PremiumValuesWidget::applyValues()
         emp.monthlyAllowances /= byWeekly;
         emp.grossIncome = (emp.monthlyBasicSalary) + emp.overTimePay + (emp.monthlyAllowances);
 
-        emp.sssPremium = truncateForCurrency(calcSSS(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.sssPremium_EE = truncateForCurrency(calcSSS_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
 
-        emp.philHealthPremium = truncateForCurrency(calcPhilHealth(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.philHealthPremium_EE = truncateForCurrency(calcPhilHealth_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
 
-        emp.hdmfPremium = truncateForCurrency(calcHDMF(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.hdmfPremium_EE = truncateForCurrency(calcHDMF_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
 
         emp.withHoldingTax = truncateForCurrency(calcWithholding(calcTaxableIncome(emp)));
 
-        emp.totalDeductions = emp.sssPremium + emp.philHealthPremium + emp.hdmfPremium + emp.withHoldingTax + emp.loanDeductionsPerPayroll;
+        emp.totalDeductions = emp.sssPremium_EE + emp.philHealthPremium_EE + emp.hdmfPremium_EE + emp.withHoldingTax + emp.loanDeductionsPerPayroll;
 
         emp.netPay = emp.monthlyBasicSalary + emp.overTimePay + emp.monthlyAllowances - emp.totalDeductions;
+
+        emp.sssPremium_ER = truncateForCurrency(calcSSS_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+
+        emp.philHealthPremium_ER = truncateForCurrency(calcPhilHealth_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+
+        emp.philHealthPremium_ER = truncateForCurrency(calcHDMF_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
 
         LOG_DEBUG(emp.to_string());
     }
