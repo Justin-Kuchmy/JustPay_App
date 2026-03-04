@@ -98,9 +98,9 @@ QString PayslipWidget::htmlFileToQString(const PayrollCalculationResults &paysli
         html.replace("{{OvertimePay}}", QString::number(payslip.overTimePay, 'f', 2).toStdString().c_str());
         html.replace("{{Others}}", QString::number(payslip.adjustments, 'f', 2).toStdString().c_str());
         html.replace("{{GrossPay}}", QString::number(payslip.grossIncome, 'f', 2).toStdString().c_str());
-        html.replace("{{SSS}}", QString::number(payslip.sssPremium, 'f', 2).toStdString().c_str());
-        html.replace("{{PHIC}}", QString::number(payslip.philHealthPremium, 'f', 2).toStdString().c_str());
-        html.replace("{{HDMF}}", QString::number(payslip.hdmfPremium, 'f', 2).toStdString().c_str());
+        html.replace("{{SSS}}", QString::number(payslip.sssPremium_EE, 'f', 2).toStdString().c_str());
+        html.replace("{{PHIC}}", QString::number(payslip.philHealthPremium_EE, 'f', 2).toStdString().c_str());
+        html.replace("{{HDMF}}", QString::number(payslip.hdmfPremium_EE, 'f', 2).toStdString().c_str());
         html.replace("{{WithholdingTaxes}}", QString::number(payslip.withHoldingTax, 'f', 2).toStdString().c_str());
         html.replace("{{TotalDeductions}}", QString::number(payslip.totalDeductions, 'f', 2).toStdString().c_str());
         html.replace("{{NetPay}}", QString::number(payslip.netPay, 'f', 2).toStdString().c_str());
