@@ -36,9 +36,9 @@ PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
     payrollRecord.overTimePay = sqlite3_column_int(stmt, 8);
     payrollRecord.adjustments = sqlite3_column_int(stmt, 9);
     payrollRecord.grossIncome = sqlite3_column_int(stmt, 10);
-    payrollRecord.sssPremium = sqlite3_column_int(stmt, 11);
-    payrollRecord.philHealthPremium = sqlite3_column_int(stmt, 12);
-    payrollRecord.hdmfPremium = sqlite3_column_int(stmt, 13);
+    payrollRecord.sssPremium_EE = sqlite3_column_int(stmt, 11);
+    payrollRecord.philHealthPremium_EE = sqlite3_column_int(stmt, 12);
+    payrollRecord.hdmfPremium_EE = sqlite3_column_int(stmt, 13);
     payrollRecord.loanDeductionsPerPayroll = sqlite3_column_int(stmt, 14);
     payrollRecord.withHoldingTax = sqlite3_column_int(stmt, 15);
     payrollRecord.totalDeductions = sqlite3_column_int(stmt, 16);
@@ -52,6 +52,9 @@ PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
     {
         payrollRecord.dateProcessed = Date(1900, 1, 1);
     }
+    payrollRecord.sssPremium_ER = sqlite3_column_int(stmt, 19);
+    payrollRecord.philHealthPremium_ER = sqlite3_column_int(stmt, 20);
+    payrollRecord.hdmfPremium_ER = sqlite3_column_int(stmt, 21);
 
     return payrollRecord;
 };
@@ -70,14 +73,17 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
             overtime_pay,
             adjustments,
             gross_income,
-            sss_premium,
-            philhealth_premium,
-            hdmf_premium,
+            sss_premium_ee,
+            philhealth_premium_ee,
+            hdmf_premium_ee,
             loan_deductions,
             withholding_tax,
             total_deductions,
-            net_pay
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            net_pay,
+            sss_premium_er, 
+            philhealth_premium_er, 
+            hdmf_premium_er,
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     )";
 
     sqlite3_stmt *stmt = nullptr;
@@ -103,14 +109,18 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
     sqlite3_bind_double(stmt, idx++, prRecord.adjustments);
     sqlite3_bind_double(stmt, idx++, prRecord.grossIncome);
 
-    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium);
-    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium);
-    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium);
+    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_EE);
+    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_EE);
+    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_EE);
     sqlite3_bind_double(stmt, idx++, prRecord.loanDeductionsPerPayroll);
 
     sqlite3_bind_double(stmt, idx++, prRecord.withHoldingTax);
     sqlite3_bind_double(stmt, idx++, prRecord.totalDeductions);
     sqlite3_bind_double(stmt, idx++, prRecord.netPay);
+
+    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_ER);
+    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_ER);
+    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_ER);
 
     int rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -219,7 +229,7 @@ std::vector<PayrollCalculationResults> PayrollRepository::getAll()
 bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 {
     std::string sql = std::format(
-        "UPDATE payroll_records SET employee_id = '{}', full_name = '{}', department = '{}', pay_period_text = '{}', pay_period_half = {}, basic_salary = {}, allowances = {}, overtime_pay = {}, adjustments = {}, gross_income = {}, sss_premium = {}, philhealth_premium = {}, hdmf_premium = {}, loan_deductions = {}, withholding_tax = {}, total_deductions = {}, net_pay = {} WHERE id = {}",
+        "UPDATE payroll_records SET employee_id = '{}', full_name = '{}', department = '{}', pay_period_text = '{}', pay_period_half = {}, basic_salary = {}, allowances = {}, overtime_pay = {}, adjustments = {}, gross_income = {}, sss_premium_ee = {}, philhealth_premium_ee = {}, hdmf_premium_ee = {}, loan_deductions = {}, withholding_tax = {}, total_deductions = {}, net_pay = {}, sss_premium_er = {}, philhealth_premium_er = {}, hdmf_premium_er = {} WHERE id = {}",
         prRecord.employeeId,
         prRecord.fullName,
         prRecord.employeeDepartment,
@@ -230,15 +240,17 @@ bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
         prRecord.overTimePay,
         prRecord.adjustments,
         prRecord.grossIncome,
-        prRecord.sssPremium,
-        prRecord.philHealthPremium,
-        prRecord.hdmfPremium,
+        prRecord.sssPremium_EE,
+        prRecord.philHealthPremium_EE,
+        prRecord.hdmfPremium_EE,
         prRecord.loanDeductionsPerPayroll,
         prRecord.withHoldingTax,
         prRecord.totalDeductions,
         prRecord.netPay,
-        prRecord.id // make sure your entity has an 'id' field!
-    );
+        prRecord.sssPremium_ER,
+        prRecord.philHealthPremium_ER,
+        prRecord.hdmfPremium_ER,
+        prRecord.id);
 
     return execute(sql);
 };
