@@ -82,7 +82,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <property name="spacing">
-      <number>100</number>
+      <number>0</number>
      </property>
      <property name="leftMargin">
       <number>50</number>
@@ -97,14 +97,14 @@
       <number>10</number>
      </property>
      <item>
-      <widget class="QLabel" name="totalValue">
+      <widget class="QLabel" name="emptyLabel">
        <property name="font">
         <font>
          <pointsize>20</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Totals</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -116,7 +116,40 @@
         </font>
        </property>
        <property name="text">
-        <string>PHP 70,000</string>
+        <string>Total</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="debitTotalLabel">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>₱ 0.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="creditTotalLabel">
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>₱ 0.0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
