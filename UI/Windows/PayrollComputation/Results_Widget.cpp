@@ -52,9 +52,9 @@ void ResultsWidget::loadTableData()
         QTableWidgetItem *OVERTIME = new QTableWidgetItem(QString::number(dataBus->at(i).overTimePay, 'f', 2));
         QTableWidgetItem *ADJUST = new QTableWidgetItem(QString::number(dataBus->at(i).adjustments, 'f', 2));
         QTableWidgetItem *GROSS = new QTableWidgetItem(QString::number(dataBus->at(i).grossIncome, 'f', 2));
-        QTableWidgetItem *SSS = new QTableWidgetItem(QString::number(dataBus->at(i).sssPremium, 'f', 2));
-        QTableWidgetItem *PHILHEALTH = new QTableWidgetItem(QString::number(dataBus->at(i).philHealthPremium, 'f', 2));
-        QTableWidgetItem *HDMF = new QTableWidgetItem(QString::number(dataBus->at(i).hdmfPremium, 'f', 2));
+        QTableWidgetItem *SSS = new QTableWidgetItem(QString::number(dataBus->at(i).sssPremium_EE, 'f', 2));
+        QTableWidgetItem *PHILHEALTH = new QTableWidgetItem(QString::number(dataBus->at(i).philHealthPremium_EE, 'f', 2));
+        QTableWidgetItem *HDMF = new QTableWidgetItem(QString::number(dataBus->at(i).hdmfPremium_EE, 'f', 2));
         QTableWidgetItem *LOAN = new QTableWidgetItem(QString::number(dataBus->at(i).loanDeductionsPerPayroll, 'f', 2));
         QTableWidgetItem *TAX = new QTableWidgetItem(QString::number(dataBus->at(i).withHoldingTax, 'f', 2));
         QTableWidgetItem *DED = new QTableWidgetItem(QString::number(dataBus->at(i).totalDeductions, 'f', 2));
