@@ -23,7 +23,7 @@ std::optional<JournalEntry> JournalEntryService::getJournalEntryByID(int id) con
 
 std::vector<JournalEntry> JournalEntryService::getAll() const
 {
-    return {};
+    return this->repo.getAll();
 }
 
 // UPDATE
