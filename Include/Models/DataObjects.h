@@ -59,14 +59,14 @@ enum LoanType
 
 enum class AccountType
 {
-    Expense,
-    Liability,
-    Asset
+    Expense = 0,
+    Liability = 1,
+    Asset = 2
 };
 enum class EntryType
 {
-    Debit,
-    Credit
+    Debit = 0,
+    Credit = 1
 };
 
 // =========================
@@ -82,11 +82,13 @@ inline std::string EntryType_to_string(int i);
 
 struct JournalEntry
 {
+    int entryId;
     AccountType accountType;
-    QString accountName;
-    EntryType entryType;
-    double amount;
-    QString sourceDescription; // "Basic Salary", "SSS Premium ER", etc
+    std::string accountName;
+    double debit;
+    double credit;
+    std::string periodText;
+    std::string periodHalf;
 };
 
 struct EmailCrudentials
@@ -426,9 +428,9 @@ public:
     double overTimePay{0.0};
     double adjustments{0.0};
     double grossIncome{0.0};
-    double sssPremium{0.0};
-    double philHealthPremium{0.0};
-    double hdmfPremium{0.0};
+    double sssPremium_EE{0.0};
+    double philHealthPremium_EE{0.0};
+    double hdmfPremium_EE{0.0};
     double loanDeductionsPerPayroll{0.0};
     bool deductionFirstHalf{false};
     bool deductionSecondHalf{false};
@@ -436,6 +438,9 @@ public:
     double totalDeductions{0.0};
     double netPay{0.0};
     Date dateProcessed{Date(2025, 12, 18)};
+    double sssPremium_ER{0.0};
+    double philHealthPremium_ER{0.0};
+    double hdmfPremium_ER{0.0};
 
     std::string to_string() const
     {
@@ -452,9 +457,9 @@ public:
             << "\n overTimePay: " << overTimePay
             << "\n adjustments: " << adjustments
             << "\n grossIncome: " << grossIncome
-            << "\n sssPremium: " << sssPremium
-            << "\n philHealthPremium: " << philHealthPremium
-            << "\n hdmfPremium: " << hdmfPremium
+            << "\n sssPremium_EE: " << sssPremium_EE
+            << "\n philHealthPremium_EE: " << philHealthPremium_EE
+            << "\n hdmfPremium_EE: " << hdmfPremium_EE
             << "\n loanDeductionsPerPayroll: " << loanDeductionsPerPayroll
             << "\n deductionFirstHalf: " << deductionFirstHalf
             << "\n deductionSecondHalf: " << deductionSecondHalf
@@ -583,8 +588,11 @@ inline std::string AccountType_to_string(int i)
         return "Liability";
     case AccountType::Asset:
         return "Asset";
+    default:
+        return "Unknown";
     }
 }
+
 inline std::string EntryType_to_string(int i)
 {
     switch (static_cast<EntryType>(i))
@@ -593,6 +601,8 @@ inline std::string EntryType_to_string(int i)
         return "Debit";
     case EntryType::Credit:
         return "Credit";
+    default:
+        return "Unknown";
     }
 }
 
