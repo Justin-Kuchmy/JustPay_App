@@ -8,6 +8,7 @@
 #include "Services/AttendanceLogService.h"
 #include "Services/PayrollService.h"
 #include "Services/JournalEntryService.h"
+#include "Services/GovernmentRemittanceService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Repositories/DependentRepository.h"
 #include "Repositories/EmergencyContactRepository.h"
@@ -15,6 +16,7 @@
 #include "Repositories/AttendanceLogRepository.h"
 #include "Repositories/PayrollRepository.h"
 #include "Repositories/JournalEntryRepository.h"
+#include "Repositories/GovernmentRemittanceRepository.h"
 #include <sqlite3.h>
 
 class EmployeeRepository;
@@ -24,6 +26,7 @@ class LoanLedgerRepository;
 class AttendanceLogRepository;
 class PayrollRepository;
 class JournalEntryRepository;
+class GovernmentRemittanceRepository;
 
 class EmployeeService;
 class DependentService;
@@ -32,6 +35,7 @@ class LoanLedgerService;
 class AttendanceLogService;
 class PayrollService;
 class JournalEntryService;
+class GovernmentRemittanceService;
 
 class AppContext
 {
@@ -46,6 +50,7 @@ public:
     AttendanceLogService &attendanceLogService() noexcept;
     PayrollService &payrollService() noexcept;
     JournalEntryService &journalEntryService() noexcept;
+    GovernmentRemittanceService &governmentRemittanceService() noexcept;
 
 private:
     sqlite3 *m_db = nullptr;
@@ -56,6 +61,7 @@ private:
     AttendanceLogRepository m_attendanceLogRepo;
     PayrollRepository m_payrollRepo;
     JournalEntryRepository m_journalEntryRepo;
+    GovernmentRemittanceRepository m_governmentRemittanceRepo;
 
     EmployeeService m_employeeService;
     DependentService m_dependentService;
@@ -64,6 +70,7 @@ private:
     AttendanceLogService m_attendanceLogService;
     PayrollService m_payrollService;
     JournalEntryService m_journalEntryService;
+    GovernmentRemittanceService m_governmentRemittanceService;
 
     explicit AppContext(const std::string &dbName);
     ~AppContext() noexcept;

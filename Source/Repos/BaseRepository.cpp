@@ -55,3 +55,4 @@ template std::vector<Contact> BaseRepository::query(const std::string &sql, std:
 template std::vector<Dependent> BaseRepository::query(const std::string &sql, std::function<Dependent(sqlite3_stmt *)> mapper);
 template std::vector<LoanLedger> BaseRepository::query(const std::string &sql, std::function<LoanLedger(sqlite3_stmt *)> mapper);
 template std::vector<PayrollCalculationResults> BaseRepository::query(const std::string &sql, std::function<PayrollCalculationResults(sqlite3_stmt *)> mapper);
+template std::vector<JournalEntry> BaseRepository::query(const std::string &sql, std::function<JournalEntry(sqlite3_stmt *)> mapper);

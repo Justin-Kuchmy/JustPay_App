@@ -69,6 +69,14 @@ enum class EntryType
     Credit = 1
 };
 
+enum class RemittanceStatus
+{
+    PENDING = 0,
+    SUBMITTED = 1,
+    CONFIRMED = 2,
+    REJECTED = 3
+};
+
 // =========================
 // CONVERSION ENUM DECLARATIONS
 // =========================
@@ -79,6 +87,7 @@ inline std::string joblevel_to_string(int i);
 inline std::string status_to_string(int i);
 inline std::string AccountType_to_string(int i);
 inline std::string EntryType_to_string(int i);
+inline std::string RemittanceStatus_to_string(int i);
 
 struct JournalEntry
 {
@@ -471,6 +480,58 @@ public:
     };
 };
 
+class GovernmentRemittance
+{
+public:
+    int id{};
+
+    int payrollCalculationResultsId{};
+    std::string employeeId{""};
+    std::string fullName{""};
+    std::string employeeDepartment{""};
+    std::string payPeriodText{""};
+    int payPeriodHalf{1};
+
+    double sssPremiumEE{0.0};
+    double sssPremiumER{0.0};
+    double sssPremiumTotal{0.0};
+
+    double philHealthPremiumEE{0.0};
+    double philHealthPremiumER{0.0};
+    double philHealthPremiumTotal{0.0};
+
+    double hdmfPremiumEE{0.0};
+    double hdmfPremiumER{0.0};
+    double hdmfPremiumTotal{0.0};
+
+    double withHoldingTax{0.0};
+
+    RemittanceStatus sssSubmissionStatus{RemittanceStatus::PENDING};
+    RemittanceStatus phicSubmissionStatus{RemittanceStatus::PENDING};
+    RemittanceStatus hdmfSubmissionStatus{RemittanceStatus::PENDING};
+    RemittanceStatus withHoldingTaxSubmissionStatus{RemittanceStatus::PENDING};
+
+    Date lastSubmittedDate{Date(1970, 1, 1)};
+    int submittedByUserId{};
+    Date dateCreated{Date(1970, 1, 1)};
+    Date dateModified{Date(1970, 1, 1)};
+
+    double totalEmployerContribution() const
+    {
+        return sssPremiumER + philHealthPremiumER + hdmfPremiumER;
+    }
+
+    double totalEmployeeContribution() const
+    {
+        return sssPremiumEE + philHealthPremiumEE + hdmfPremiumEE;
+    }
+
+    double totalGovernmentRemittance() const
+    {
+        return totalEmployerContribution() + totalEmployeeContribution() + withHoldingTax;
+    }
+};
+
 // =========================
 // CONVERSION ENUM HELPERS
 // =========================
@@ -601,6 +662,23 @@ inline std::string EntryType_to_string(int i)
         return "Debit";
     case EntryType::Credit:
         return "Credit";
+    default:
+        return "Unknown";
+    }
+}
+
+inline std::string RemittanceStatus_to_string(int i)
+{
+    switch (static_cast<RemittanceStatus>(i))
+    {
+    case RemittanceStatus::CONFIRMED:
+        return "Confirmed";
+    case RemittanceStatus::PENDING:
+        return "Pending";
+    case RemittanceStatus::REJECTED:
+        return "Rejected";
+    case RemittanceStatus::SUBMITTED:
+        return "Submitted";
     default:
         return "Unknown";
     }
