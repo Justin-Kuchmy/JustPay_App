@@ -492,16 +492,16 @@ public:
     std::string payPeriodText{""};
     int payPeriodHalf{1};
 
-    double sssPremiumEE{0.0};
-    double sssPremiumER{0.0};
+    double sssPremium_EE{0.0};
+    double sssPremium_ER{0.0};
     double sssPremiumTotal{0.0};
 
-    double philHealthPremiumEE{0.0};
-    double philHealthPremiumER{0.0};
+    double philHealthPremium_EE{0.0};
+    double philHealthPremium_ER{0.0};
     double philHealthPremiumTotal{0.0};
 
-    double hdmfPremiumEE{0.0};
-    double hdmfPremiumER{0.0};
+    double hdmfPremium_EE{0.0};
+    double hdmfPremium_ER{0.0};
     double hdmfPremiumTotal{0.0};
 
     double withHoldingTax{0.0};
@@ -518,12 +518,12 @@ public:
 
     double totalEmployerContribution() const
     {
-        return sssPremiumER + philHealthPremiumER + hdmfPremiumER;
+        return sssPremium_ER + philHealthPremium_ER + hdmfPremium_ER;
     }
 
     double totalEmployeeContribution() const
     {
-        return sssPremiumEE + philHealthPremiumEE + hdmfPremiumEE;
+        return sssPremium_EE + philHealthPremium_EE + hdmfPremium_EE;
     }
 
     double totalGovernmentRemittance() const
