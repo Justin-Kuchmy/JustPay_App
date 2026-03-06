@@ -14,3 +14,5 @@ payroll|  select * from payroll_records
 --END--
 journalEntry|  select * from journal_entries
 --END--
+governmentRemittance | select * from government_remittances
+--END--

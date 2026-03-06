@@ -10,6 +10,7 @@
     <file>sql/loanledger.sql</file>
     <file>sql/payroll.sql</file>
     <file>sql/journalentry.sql</file>
+    <file>sql/governmentremittance.sql</file>
   </qresource>
 
   <qresource prefix="/QtTheme/">
