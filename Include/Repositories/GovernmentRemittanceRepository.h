@@ -1,7 +1,12 @@
+
+
 #ifndef GOVERNMENT_REMITTANCE_REPOSITORY_H
 #define GOVERNMENT_REMITTANCE_REPOSITORY_H
 #include "Models/DataObjects.h"
 #include "Repositories/BaseRepository.h"
+#include <sqlite3.h>
+#include <vector>
+#include <optional>
 
 class GovernmentRemittanceRepository : public BaseRepository
 {
@@ -9,11 +14,43 @@ private:
     static GovernmentRemittance mapRemittance(sqlite3_stmt *stmt);
 
 public:
+    struct MonthlySummary
+    {
+        std::string monthYear;
+        double totalSSSEE{0.0};
+        double totalSSSER{0.0};
+        double totalPHICEE{0.0};
+        double totalPHICER{0.0};
+        double totalHDMFEE{0.0};
+        double totalHDMFER{0.0};
+        double totalWithholdingTax{0.0};
+    };
+
     explicit GovernmentRemittanceRepository(sqlite3 *db);
 
     bool createTable() const override;
 
-    sqlite3_int64 insertPayroll(const PayrollCalculationResults &payRoll);
+    // create
+    sqlite3_int64 insertRemittance(const GovernmentRemittance &r);
+
+    std::optional<GovernmentRemittance> getRemittanceById(int id);
+
+    std::vector<GovernmentRemittance> getRemittancesByPeriod(const std::string &payPeriodText, int payPeriodHalf);
+
+    std::vector<GovernmentRemittance> getAllRemittances();
+
+    // update -
+    bool markAsSubmitted(int remittanceId, const std::string &remittanceType, int submittedByUserId, const Date &submissionDate);
+
+    bool markAsConfirmed(int remittanceId, const std::string &remittanceType);
+
+    bool markAsRejected(int remittanceId, const std::string &remittanceType);
+
+    bool updateRemittance(const GovernmentRemittance &remittance);
+
+    bool deleteRemittance(int id);
+
+    MonthlySummary getMonthlySummary(const std::string &monthYear);
 };
 
 #endif
