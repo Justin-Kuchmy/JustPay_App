@@ -20,14 +20,14 @@ public:
     std::vector<PayrollCalculationResults> getAll();
     std::optional<PayrollCalculationResults> getById(int id);
     std::vector<PayrollCalculationResults> getAllById(std::string &id);
-    std::optional<PayrollCalculationResults> getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf);
+    std::vector<PayrollCalculationResults> getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId = std::nullopt, std::optional<int> payPeriodHalf = std::nullopt);
 
     // update
     bool updatePayroll(const PayrollCalculationResults &lled);
 
     // delete
     bool deletePayroll(int id);
-    std::string getLastPayrollId();
+    int getLastPayrollId();
 };
 
 #endif
