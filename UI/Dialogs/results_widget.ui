@@ -246,9 +246,16 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QPushButton" name="submitButton">
+           <widget class="QPushButton" name="submitPayrollButton">
             <property name="text">
-             <string>Submit</string>
+             <string>Submit Payroll and update loan ledgers</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="submitGovernmentRemittButton">
+            <property name="text">
+             <string>Submit Government Remittance Reports</string>
             </property>
            </widget>
           </item>
