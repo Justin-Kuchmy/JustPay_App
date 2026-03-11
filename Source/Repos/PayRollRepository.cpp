@@ -82,7 +82,7 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
             net_pay,
             sss_premium_er, 
             philhealth_premium_er, 
-            hdmf_premium_er,
+            hdmf_premium_er
         ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     )";
 
@@ -93,15 +93,12 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
         return 0;
     }
 
-    // derive pay period number from payPeriodText string
-    int payPeriodNumber = (prRecord.payPeriodText == "first") ? 1 : 2;
-
     int idx = 1;
     sqlite3_bind_text(stmt, idx++, prRecord.employeeId.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, idx++, prRecord.fullName.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, idx++, prRecord.employeeDepartment.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, idx++, prRecord.payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, idx++, payPeriodNumber);
+    sqlite3_bind_int(stmt, idx++, prRecord.payPeriodHalf);
 
     sqlite3_bind_double(stmt, idx++, prRecord.monthlyBasicSalary);
     sqlite3_bind_double(stmt, idx++, prRecord.monthlyAllowances);
@@ -133,33 +130,44 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
 
     return sqlite3_last_insert_rowid(db);
 };
-
-std::optional<PayrollCalculationResults> PayrollRepository::getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf)
+std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
 {
-    const char *sql = "SELECT * FROM payroll_records WHERE employee_id = ? AND pay_period_text = ? AND pay_period_half = ?";
+    std::string sql = "SELECT * FROM payroll_records WHERE pay_period_text = ?";
+    if (employeeId.has_value())
+        sql += " AND employee_id = ?";
+    if (payPeriodHalf.has_value())
+        sql += " AND pay_period_half = ?";
+
     sqlite3_stmt *stmt = nullptr;
+    std::vector<PayrollCalculationResults> results{};
 
-    std::optional<PayrollCalculationResults> result = std::nullopt;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
         LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
-        return result;
+        return results;
+    }
+    int idx = 1;
+    sqlite3_bind_text(stmt, idx++, payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+    LOG_DEBUG("payPeriodText");
+    if (employeeId.has_value())
+    {
+        sqlite3_bind_text(stmt, idx++, employeeId.value().c_str(), -1, SQLITE_TRANSIENT);
+        LOG_DEBUG("employeeId");
+    }
+    if (payPeriodHalf.has_value())
+    {
+        sqlite3_bind_int(stmt, idx++, payPeriodHalf.value());
+        LOG_DEBUG("payPeriodHalf");
     }
 
-    sqlite3_bind_text(stmt, 1, employeeId.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 3, payPeriodHalf);
-
-    int rc = sqlite3_step(stmt);
-    if (rc == SQLITE_ROW)
+    while (sqlite3_step(stmt) == SQLITE_ROW)
     {
-        result = mapPayroll(stmt);
-        LOG_DEBUG("Payroll record for Employee ID: " << employeeId << " for period: " << payPeriodText << " half: " << payPeriodHalf);
+        auto obj = mapPayroll(stmt);
+        results.push_back(obj);
     }
 
     sqlite3_finalize(stmt);
-    return result;
+    return results;
 }
 
 // read
@@ -258,12 +266,11 @@ bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 // delete
 bool PayrollRepository::deletePayroll(int id)
 {
-    LOG_DEBUG("PayrollRepository::deletePayroll not implemented");
-    return false;
+    std::string sql = std::format("delete from payroll_records where id = '{}';", id);
+    return execute(sql);
 };
 
-std::string PayrollRepository::getLastPayrollId()
+int PayrollRepository::getLastPayrollId()
 {
-    LOG_DEBUG("PayrollRepository::getLastPayrollId not implemented");
-    return "";
+    return getAll().size() + 1;
 };
