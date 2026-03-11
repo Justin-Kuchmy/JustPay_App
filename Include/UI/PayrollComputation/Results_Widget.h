@@ -5,28 +5,33 @@
 #include "Utils/BaseContentWidget.h"
 #include <qstandarditemmodel.h>
 
-namespace Ui{
-class ResultsWidget;
+namespace Ui
+{
+    class ResultsWidget;
 }
 
-class ResultsWidget : public BaseContentWidget {
+class ResultsWidget : public BaseContentWidget
+{
     Q_OBJECT
 
 public:
-    explicit ResultsWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
-    ~ResultsWidget();   
-    ResultsWidget(const ResultsWidget&) = delete; 
-    ResultsWidget& operator=(const ResultsWidget&) = delete; 
-    void calculateValues(); 
-    void loadTableData();           
+    explicit ResultsWidget(std::vector<PayrollCalculationResults> *dataBus, QWidget *parent = nullptr);
+    ~ResultsWidget();
+    ResultsWidget(const ResultsWidget &) = delete;
+    ResultsWidget &operator=(const ResultsWidget &) = delete;
+    void calculateValues();
+    void loadTableData();
 private slots:
     void submitPayroll();
+    void submitGovernRemitt();
     void exportToExcel();
 
 private:
     Ui::ResultsWidget *ui;
-    std::vector<PayrollCalculationResults>* dataBus = nullptr;
+    std::vector<PayrollCalculationResults> *dataBus = nullptr;
     std::unique_ptr<QStandardItemModel> model;
+    bool enablePayrollSubmit{true};
+    bool enableGovernmentRemitSubmit{false};
 };
 
 #endif
