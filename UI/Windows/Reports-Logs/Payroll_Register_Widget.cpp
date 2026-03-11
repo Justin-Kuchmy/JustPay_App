@@ -99,17 +99,17 @@ void PayrollRegisterWidget::onPayrollPeriodChanged()
     QString selected = ui->payrollPeriodFilter->currentText();
     if (ui->fortNightRadio->isChecked())
     {
-        // selected text for example could be 'March 2025 First Half'
+
         QStringList parts = selected.split(' ');
         QString half = parts[2] + " " + parts[3];
         QString monthYear = parts[0] + " " + parts[1];
-        m_proxy->setPayPeriodFilter(monthYear); // Pass in 'March 2025'
-        m_proxy->setPayPeriodHalfFilter(half);  // Pass in 'First Half'
+        m_proxy->setPayPeriodFilter(monthYear);
+        m_proxy->setPayPeriodHalfFilter(half);
     }
     else
     {
-        m_proxy->setPayPeriodFilter(selected); // combo box only has the first part 'March 2025'. pass in as normal
-        m_proxy->setPayPeriodHalfFilter("");   // make sure to clear the internal variable for the period half
+        m_proxy->setPayPeriodFilter(selected);
+        m_proxy->setPayPeriodHalfFilter("");
     }
 }
 
