@@ -40,13 +40,13 @@ PayslipWidget::~PayslipWidget()
 PayrollCalculationResults PayslipWidget::getPayslipForEmployeeAndPeriod(QString &employeeId)
 {
 
-    auto payrollDate = ui->payrollDateEdit->date().toString("MMMM yyyy").toStdString();
-    auto payrollPeriod = ui->comboPayrollPeriod->currentIndex() + 1;
-    const auto payrollOpt = AppContext::instance().payrollService().getPayrollByEmployeeAndPeriod(employeeId.toStdString(), payrollDate, payrollPeriod);
+    auto payrollPeriod = ui->payrollDateEdit->date().toString("MMMM yyyy").toStdString();
+    auto payPeriodHalf = ui->comboPayrollPeriod->currentIndex() + 1;
+    const auto payrollVect = AppContext::instance().payrollService().getPayrollByPeriod(payrollPeriod, employeeId.toStdString(), payPeriodHalf);
     QString path{};
-    if (payrollOpt.has_value())
+    if (payrollVect.size() == 1)
     {
-        return payrollOpt.value();
+        return payrollVect.at(0);
     }
     else
     {
