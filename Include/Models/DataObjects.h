@@ -87,7 +87,7 @@ inline std::string joblevel_to_string(int i);
 inline std::string status_to_string(int i);
 inline std::string AccountType_to_string(int i);
 inline std::string EntryType_to_string(int i);
-inline std::string RemittanceStatus_to_string(int i);
+inline std::string RemittanceStatus_to_string(RemittanceStatus status);
 
 struct JournalEntry
 {
@@ -530,6 +530,40 @@ public:
     {
         return totalEmployerContribution() + totalEmployeeContribution() + withHoldingTax;
     }
+
+    std::string to_string() const
+    {
+
+        std::ostringstream oss;
+        oss << "GovernmentRemittance { "
+            << "\n id: " << id
+            << "\n payrollCalculationResultsId: " << payrollCalculationResultsId
+            << "\n employeeId: " << employeeId
+            << "\n fullName: " << fullName
+            << "\n employeeDepartment: " << employeeDepartment
+            << "\n payPeriodText: " << payPeriodText
+            << "\n payPeriodHalf: " << payPeriodHalf
+            << "\n sssPremium_EE: " << sssPremium_EE
+            << "\n sssPremium_ER: " << sssPremium_ER
+            << "\n sssPremiumTotal: " << sssPremiumTotal
+            << "\n philHealthPremium_EE: " << philHealthPremium_EE
+            << "\n philHealthPremium_ER: " << philHealthPremium_ER
+            << "\n philHealthPremiumTotal: " << philHealthPremiumTotal
+            << "\n hdmfPremium_EE: " << hdmfPremium_EE
+            << "\n hdmfPremium_ER: " << hdmfPremium_ER
+            << "\n hdmfPremiumTotal: " << hdmfPremiumTotal
+            << "\n withHoldingTax: " << withHoldingTax
+            << "\n sssSubmissionStatus: " << RemittanceStatus_to_string(sssSubmissionStatus)
+            << "\n phicSubmissionStatus: " << RemittanceStatus_to_string(phicSubmissionStatus)
+            << "\n hdmfSubmissionStatus: " << RemittanceStatus_to_string(hdmfSubmissionStatus)
+            << "\n withHoldingTaxSubmissionStatus: " << RemittanceStatus_to_string(withHoldingTaxSubmissionStatus)
+            << "\n lastSubmittedDate: " << lastSubmittedDate.to_string()
+            << "\n submittedByUserId: " << submittedByUserId
+            << "\n dateCreated: " << dateCreated.to_string()
+            << "\n dateModified: " << dateModified.to_string()
+            << " }";
+        return oss.str();
+    };
 };
 
 // =========================
@@ -667,9 +701,9 @@ inline std::string EntryType_to_string(int i)
     }
 }
 
-inline std::string RemittanceStatus_to_string(int i)
+inline std::string RemittanceStatus_to_string(RemittanceStatus status)
 {
-    switch (static_cast<RemittanceStatus>(i))
+    switch (status)
     {
     case RemittanceStatus::CONFIRMED:
         return "Confirmed";
