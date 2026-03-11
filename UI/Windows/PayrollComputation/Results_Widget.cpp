@@ -28,8 +28,11 @@ ResultsWidget::ResultsWidget(std::vector<PayrollCalculationResults> *dataBus, QW
 {
     ui->setupUi(this);
     model = std::make_unique<QStandardItemModel>(this);
-    connect(ui->submitButton, &QPushButton::clicked, this, &ResultsWidget::submitPayroll);
+    connect(ui->submitPayrollButton, &QPushButton::clicked, this, &ResultsWidget::submitPayroll);
+    connect(ui->submitGovernmentRemittButton, &QPushButton::clicked, this, &ResultsWidget::submitGovernRemitt);
     connect(ui->exportButton, &QPushButton::clicked, this, &ResultsWidget::exportToExcel);
+    ui->submitPayrollButton->setEnabled(this->enablePayrollSubmit);
+    ui->submitGovernmentRemittButton->setEnabled(this->enableGovernmentRemitSubmit);
 }
 ResultsWidget::~ResultsWidget()
 {
@@ -77,7 +80,15 @@ void ResultsWidget::loadTableData()
         ui->table_results->setItem(i, COL_NET_PAY, NET_PAY);
     }
 }
-
+void ResultsWidget::submitGovernRemitt()
+{
+    // TODO need to make a call to a service that will accept a batch, then combine them into monthly,
+    AppContext::instance().governmentRemittanceService().generateRemittanceFromPayrolls(dataBus);
+    // QMessageBox::Information(this, "Good", "Government Remittance Submitted");
+    QMessageBox::information(this, QString::fromStdString("Good"), QString::fromStdString("Government Remittance Submitted"));
+    enableGovernmentRemitSubmit = !enableGovernmentRemitSubmit;
+    ui->submitGovernmentRemittButton->setEnabled(enableGovernmentRemitSubmit);
+}
 void ResultsWidget::submitPayroll()
 {
     std::string currentPeriod = ui->value_payPeriod->text().toStdString();
@@ -112,7 +123,14 @@ void ResultsWidget::submitPayroll()
 
             AppContext::instance().loanLedgerService().updateLoanLedger(loans[j]);
         }
+        AppContext::instance().payrollService().addPayroll(results);
     }
+    QMessageBox::information(this, QString::fromStdString("Good"), QString::fromStdString("Payroll Submitted"));
+    enablePayrollSubmit = !enablePayrollSubmit;
+    ui->submitPayrollButton->setEnabled(enablePayrollSubmit);
+
+    enableGovernmentRemitSubmit = !enableGovernmentRemitSubmit;
+    ui->submitGovernmentRemittButton->setEnabled(enableGovernmentRemitSubmit);
 }
 
 void ResultsWidget::exportToExcel()
