@@ -32,6 +32,7 @@ public:
 
     // create
     sqlite3_int64 insertRemittance(const GovernmentRemittance &r);
+    sqlite3_int64 insertRemittanceReports(const std::vector<GovernmentRemittance> &r);
 
     std::optional<GovernmentRemittance> getRemittanceById(int id);
 
