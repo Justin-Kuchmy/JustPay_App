@@ -59,7 +59,7 @@ public:
 
     std::vector<GovernmentRemittance> getRemittancesForWidget(const std::string &payPeriodText, int payPeriodHalf);
 
-    GovernmentRemittance generateRemittanceFromPayroll(const PayrollCalculationResults &payroll);
+    bool generateRemittanceFromPayrolls(const std::vector<PayrollCalculationResults> *payrolls);
 
     std::vector<GovernmentRemittance> generateRemittancesForPeriod(const std::string &payPeriodText, int payPeriodHalf);
 
