@@ -136,6 +136,7 @@ void PremiumValuesWidget::applyValues()
         auto &emp = dataBus->at(i);
         std::vector<LoanLedger> empLoans = AppContext::instance().loanLedgerService().getAllLoanLedgers(emp.employeeId);
         emp.payPeriodText = ui->payrollPeriodComboBox->currentIndex() == 0 ? "first" : "second";
+        emp.payPeriodHalf = ui->payrollPeriodComboBox->currentIndex() == 0 ? 1 : 2;
         emp.deductionFirstHalf = ui->payrollPeriodComboBox->currentIndex() == 0;
         emp.deductionSecondHalf = ui->payrollPeriodComboBox->currentIndex() == 1;
         auto truncateForCurrency = [](double v)
