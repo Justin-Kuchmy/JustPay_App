@@ -106,3 +106,9 @@ target_link_libraries(JustPay
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_target_properties(JustPay PROPERTIES FOLDER "Apps")
 
+# ---------------------------------------------------------
+# Tests
+# ---------------------------------------------------------
+if(BUILD_TESTS)
+    add_subdirectory(Tests)
+endif()
