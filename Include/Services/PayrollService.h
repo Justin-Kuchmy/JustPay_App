@@ -22,7 +22,7 @@ public:
 
     std::vector<PayrollCalculationResults> getAllPayrollsByEmployeeID(std::string &id);
 
-    std::optional<PayrollCalculationResults> getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf);
+    std::vector<PayrollCalculationResults> getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId = std::nullopt, std::optional<int> payPeriodHalf = std::nullopt);
 
     // UPDATE
     bool updatePayroll(const PayrollCalculationResults &e);
