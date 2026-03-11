@@ -84,9 +84,24 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsByEmployeeI
     return this->repo.getAllById(id);
 }
 
-std::optional<PayrollCalculationResults> PayrollService::getPayrollByEmployeeAndPeriod(const std::string &employeeId, const std::string &payPeriodText, int payPeriodHalf)
+std::vector<PayrollCalculationResults> PayrollService::getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
 {
-    return this->repo.getPayrollByEmployeeAndPeriod(employeeId, payPeriodText, payPeriodHalf);
+    if (employeeId.has_value() && payPeriodHalf.has_value())
+    {
+        return this->repo.getPayrollByPeriod(payPeriodText, employeeId, payPeriodHalf);
+    }
+    else if (payPeriodHalf.has_value())
+    {
+        return this->repo.getPayrollByPeriod(payPeriodText, std::nullopt, payPeriodHalf);
+    }
+    else if (employeeId.has_value())
+    {
+        return this->repo.getPayrollByPeriod(payPeriodText, employeeId, std::nullopt);
+    }
+    else
+    {
+        return this->repo.getPayrollByPeriod(payPeriodText, std::nullopt, std::nullopt);
+    }
 }
 
 // UPDATE
