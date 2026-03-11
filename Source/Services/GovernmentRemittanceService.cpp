@@ -11,63 +11,49 @@ std::vector<GovernmentRemittance> GovernmentRemittanceService::getRemittancesFor
     return {};
 }
 
-GovernmentRemittance GovernmentRemittanceService::generateRemittanceFromPayroll(const PayrollCalculationResults &payroll)
+bool GovernmentRemittanceService::generateRemittanceFromPayrolls(const std::vector<PayrollCalculationResults> *payrolls)
 {
-    GovernmentRemittance rem{};
+    std::vector<GovernmentRemittance> v_Rem{};
+    for (size_t i{0}; i < payrolls->size(); i++)
+    {
+        GovernmentRemittance rem{};
+        auto &payroll = payrolls->at(i);
+        rem.payrollCalculationResultsId = payroll.id;
+        rem.employeeId = payroll.employeeId;
+        rem.fullName = payroll.fullName;
+        rem.employeeDepartment = payroll.employeeDepartment;
+        rem.payPeriodText = payroll.payPeriodText;
+        rem.payPeriodHalf = payroll.payPeriodHalf;
 
-    // ========================================
-    // Copy Reference Data
-    // ========================================
-    rem.payrollCalculationResultsId = payroll.id;
-    rem.employeeId = payroll.employeeId;
-    rem.fullName = payroll.fullName;
-    rem.employeeDepartment = payroll.employeeDepartment;
-    rem.payPeriodText = payroll.payPeriodText;
-    rem.payPeriodHalf = payroll.payPeriodHalf;
+        rem.sssPremium_EE = payroll.sssPremium_EE; // Employee share
+        rem.sssPremium_ER = payroll.sssPremium_ER; // Employer share
+        rem.sssPremiumTotal = payroll.sssPremium_EE + payroll.sssPremium_ER;
 
-    // ========================================
-    // Copy SSS Contribution Data
-    // ========================================
-    rem.sssPremium_EE = payroll.sssPremium_EE; // Employee share
-    rem.sssPremium_ER = payroll.sssPremium_ER; // Employer share
-    rem.sssPremiumTotal = payroll.sssPremium_EE + payroll.sssPremium_ER;
+        rem.philHealthPremium_EE = payroll.philHealthPremium_EE;
+        rem.philHealthPremium_ER = payroll.philHealthPremium_ER;
+        rem.philHealthPremiumTotal = payroll.philHealthPremium_EE + payroll.philHealthPremium_ER;
 
-    // ========================================
-    // Copy PHIC Contribution Data
-    // ========================================
-    rem.philHealthPremium_EE = payroll.philHealthPremium_EE; // Employee share
-    rem.philHealthPremium_ER = payroll.philHealthPremium_ER; // Employer share
-    rem.philHealthPremiumTotal = payroll.philHealthPremium_EE + payroll.philHealthPremium_ER;
+        rem.hdmfPremium_EE = payroll.hdmfPremium_EE;
+        rem.hdmfPremium_ER = payroll.hdmfPremium_ER;
+        rem.hdmfPremium_ER = payroll.hdmfPremium_ER;
+        rem.hdmfPremiumTotal = payroll.hdmfPremium_EE + payroll.hdmfPremium_ER;
 
-    // ========================================
-    // Copy HDMF Contribution Data
-    // ========================================
-    rem.hdmfPremium_EE = payroll.hdmfPremium_EE; // Employee share
-    rem.hdmfPremium_ER = payroll.hdmfPremium_ER; // Employer share
-    rem.hdmfPremiumTotal = payroll.hdmfPremium_EE + payroll.hdmfPremium_ER;
+        rem.withHoldingTax = payroll.withHoldingTax;
 
-    // ========================================
-    // Copy Withholding Tax
-    // ========================================
-    rem.withHoldingTax = payroll.withHoldingTax;
+        rem.sssSubmissionStatus = RemittanceStatus::PENDING;
+        rem.phicSubmissionStatus = RemittanceStatus::PENDING;
+        rem.hdmfSubmissionStatus = RemittanceStatus::PENDING;
+        rem.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
 
-    // ========================================
-    // Set Initial Submission Status
-    // ========================================
-    rem.sssSubmissionStatus = RemittanceStatus::PENDING;
-    rem.phicSubmissionStatus = RemittanceStatus::PENDING;
-    rem.hdmfSubmissionStatus = RemittanceStatus::PENDING;
-    rem.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
+        rem.dateCreated = Date::getTodayDate();  // Current date
+        rem.dateModified = Date::getTodayDate(); // Current date
+        v_Rem.push_back(rem);
+    }
 
-    // ========================================
-    // Set Audit Trail
-    // ========================================
-    rem.dateCreated = Date::getTodayDate();  // Current date
-    rem.dateModified = Date::getTodayDate(); // Current date
     // lastSubmittedDate remains default (1970-01-01)
     // submittedByUserId remains 0 (not yet submitted)
-
-    return rem;
+    this->remittanceRepo.insertRemittanceReports(v_Rem);
+    return v_Rem.size() > 0;
 }
 
 std::vector<GovernmentRemittance> GovernmentRemittanceService::generateRemittancesForPeriod(const std::string &payPeriodText, int payPeriodHalf)
