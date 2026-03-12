@@ -83,7 +83,7 @@ void ResultsWidget::loadTableData()
 void ResultsWidget::submitGovernRemitt()
 {
     // TODO need to make a call to a service that will accept a batch, then combine them into monthly,
-    AppContext::instance().governmentRemittanceService().generateRemittanceFromPayrolls(dataBus);
+    AppContext::instance().governmentRemittanceService().generateFromPayroll(dataBus);
     // QMessageBox::Information(this, "Good", "Government Remittance Submitted");
     QMessageBox::information(this, QString::fromStdString("Good"), QString::fromStdString("Government Remittance Submitted"));
     enableGovernmentRemitSubmit = !enableGovernmentRemitSubmit;
