@@ -1,6 +1,7 @@
 #ifndef PayrollService_H
 #define PayrollService_H
 #include "Repositories/PayrollRepository.h"
+#include "Helpers/PayrollCalculations.h"
 
 class PayrollService
 {
@@ -23,9 +24,13 @@ public:
     std::vector<PayrollCalculationResults> getAllPayrollsByEmployeeID(std::string &id);
 
     std::vector<PayrollCalculationResults> getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId = std::nullopt, std::optional<int> payPeriodHalf = std::nullopt);
+    // READ
+    std::optional<PayrollConfig> loadConfig();
 
     // UPDATE
     bool updatePayroll(const PayrollCalculationResults &e);
+
+    bool saveConfig(const PayrollConfig &config);
 
     // DELETE
     bool deletePayroll(int id);
