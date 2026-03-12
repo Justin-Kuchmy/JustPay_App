@@ -2,36 +2,13 @@
 #include "include/Generated/ui_premium_values_widget.h"
 #include "UI/PayrollComputation/Premium_Values_Widget.h"
 
-struct TaxBracket
-{
-    double lowerBound; // taxable income lower bound
-    double baseTax;    // fixed base tax for bracket
-    double rate;       // rate on excess
-};
-constexpr TaxBracket SEMI_MONTHLY_TAX_BRACKETS[] = {
-    {0.0, 0.0, 0.0},          // 0-10,417
-    {10417.01, 0.0, 0.15},    // 10,417.01 - 16,666
-    {16667.0, 937.5, 0.20},   // 16,667 - 33,332
-    {33333.0, 4270.7, 0.25},  // 33,333 - 83,332
-    {83333.0, 16770.7, 0.30}, // 83,333 - 333,332
-    {333333.0, 91770.7, 0.35} // >333,333
-};
-constexpr size_t NUM_BRACKETS = sizeof(SEMI_MONTHLY_TAX_BRACKETS) / sizeof(TaxBracket);
-constexpr long SSS_SALARY_CAP = 35000;
-constexpr long PHIC_SALARY_FLOOR = 10000;
-constexpr long PHIC_SALARY_CAP = 100000;
-constexpr long HDMF_SALARY_CAP = 10000;
-constexpr double SSS_EMP_RATE = 0.05;
-constexpr double PHIC_EMP_RATE = 0.025;
-constexpr double HDMF_EMP_RATE = 0.02;
-
-constexpr double SSS_ER_RATE = 0.0795;
-constexpr double PHIC_ER_RATE = 0.025;
-constexpr double HDMF_ER_RATE = 0.02;
 PremiumValuesWidget::PremiumValuesWidget(std::vector<PayrollCalculationResults> *dataBus, QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PremiumValuesWidget), dataBus(dataBus)
 {
     ui->setupUi(this);
     connect(ui->applyButton, &QPushButton::clicked, this, &PremiumValuesWidget::applyClicked);
+    auto conf = AppContext::instance().payrollService().loadConfig();
+    if (conf)
+        config = *conf;
 }
 PremiumValuesWidget::~PremiumValuesWidget()
 {
@@ -45,113 +22,28 @@ void PremiumValuesWidget::applyClicked()
     applyValues();
 }
 
-inline double calcSSS_EE(double gross, bool firstHalf)
-{
-    if (!firstHalf)
-        return 0.0;
-    return std::min(gross,
-                    static_cast<double>(SSS_SALARY_CAP)) *
-           SSS_EMP_RATE;
-}
-
-inline double calcPhilHealth_EE(double gross, bool firstHalf)
-{
-    if (firstHalf)
-        return 0.0;
-    return std::clamp(gross,
-                      static_cast<double>(PHIC_SALARY_FLOOR),
-                      static_cast<double>(PHIC_SALARY_CAP)) *
-           PHIC_EMP_RATE;
-}
-
-inline double calcHDMF_EE(double gross, bool firstHalf)
-{
-    if (firstHalf)
-        return 0.0;
-    return std::min(gross,
-                    static_cast<double>(HDMF_SALARY_CAP)) *
-           HDMF_EMP_RATE;
-}
-
-inline double calcTaxableIncome(PayrollCalculationResults &emp)
-{
-    double taxableIncome = emp.monthlyBasicSalary + emp.overTimePay - emp.sssPremium_EE - emp.philHealthPremium_EE - emp.hdmfPremium_EE;
-    return taxableIncome;
-}
-
-inline double calcSSS_ER(double gross, bool firstHalf)
-{
-    if (!firstHalf)
-        return 0.0;
-    return std::min(gross,
-                    static_cast<double>(SSS_SALARY_CAP)) *
-           SSS_ER_RATE;
-}
-
-inline double calcPhilHealth_ER(double gross, bool firstHalf)
-{
-    if (firstHalf)
-        return 0.0;
-    return std::clamp(gross,
-                      static_cast<double>(PHIC_SALARY_FLOOR),
-                      static_cast<double>(PHIC_SALARY_CAP)) *
-           PHIC_ER_RATE;
-}
-
-inline double calcHDMF_ER(double gross, bool firstHalf)
-{
-    if (firstHalf)
-        return 0.0;
-    return std::min(gross,
-                    static_cast<double>(HDMF_SALARY_CAP)) *
-           HDMF_ER_RATE;
-}
-
-inline double calcWithholding(double taxableIncome)
-{
-    double withholdingTax = 0.0;
-    for (size_t i{NUM_BRACKETS}; i > 0; --i)
-    {
-        if (taxableIncome < SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound)
-        {
-            continue;
-        }
-        else
-        {
-            withholdingTax =
-                SEMI_MONTHLY_TAX_BRACKETS[i - 1].baseTax +
-                SEMI_MONTHLY_TAX_BRACKETS[i - 1].rate *
-                    (taxableIncome - SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound);
-            break;
-        }
-    }
-    return withholdingTax;
-}
-
 void PremiumValuesWidget::applyValues()
 {
     const int byWeekly = 2;
+    auto truncateForCurrency = [](double v)
+    { return std::trunc(v * 100.0) / 100.0; };
+
     for (size_t i{}; i < dataBus->size(); i++)
     {
         auto &emp = dataBus->at(i);
         std::vector<LoanLedger> empLoans = AppContext::instance().loanLedgerService().getAllLoanLedgers(emp.employeeId);
-        emp.payPeriodText = ui->payrollPeriodComboBox->currentIndex() == 0 ? "first" : "second";
         emp.payPeriodHalf = ui->payrollPeriodComboBox->currentIndex() == 0 ? 1 : 2;
-        emp.deductionFirstHalf = ui->payrollPeriodComboBox->currentIndex() == 0;
-        emp.deductionSecondHalf = ui->payrollPeriodComboBox->currentIndex() == 1;
-        auto truncateForCurrency = [](double v)
-        { return std::trunc(v * 100.0) / 100.0; };
 
         for (size_t j{}; j < empLoans.size(); j++)
         {
             LOG_DEBUG(empLoans[j].deductionsPerPayroll << " " << empLoans[j].deductionFirstHalf << " " << empLoans[j].deductionSecondHalf);
 
-            if (emp.deductionFirstHalf && empLoans[j].deductionFirstHalf)
+            if (emp.payPeriodHalf - 1 && empLoans[j].deductionFirstHalf)
             {
                 emp.loanDeductionsPerPayroll += empLoans[j].deductionsPerPayroll;
             }
 
-            if (emp.deductionSecondHalf && empLoans[j].deductionSecondHalf)
+            if (emp.payPeriodHalf - 1 && empLoans[j].deductionSecondHalf)
             {
                 emp.loanDeductionsPerPayroll += empLoans[j].deductionsPerPayroll;
             }
@@ -161,23 +53,26 @@ void PremiumValuesWidget::applyValues()
         emp.monthlyAllowances /= byWeekly;
         emp.grossIncome = (emp.monthlyBasicSalary) + emp.overTimePay + (emp.monthlyAllowances);
 
-        emp.sssPremium_EE = truncateForCurrency(calcSSS_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.applySSS = PayrollCalc::applies(config.sssSchedule, emp.payPeriodHalf);
+        emp.sssPremium_EE = truncateForCurrency(PayrollCalc::calcSSS_EE(emp.monthlyBasicSalary, emp.applySSS));
 
-        emp.philHealthPremium_EE = truncateForCurrency(calcPhilHealth_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.applyPhilHealth = PayrollCalc::applies(config.philHealthSchedule, emp.payPeriodHalf);
+        emp.philHealthPremium_EE = truncateForCurrency(PayrollCalc::calcPhilHealth_EE(emp.monthlyBasicSalary, emp.applyPhilHealth));
 
-        emp.hdmfPremium_EE = truncateForCurrency(calcHDMF_EE(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.applyHDMF = PayrollCalc::applies(config.hdmfSchedule, emp.payPeriodHalf);
+        emp.hdmfPremium_EE = truncateForCurrency(PayrollCalc::calcHDMF_EE(emp.monthlyBasicSalary, emp.applyHDMF));
 
-        emp.withHoldingTax = truncateForCurrency(calcWithholding(calcTaxableIncome(emp)));
+        emp.withHoldingTax = truncateForCurrency(PayrollCalc::calcWithholding(PayrollCalc::calcTaxableIncome(emp)));
 
         emp.totalDeductions = emp.sssPremium_EE + emp.philHealthPremium_EE + emp.hdmfPremium_EE + emp.withHoldingTax + emp.loanDeductionsPerPayroll;
 
         emp.netPay = emp.monthlyBasicSalary + emp.overTimePay + emp.monthlyAllowances - emp.totalDeductions;
 
-        emp.sssPremium_ER = truncateForCurrency(calcSSS_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.sssPremium_ER = truncateForCurrency(PayrollCalc::calcSSS_ER(emp.monthlyBasicSalary, emp.applySSS));
 
-        emp.philHealthPremium_ER = truncateForCurrency(calcPhilHealth_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.philHealthPremium_ER = truncateForCurrency(PayrollCalc::calcPhilHealth_ER(emp.monthlyBasicSalary, emp.applyPhilHealth));
 
-        emp.philHealthPremium_ER = truncateForCurrency(calcHDMF_ER(emp.monthlyBasicSalary, emp.deductionFirstHalf));
+        emp.hdmfPremium_ER = truncateForCurrency(PayrollCalc::calcHDMF_ER(emp.monthlyBasicSalary, emp.applyHDMF));
 
         LOG_DEBUG(emp.to_string());
     }
