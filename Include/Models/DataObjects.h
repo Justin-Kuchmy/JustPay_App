@@ -422,6 +422,19 @@ struct Employee
         return oss.str();
     };
 };
+enum class DeductionSchedule
+{
+    FirstHalf = 1,
+    SecondHalf = 2,
+    BothHalves = 3
+};
+
+struct PayrollConfig
+{
+    DeductionSchedule sssSchedule{DeductionSchedule::SecondHalf};
+    DeductionSchedule philHealthSchedule{DeductionSchedule::SecondHalf};
+    DeductionSchedule hdmfSchedule{DeductionSchedule::SecondHalf};
+};
 
 class PayrollCalculationResults
 {
@@ -441,8 +454,9 @@ public:
     double philHealthPremium_EE{0.0};
     double hdmfPremium_EE{0.0};
     double loanDeductionsPerPayroll{0.0};
-    bool deductionFirstHalf{false};
-    bool deductionSecondHalf{false};
+    bool applySSS{false};
+    bool applyPhilHealth{false};
+    bool applyHDMF{false};
     double withHoldingTax{0.0};
     double totalDeductions{0.0};
     double netPay{0.0};
@@ -470,8 +484,6 @@ public:
             << "\n philHealthPremium_EE: " << philHealthPremium_EE
             << "\n hdmfPremium_EE: " << hdmfPremium_EE
             << "\n loanDeductionsPerPayroll: " << loanDeductionsPerPayroll
-            << "\n deductionFirstHalf: " << deductionFirstHalf
-            << "\n deductionSecondHalf: " << deductionSecondHalf
             << "\n totalDeductions: " << totalDeductions
             << "\n withHoldingTax: " << withHoldingTax
             << "\n netPay: " << netPay
