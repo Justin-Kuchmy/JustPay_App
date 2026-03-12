@@ -32,26 +32,24 @@ public:
 
     // create
     sqlite3_int64 insertRemittance(const GovernmentRemittance &r);
-    sqlite3_int64 insertRemittanceReports(const std::vector<GovernmentRemittance> &r);
+    std::vector<sqlite3_int64> insertRemittanceReports(const std::vector<GovernmentRemittance> &r);
 
+    // read
     std::optional<GovernmentRemittance> getRemittanceById(int id);
-
-    std::vector<GovernmentRemittance> getRemittancesByPeriod(const std::string &payPeriodText, int payPeriodHalf);
-
+    std::optional<GovernmentRemittance> getRemittanceByPayrollId(int payrollId);
+    std::vector<GovernmentRemittance> getRemittancesByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf = std::nullopt);
+    std::vector<GovernmentRemittance> getRemittancesByEmployee(const std::string &employeeId);
+    std::vector<GovernmentRemittance> getRemittancesByStatus(RemittanceStatus status);
     std::vector<GovernmentRemittance> getAllRemittances();
+    MonthlySummary getMonthlySummary(const std::string &monthYear);
 
     // update -
     bool markAsSubmitted(int remittanceId, const std::string &remittanceType, int submittedByUserId, const Date &submissionDate);
-
     bool markAsConfirmed(int remittanceId, const std::string &remittanceType);
-
     bool markAsRejected(int remittanceId, const std::string &remittanceType);
-
     bool updateRemittance(const GovernmentRemittance &remittance);
-
+    // delete
     bool deleteRemittance(int id);
-
-    MonthlySummary getMonthlySummary(const std::string &monthYear);
 };
 
 #endif
