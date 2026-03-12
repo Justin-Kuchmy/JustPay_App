@@ -28,7 +28,7 @@ private slots:
 
 private:
     Ui::ResultsWidget *ui;
-    std::vector<PayrollCalculationResults> *dataBus = nullptr;
+    const std::vector<PayrollCalculationResults> *dataBus = nullptr;
     std::unique_ptr<QStandardItemModel> model;
     bool enablePayrollSubmit{true};
     bool enableGovernmentRemitSubmit{false};
