@@ -12,6 +12,15 @@ bool PayrollRepository::createTable() const
     return BaseRepository::executeFile(":/resources/sql/payroll.sql");
 };
 
+PayrollConfig PayrollRepository::mapPayrollConfig(sqlite3_stmt *stmt)
+{
+    PayrollConfig config;
+    config.sssSchedule = static_cast<DeductionSchedule>(sqlite3_column_int(stmt, 1));
+    config.philHealthSchedule = static_cast<DeductionSchedule>(sqlite3_column_int(stmt, 2));
+    config.hdmfSchedule = static_cast<DeductionSchedule>(sqlite3_column_int(stmt, 3));
+    return config;
+}
+
 PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
 {
     PayrollCalculationResults payrollRecord;
@@ -41,8 +50,8 @@ PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
     payrollRecord.hdmfPremium_EE = sqlite3_column_int(stmt, 13);
     payrollRecord.loanDeductionsPerPayroll = sqlite3_column_int(stmt, 14);
     payrollRecord.withHoldingTax = sqlite3_column_int(stmt, 15);
-    payrollRecord.totalDeductions = sqlite3_column_int(stmt, 16);
-    payrollRecord.netPay = sqlite3_column_int(stmt, 17);
+    payrollRecord.totalDeductions = sqlite3_column_double(stmt, 16);
+    payrollRecord.netPay = sqlite3_column_double(stmt, 17);
     const unsigned char *date = sqlite3_column_text(stmt, 18);
     if (date)
     {
@@ -62,7 +71,7 @@ PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
 // create
 sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &prRecord)
 {
-    const char *sql = R"(INSERT INTO payroll_records (
+    const char *sql = R"(INSERT OR IGNORE INTO payroll_records (
             employee_id,
             full_name,
             department,
@@ -80,10 +89,11 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
             withholding_tax,
             total_deductions,
             net_pay,
+            created_at,
             sss_premium_er, 
             philhealth_premium_er, 
             hdmf_premium_er
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     )";
 
     sqlite3_stmt *stmt = nullptr;
@@ -115,6 +125,7 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
     sqlite3_bind_double(stmt, idx++, prRecord.totalDeductions);
     sqlite3_bind_double(stmt, idx++, prRecord.netPay);
 
+    sqlite3_bind_text(stmt, idx++, prRecord.dateProcessed.to_string().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_ER);
     sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_ER);
     sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_ER);
@@ -125,6 +136,12 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
     if (rc != SQLITE_DONE)
     {
         LOG_DEBUG("SQL insert failed: " << sqlite3_errmsg(db));
+        return 0;
+    }
+
+    if (sqlite3_changes(db) == 0)
+    {
+        LOG_DEBUG("Duplicate payroll record, insert skipped");
         return 0;
     }
 
@@ -274,3 +291,31 @@ int PayrollRepository::getLastPayrollId()
 {
     return getAll().size() + 1;
 };
+
+std::optional<PayrollConfig> PayrollRepository::loadConfig()
+{
+    const char *sql = "select * from payroll_config";
+    sqlite3_stmt *stmt = nullptr;
+    std::optional<PayrollConfig> result = std::nullopt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
+        return result;
+    }
+
+    int rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW)
+    {
+        result = mapPayrollConfig(stmt);
+    }
+
+    sqlite3_finalize(stmt);
+    return result;
+}
+
+bool PayrollRepository::saveConfig(const PayrollConfig &config)
+{
+    std::string sql = std::format("update Payroll_Config set sss_schedule = {}, philhealth_schedule = {}, hdmf_schedule = {};", static_cast<int>(config.sssSchedule), static_cast<int>(config.philHealthSchedule), static_cast<int>(config.hdmfSchedule));
+    return execute(sql);
+}
