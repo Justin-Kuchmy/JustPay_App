@@ -4,21 +4,22 @@
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"
 
-
-namespace Ui{
-class PremiumValuesWidget;
+namespace Ui
+{
+    class PremiumValuesWidget;
 }
 
-class PremiumValuesWidget : public BaseContentWidget {
+class PremiumValuesWidget : public BaseContentWidget
+{
     Q_OBJECT
 
 public:
-    explicit PremiumValuesWidget(std::vector<PayrollCalculationResults>* dataBus, QWidget *parent = nullptr);
+    explicit PremiumValuesWidget(std::vector<PayrollCalculationResults> *dataBus, QWidget *parent = nullptr);
     ~PremiumValuesWidget();
-    PremiumValuesWidget(const PremiumValuesWidget&) = delete; 
-    PremiumValuesWidget& operator=(const PremiumValuesWidget&) = delete; 
+    PremiumValuesWidget(const PremiumValuesWidget &) = delete;
+    PremiumValuesWidget &operator=(const PremiumValuesWidget &) = delete;
     void applyValues();
-    
+
 private slots:
     void applyClicked();
 signals:
@@ -26,7 +27,8 @@ signals:
 
 private:
     Ui::PremiumValuesWidget *ui;
-    std::vector<PayrollCalculationResults>* dataBus = nullptr;
+    std::vector<PayrollCalculationResults> *dataBus = nullptr;
+    PayrollConfig config{};
 };
 
 #endif
