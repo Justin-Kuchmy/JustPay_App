@@ -2,106 +2,85 @@
 
 GovernmentRemittanceService::GovernmentRemittanceService(GovernmentRemittanceRepository &remRepo, PayrollRepository &payRepo) : remittanceRepo(remRepo), payrollRepo(payRepo)
 {
-    // we have access to PayrollRepository but we need to check which ones have been turned into a governmentremittance object yet,
-    // then we get all the ones that havent not been created, then loop through and call generateRemittanceFromPayroll, then we call the repos insertRemittance
 }
 
-std::vector<GovernmentRemittance> GovernmentRemittanceService::getRemittancesForWidget(const std::string &payPeriodText, int payPeriodHalf)
+sqlite3_int64 GovernmentRemittanceService::addRemittance(const GovernmentRemittance &r)
+{
+    return 0;
+};
+std::vector<sqlite3_int64> GovernmentRemittanceService::addRemittanceReports(const std::vector<GovernmentRemittance> &r)
 {
     return {};
-}
-
-bool GovernmentRemittanceService::generateRemittanceFromPayrolls(const std::vector<PayrollCalculationResults> *payrolls)
-{
-    std::vector<GovernmentRemittance> v_Rem{};
-    for (size_t i{0}; i < payrolls->size(); i++)
-    {
-        GovernmentRemittance rem{};
-        auto &payroll = payrolls->at(i);
-        rem.payrollCalculationResultsId = payroll.id;
-        rem.employeeId = payroll.employeeId;
-        rem.fullName = payroll.fullName;
-        rem.employeeDepartment = payroll.employeeDepartment;
-        rem.payPeriodText = payroll.payPeriodText;
-        rem.payPeriodHalf = payroll.payPeriodHalf;
-
-        rem.sssPremium_EE = payroll.sssPremium_EE; // Employee share
-        rem.sssPremium_ER = payroll.sssPremium_ER; // Employer share
-        rem.sssPremiumTotal = payroll.sssPremium_EE + payroll.sssPremium_ER;
-
-        rem.philHealthPremium_EE = payroll.philHealthPremium_EE;
-        rem.philHealthPremium_ER = payroll.philHealthPremium_ER;
-        rem.philHealthPremiumTotal = payroll.philHealthPremium_EE + payroll.philHealthPremium_ER;
-
-        rem.hdmfPremium_EE = payroll.hdmfPremium_EE;
-        rem.hdmfPremium_ER = payroll.hdmfPremium_ER;
-        rem.hdmfPremium_ER = payroll.hdmfPremium_ER;
-        rem.hdmfPremiumTotal = payroll.hdmfPremium_EE + payroll.hdmfPremium_ER;
-
-        rem.withHoldingTax = payroll.withHoldingTax;
-
-        rem.sssSubmissionStatus = RemittanceStatus::PENDING;
-        rem.phicSubmissionStatus = RemittanceStatus::PENDING;
-        rem.hdmfSubmissionStatus = RemittanceStatus::PENDING;
-        rem.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
-
-        rem.dateCreated = Date::getTodayDate();  // Current date
-        rem.dateModified = Date::getTodayDate(); // Current date
-        v_Rem.push_back(rem);
-    }
-
-    // lastSubmittedDate remains default (1970-01-01)
-    // submittedByUserId remains 0 (not yet submitted)
-    this->remittanceRepo.insertRemittanceReports(v_Rem);
-    return v_Rem.size() > 0;
-}
-
-std::vector<GovernmentRemittance> GovernmentRemittanceService::generateRemittancesForPeriod(const std::string &payPeriodText, int payPeriodHalf)
+};
+std::vector<GovernmentRemittance> GovernmentRemittanceService::generateFromPayroll(const std::vector<PayrollCalculationResults> *payrolls)
 {
     return {};
-}
-
-bool GovernmentRemittanceService::submitRemittancesForPeriod(const std::string &payPeriodText, int payPeriodHalf, const std::string &remittanceType, int userId)
+};
+std::optional<GovernmentRemittance> GovernmentRemittanceService::getById(int id)
 {
-    return 0;
-}
-
-GovernmentRemittanceRepository::MonthlySummary GovernmentRemittanceService::getMonthlySummary(const std::string &monthYear)
+    return std::nullopt;
+};
+std::optional<GovernmentRemittance> GovernmentRemittanceService::getByPayrollId(int payrollId)
 {
-    return {};
-}
-
-PeriodTotals GovernmentRemittanceService::calculatePeriodTotals(const std::string &payPeriodText, int payPeriodHalf)
+    return std::nullopt;
+};
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf)
 {
     return {};
-}
-
-bool GovernmentRemittanceService::submitRemittance(int remittanceId, const std::string &remittanceType, int submittedByUserId)
-{
-    return 0;
-}
-
-bool GovernmentRemittanceService::confirmRemittance(int remittanceId, const std::string &remittanceType)
-{
-    return 0;
-}
-
-bool GovernmentRemittanceService::rejectRemittance(int remittanceId, const std::string &remittanceType)
-{
-    return 0;
-}
-
-bool GovernmentRemittanceService::isPeriodFullySubmitted(const std::string &payPeriodText, int payPeriodHalf, const std::string &remittanceType)
-{
-    return 0;
-}
-
-bool GovernmentRemittanceService::isPeriodFullyConfirmed(const std::string &payPeriodText, int payPeriodHalf, const std::string &remittanceType)
-{
-    return 0;
-}
-
-PeriodStatusSummary GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodText, int payPeriodHalf)
+};
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getByEmployee(const std::string &employeeId)
 {
     return {};
-}
+};
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getPending()
+{
+    return {};
+};
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getAll()
+{
+    return {};
+};
+GovernmentRemittanceRepository::MonthlySummary getMonthlySummary(const std::string &monthYear)
+{
+    return {};
+};
+GovernmentRemittanceService::PeriodStatusSummary GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodText, int payPeriodHalf)
+{
+    return {};
+};
+GovernmentRemittanceService::PeriodTotals GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf)
+{
+    return {};
+};
+double GovernmentRemittanceService::getTotalEmployerContribution(const std::vector<GovernmentRemittance> &remittances)
+{
+    return 0.0;
+};
+double GovernmentRemittanceService::getTotalEmployeeContribution(const std::vector<GovernmentRemittance> &remittances)
+{
+    return 0.0;
+};
+double GovernmentRemittanceService::getTotalRemittance(const std::vector<GovernmentRemittance> &remittances)
+{
+    return 0.0;
+};
+bool GovernmentRemittanceService::submit(int remittanceId, const std::string &remittanceType, int submittedByUserId, const Date &submissionDate)
+{
+    return false;
+};
+bool GovernmentRemittanceService::confirm(int remittanceId, const std::string &remittanceType)
+{
+    return false;
+};
+bool GovernmentRemittanceService::reject(int remittanceId, const std::string &remittanceType)
+{
+    return false;
+};
+bool GovernmentRemittanceService::update(const GovernmentRemittance &remittance)
+{
+    return false;
+};
+bool GovernmentRemittanceService::remove(int id)
+{
+    return false;
+};
