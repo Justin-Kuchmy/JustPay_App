@@ -89,10 +89,21 @@ std::vector<PayrollCalculationResults> PayrollService::getPayrollByPeriod(const 
     return this->repo.getPayrollByPeriod(payPeriodText, employeeId, payPeriodHalf);
 }
 
+std::optional<PayrollConfig> PayrollService::loadConfig()
+{
+    return this->repo.loadConfig();
+}
+
 // UPDATE
 bool PayrollService::updatePayroll(const PayrollCalculationResults &e)
 {
     return this->repo.updatePayroll(e);
+}
+
+bool PayrollService::saveConfig(const PayrollConfig &config)
+{
+    auto res = this->repo.saveConfig(config);
+    return res;
 }
 
 // DELETE
