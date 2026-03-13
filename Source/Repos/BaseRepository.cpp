@@ -12,18 +12,22 @@ BaseRepository::~BaseRepository()
     std::cout << "\nBaseRepository destroyed";
 }
 
-bool BaseRepository::execute(const std::string &sql) const
+bool BaseRepository::execute(const std::string &sql, std::function<void(sqlite3_stmt *)> binder) const
 {
-    char *errMsg = nullptr;
-    int rc = sqlite3_exec(this->db, sql.c_str(), nullptr, nullptr, &errMsg);
+    sqlite3_stmt *stmt = nullptr;
 
-    if (rc != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        LOG_DEBUG("SQL error: " << errMsg);
-        sqlite3_free(errMsg);
+        LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
         return false;
     }
-    return true;
+
+    binder(stmt);
+
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+
+    return rc == SQLITE_DONE;
 }
 
 bool BaseRepository::executeFile(const QString &filePath) const
