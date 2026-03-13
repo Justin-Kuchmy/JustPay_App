@@ -7,6 +7,7 @@
 class AttendanceLogRepository : public BaseRepository
 {
     static AttendanceLog mapAttendanceLog(sqlite3_stmt *stmt);
+    static void bindAttendanceLog(sqlite3_stmt *stmt, const AttendanceLog &log);
 
 public:
     explicit AttendanceLogRepository(sqlite3 *db);
