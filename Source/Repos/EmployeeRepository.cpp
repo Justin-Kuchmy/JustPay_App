@@ -18,43 +18,24 @@ bool EmployeeRepository::createTable() const
 
 std::string EmployeeRepository::insertEmployee(const Employee &employee)
 {
-    std::string sqlA = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    std::string sql = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     sqlite3_stmt *stmt = nullptr;
     std::string result = "";
-    int column{1};
     // database, sql_statement, max_length, out_statement, ptr to unused part of sql string
-    if (sqlite3_prepare_v2(db, sqlA.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
         std::cerr << "SQLite insert failed: " << sqlite3_errmsg(db) << "\n";
         return ""; // Failed to prepare
     }
-    sqlite3_bind_text(stmt, column++, employee.fullName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.department));
-    sqlite3_bind_text(stmt, column++, employee.position.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.jobLevel));
-    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.status));
-    sqlite3_bind_text(stmt, column++, employee.dateHired.to_string().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.dateSeparation.to_string().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.sssNumber.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.philHealthNumber.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.hdmfNumber.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.tin.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.bankAccountNumber.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.clockInTimeStr.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.clockOutTimeStr.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_double(stmt, column++, employee.monthlyBasicSalary);
-    sqlite3_bind_double(stmt, column++, employee.monthlyAllowances);
-    sqlite3_bind_text(stmt, column++, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, column++, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, column++, employee.isActive);
-    sqlite3_bind_int(stmt, column++, employee.contactId);
-    sqlite3_bind_int(stmt, column++, employee.dependentId);
+    EmployeeRepository::bindEmployee(stmt, employee);
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE)
     {
         std::cerr << "SQLite insert failed: " << sqlite3_errmsg(db) << "\n";
         return 0;
     } // Insert failed
+
+    // we need the string employee id not the sqlite3_last_insert_rowid
     result = getLastEmployeeId();
     sqlite3_finalize(stmt);
     return result;
@@ -64,8 +45,6 @@ std::string EmployeeRepository::getLastEmployeeId()
 {
     sqlite3_stmt *stmt = nullptr;
     std::string empId;
-
-    // sqlite3_int64 lastId = sqlite3_last_insert_rowid(db);
 
     const char *sql = R"(
             SELECT employeeId 
@@ -84,7 +63,6 @@ std::string EmployeeRepository::getLastEmployeeId()
     sqlite3_finalize(stmt);
     return empId;
 }
-
 // READ
 std::optional<Employee> EmployeeRepository::getById(std::string id)
 {
@@ -137,33 +115,24 @@ std::vector<Employee> EmployeeRepository::findByName(const std::string &name)
 // UPDATE
 bool EmployeeRepository::updateEmployee(const Employee &e)
 {
-    std::string sql = std::format("update employees set fullName='{}', department={}, position='{}', jobLevel={}, status={}, dateHired='{}', dateSeparation='{}', sssNumber='{}', philHealthNumber='{}', hdmfNumber='{}', tin='{}', bankAccountNumber='{}', clockInTimeStr='{}',clockOutTimeStr='{}',monthlyBasicSalary={}, monthlyAllowances={}, personalEmail='{}', isActive=1 where employeeId = '{}'",
-                                  e.fullName,
-                                  static_cast<int>(e.department),
-                                  e.position,
-                                  static_cast<int>(e.jobLevel),
-                                  static_cast<int>(e.status),
-                                  e.dateHired.to_string(),
-                                  e.dateSeparation.to_string(),
-                                  e.sssNumber,
-                                  e.philHealthNumber,
-                                  e.hdmfNumber,
-                                  e.tin,
-                                  e.bankAccountNumber,
-                                  e.clockInTimeStr,
-                                  e.clockOutTimeStr,
-                                  e.monthlyBasicSalary,
-                                  e.monthlyAllowances,
-                                  e.personalEmail,
-                                  e.employeeId);
-    return EmployeeRepository::execute(sql);
+    std::string sql = R"( update employees set  fullName=?,  department=?,  position=?,  jobLevel=?,  status=?,  dateHired=?,  dateSeparation=?,  sssNumber=?,  philHealthNumber=?,  hdmfNumber=?,  tin=?,  
+    bankAccountNumber=?,  clockInTimeStr=?, clockOutTimeStr=?, monthlyBasicSalary=?,  monthlyAllowances=?,  personalEmail=?,  isActive=1  where employeeId = ?)";
+    return EmployeeRepository::execute(sql, [&e](sqlite3_stmt *stmt)
+                                       { bindEmployee(stmt, e); });
 };
 
 // DELETE
 bool EmployeeRepository::deleteEmployee(std::string id)
 {
-    std::string sql = std::format("update employees set isActive = false where employeeId = '{}'", id);
-    return execute(sql);
+    std::string sql = R"(
+        UPDATE employees SET
+            isActive = ?
+        WHERE employeeId = ?
+    )";
+    return execute(sql, [&id](sqlite3_stmt *stmt)
+                   {
+            sqlite3_bind_int(stmt, 1, 0);
+            sqlite3_bind_text(stmt, 2, id.c_str(), -1, SQLITE_TRANSIENT); });
 }; // Delete by ID
 
 bool EmployeeRepository::deleteAll()
@@ -171,6 +140,32 @@ bool EmployeeRepository::deleteAll()
     std::string sql = "DELETE FROM employees;";
     return execute(sql);
 };
+
+void EmployeeRepository::bindEmployee(sqlite3_stmt *stmt, const Employee &employee)
+{
+    int column{1};
+    sqlite3_bind_text(stmt, column++, employee.fullName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.department));
+    sqlite3_bind_text(stmt, column++, employee.position.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.jobLevel));
+    sqlite3_bind_int(stmt, column++, static_cast<int>(employee.status));
+    sqlite3_bind_text(stmt, column++, employee.dateHired.to_string().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.dateSeparation.to_string().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.sssNumber.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.philHealthNumber.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.hdmfNumber.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.tin.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.bankAccountNumber.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.clockInTimeStr.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.clockOutTimeStr.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_double(stmt, column++, employee.monthlyBasicSalary);
+    sqlite3_bind_double(stmt, column++, employee.monthlyAllowances);
+    sqlite3_bind_text(stmt, column++, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, column++, employee.isActive);
+    sqlite3_bind_int(stmt, column++, employee.contactId);
+    sqlite3_bind_int(stmt, column++, employee.dependentId);
+}
 
 Employee EmployeeRepository::mapEmployee(sqlite3_stmt *stmt)
 {
