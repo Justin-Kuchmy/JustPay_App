@@ -7,6 +7,7 @@
 class LoanLedgerRepository : public BaseRepository
 {
     static LoanLedger mapLoanLedger(sqlite3_stmt *stmt);
+    static void bindLoanLedger(sqlite3_stmt *stmt, const LoanLedger &lleg);
 
 public:
     explicit LoanLedgerRepository(sqlite3 *db);
