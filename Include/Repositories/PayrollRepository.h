@@ -8,6 +8,7 @@ class PayrollRepository : public BaseRepository
 {
     static PayrollCalculationResults mapPayroll(sqlite3_stmt *stmt);
     static PayrollConfig mapPayrollConfig(sqlite3_stmt *stmt);
+    static void bindPayroll(sqlite3_stmt *stmt, const PayrollCalculationResults &payroll);
 
 public:
     explicit PayrollRepository(sqlite3 *db);
