@@ -11,6 +11,18 @@ bool AttendanceLogRepository::createTable() const
     return BaseRepository::executeFile(":/resources/sql/attendancelog.sql");
 };
 
+void AttendanceLogRepository::bindAttendanceLog(sqlite3_stmt *stmt, const AttendanceLog &al)
+{
+    int column{1};
+    sqlite3_bind_text(stmt, column++, al.employeeId.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, al.logDate.to_string().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, column++, al.lateByMinute);
+    sqlite3_bind_int(stmt, column++, al.underTimeByMinute);
+    sqlite3_bind_int(stmt, column++, al.overTimeByMinute);
+    sqlite3_bind_int(stmt, column++, al.isAbsent);
+    sqlite3_bind_text(stmt, column++, al.notes.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, al.overtimeJson.c_str(), -1, SQLITE_TRANSIENT);
+}
 AttendanceLog AttendanceLogRepository::mapAttendanceLog(sqlite3_stmt *stmt)
 {
     AttendanceLog al;
@@ -46,21 +58,17 @@ sqlite3_int64 AttendanceLogRepository::insertAttendanceLog(const AttendanceLog &
     {
         return 0;
     }
-    sqlite3_bind_text(stmt, 1, al.employeeId.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, al.logDate.to_string().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, 3, al.lateByMinute);
-    sqlite3_bind_int(stmt, 4, al.underTimeByMinute);
-    sqlite3_bind_int(stmt, 5, al.overTimeByMinute);
-    sqlite3_bind_int(stmt, 6, al.isAbsent);
-    sqlite3_bind_text(stmt, 7, al.notes.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 8, al.overtimeJson.c_str(), -1, SQLITE_TRANSIENT);
+    AttendanceLogRepository::bindAttendanceLog(stmt, al);
 
     int rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 
     if (rc != SQLITE_DONE)
-        return 0; // Insert failed
-    return static_cast<sqlite3_int64>(sqlite3_last_insert_rowid(db));
+    {
+        LOG_DEBUG("SQL insert failed: " << sqlite3_errmsg(db));
+        return 0;
+    }
+    return sqlite3_last_insert_rowid(db);
 };
 
 // read
