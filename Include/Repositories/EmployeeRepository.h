@@ -7,6 +7,7 @@
 class EmployeeRepository : public BaseRepository
 {
     static Employee mapEmployee(sqlite3_stmt *stmt);
+    static void bindEmployee(sqlite3_stmt *stmt, const Employee &employee);
 
 public:
     explicit EmployeeRepository(sqlite3 *db);
