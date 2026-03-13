@@ -20,6 +20,35 @@ PayrollConfig PayrollRepository::mapPayrollConfig(sqlite3_stmt *stmt)
     config.hdmfSchedule = static_cast<DeductionSchedule>(sqlite3_column_int(stmt, 3));
     return config;
 }
+void PayrollRepository::bindPayroll(sqlite3_stmt *stmt, const PayrollCalculationResults &prRecord)
+{
+    int idx = 1;
+    sqlite3_bind_text(stmt, idx++, prRecord.employeeId.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, idx++, prRecord.fullName.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, idx++, prRecord.employeeDepartment.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, idx++, prRecord.payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, idx++, prRecord.payPeriodHalf);
+
+    sqlite3_bind_double(stmt, idx++, prRecord.monthlyBasicSalary);
+    sqlite3_bind_double(stmt, idx++, prRecord.monthlyAllowances);
+    sqlite3_bind_double(stmt, idx++, prRecord.overTimePay);
+    sqlite3_bind_double(stmt, idx++, prRecord.adjustments);
+    sqlite3_bind_double(stmt, idx++, prRecord.grossIncome);
+
+    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_EE);
+    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_EE);
+    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_EE);
+    sqlite3_bind_double(stmt, idx++, prRecord.loanDeductionsPerPayroll);
+
+    sqlite3_bind_double(stmt, idx++, prRecord.withHoldingTax);
+    sqlite3_bind_double(stmt, idx++, prRecord.totalDeductions);
+    sqlite3_bind_double(stmt, idx++, prRecord.netPay);
+
+    sqlite3_bind_text(stmt, idx++, prRecord.dateProcessed.to_string().c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_ER);
+    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_ER);
+    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_ER);
+}
 
 PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
 {
@@ -103,33 +132,7 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
         return 0;
     }
 
-    int idx = 1;
-    sqlite3_bind_text(stmt, idx++, prRecord.employeeId.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, prRecord.fullName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, prRecord.employeeDepartment.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, prRecord.payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int(stmt, idx++, prRecord.payPeriodHalf);
-
-    sqlite3_bind_double(stmt, idx++, prRecord.monthlyBasicSalary);
-    sqlite3_bind_double(stmt, idx++, prRecord.monthlyAllowances);
-    sqlite3_bind_double(stmt, idx++, prRecord.overTimePay);
-    sqlite3_bind_double(stmt, idx++, prRecord.adjustments);
-    sqlite3_bind_double(stmt, idx++, prRecord.grossIncome);
-
-    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_EE);
-    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_EE);
-    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_EE);
-    sqlite3_bind_double(stmt, idx++, prRecord.loanDeductionsPerPayroll);
-
-    sqlite3_bind_double(stmt, idx++, prRecord.withHoldingTax);
-    sqlite3_bind_double(stmt, idx++, prRecord.totalDeductions);
-    sqlite3_bind_double(stmt, idx++, prRecord.netPay);
-
-    sqlite3_bind_text(stmt, idx++, prRecord.dateProcessed.to_string().c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_double(stmt, idx++, prRecord.sssPremium_ER);
-    sqlite3_bind_double(stmt, idx++, prRecord.philHealthPremium_ER);
-    sqlite3_bind_double(stmt, idx++, prRecord.hdmfPremium_ER);
-
+    PayrollRepository::bindPayroll(stmt, prRecord);
     int rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 
@@ -283,8 +286,12 @@ bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 // delete
 bool PayrollRepository::deletePayroll(int id)
 {
-    std::string sql = std::format("delete from payroll_records where id = '{}';", id);
-    return execute(sql);
+    std::string sql = R"(
+    delete 
+    from payroll_records 
+    where id = ?
+    )";
+    return execute(sql, [&id](sqlite3_stmt *stmt) {});
 };
 
 int PayrollRepository::getLastPayrollId()
@@ -316,6 +323,14 @@ std::optional<PayrollConfig> PayrollRepository::loadConfig()
 
 bool PayrollRepository::saveConfig(const PayrollConfig &config)
 {
-    std::string sql = std::format("update Payroll_Config set sss_schedule = {}, philhealth_schedule = {}, hdmf_schedule = {};", static_cast<int>(config.sssSchedule), static_cast<int>(config.philHealthSchedule), static_cast<int>(config.hdmfSchedule));
-    return execute(sql);
+    // static_cast<int>(config.sssSchedule), static_cast<int>(config.philHealthSchedule), static_cast<int>(config.hdmfSchedule));
+    std::string sql = R"(
+        update Payroll_Config 
+        set sss_schedule = ?, 
+        philhealth_schedule = ?, 
+        hdmf_schedule = ?
+        )";
+    return execute(sql, [&config](sqlite3_stmt *stmt) {
+
+    });
 }
