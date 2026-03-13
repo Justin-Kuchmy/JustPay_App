@@ -25,7 +25,7 @@ public:
     virtual bool createTable() const = 0;
 
 protected:
-    bool execute(const std::string &sql) const;
+    bool execute(const std::string &sql, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const;
     bool executeFile(const QString &filePath) const;
     template <typename T>
     std::vector<T> query(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper)
@@ -46,6 +46,26 @@ protected:
 
         sqlite3_finalize(stmt);
         return results;
+    }
+
+    template <typename T>
+    std::optional<T> querySingle(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {})
+    {
+        std::optional<T> result = std::nullopt;
+        sqlite3_stmt *stmt = nullptr;
+
+        if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
+            std::cerr << "Failed to prepare: " << sqlite3_errmsg(db) << std::endl;
+            return result;
+        }
+
+        binder(stmt);
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+            result = mapper(stmt);
+
+        sqlite3_finalize(stmt);
+        return result;
     }
 };
 
