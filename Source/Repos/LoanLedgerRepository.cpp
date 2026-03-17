@@ -15,7 +15,6 @@ bool LoanLedgerRepository::createTable() const
 void LoanLedgerRepository::bindLoanLedger(sqlite3_stmt *stmt, const LoanLedger &lled)
 {
     int column{1};
-    sqlite3_bind_text(stmt, column++, lled.employeeId.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, column++, static_cast<int>(lled.loanType));
     sqlite3_bind_double(stmt, column++, lled.principalAmount);
     sqlite3_bind_text(stmt, column++, lled.loanDate.to_string().c_str(), -1, SQLITE_TRANSIENT);
@@ -24,6 +23,7 @@ void LoanLedgerRepository::bindLoanLedger(sqlite3_stmt *stmt, const LoanLedger &
     sqlite3_bind_int(stmt, column++, lled.deductionFirstHalf);
     sqlite3_bind_int(stmt, column++, lled.deductionSecondHalf);
     sqlite3_bind_int(stmt, column++, lled.status);
+    sqlite3_bind_text(stmt, column++, lled.employeeId.c_str(), -1, SQLITE_TRANSIENT);
 }
 LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt *stmt)
 {
@@ -55,15 +55,15 @@ LoanLedger LoanLedgerRepository::mapLoanLedger(sqlite3_stmt *stmt)
 sqlite3_int64 LoanLedgerRepository::insertLoanLedger(const LoanLedger &lled)
 {
     const char *sql = R"(INSERT INTO loan_ledgers (
-            employeeId,
-            loanType,
-            principalAmount,
-            loanDate,
-            NumOfAmortizations,
-            deductionsPerPayroll,
-            deductionFirstHalf,
-            deductionSecondHalf,
-            status
+        loanType,
+        principalAmount,
+        loanDate,
+        NumOfAmortizations,
+        deductionsPerPayroll,
+        deductionFirstHalf,
+        deductionSecondHalf,
+        status,
+        employeeId
         ) VALUES (?,?,?,?,?,?,?,?,?)
     )";
     sqlite3_stmt *stmt = nullptr;
@@ -129,18 +129,10 @@ std::vector<LoanLedger> LoanLedgerRepository::getAllById(std::string id)
 // update
 bool LoanLedgerRepository::updateLoanLedger(const LoanLedger &lled)
 {
-    // static_cast<int>(lled.loanType),
-    // lled.principalAmount,
-    // lled.loanDate.to_string(),
-    // lled.NumOfAmortizations,
-    // lled.deductionsPerPayroll,
-    // lled.deductionFirstHalf,
-    // lled.deductionSecondHalf,
-    // lled.status,
-    // lled.loanLedgerId
+
     std::string sql = R"(
-        UPDATE loan_ledgers 
-        SET loanType = ?,
+        UPDATE loan_ledgers SET 
+        loanType = ?,
         principalAmount = ?,
         loanDate = ?,
         NumOfAmortizations = ?,
@@ -148,10 +140,13 @@ bool LoanLedgerRepository::updateLoanLedger(const LoanLedger &lled)
         deductionFirstHalf = ?,
         deductionSecondHalf = ?,
         status = ?,
+        employeeId = ?
         WHERE loanLedgerId = ?
     )";
     return execute(sql, [&lled](sqlite3_stmt *stmt)
-                   { bindLoanLedger(stmt, lled); });
+                   { 
+                    bindLoanLedger(stmt, lled); 
+                    sqlite3_bind_int(stmt, 10, lled.loanLedgerId); });
 };
 
 // delete
@@ -162,13 +157,6 @@ bool LoanLedgerRepository::deleteLoanLedger(int id)
         FROM loan_ledgers
         WHERE loanLedgerId = ?
     )";
-    return execute(sql, [&id](sqlite3_stmt *stmt) {
-
-    });
-};
-
-std::string LoanLedgerRepository::getLastLoanLedgerId()
-{
-    LOG_DEBUG("LoanLedgerRepository::getLastLoanLedgerId not implemented");
-    return "";
+    return execute(sql, [&id](sqlite3_stmt *stmt)
+                   { sqlite3_bind_int(stmt, 1, id); });
 };

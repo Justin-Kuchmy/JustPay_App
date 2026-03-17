@@ -4,6 +4,8 @@
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Services/AppContext.h"
+using std::cout;
+using std::endl;
 
 EmployeeRepository::EmployeeRepository(sqlite3 *db) : BaseRepository(db)
 {
@@ -74,6 +76,9 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
         LOG_DEBUG("No employee found for ID: " << id);
         return std::nullopt;
     }
+    cout << "\n\n\n\n"
+         << results.front().to_string() << "\n\n\n\n"
+         << endl;
 
     Employee e = results.front();
 
@@ -115,10 +120,30 @@ std::vector<Employee> EmployeeRepository::findByName(const std::string &name)
 // UPDATE
 bool EmployeeRepository::updateEmployee(const Employee &e)
 {
-    std::string sql = R"( update employees set  fullName=?,  department=?,  position=?,  jobLevel=?,  status=?,  dateHired=?,  dateSeparation=?,  sssNumber=?,  philHealthNumber=?,  hdmfNumber=?,  tin=?,  
-    bankAccountNumber=?,  clockInTimeStr=?, clockOutTimeStr=?, monthlyBasicSalary=?,  monthlyAllowances=?,  personalEmail=?,  isActive=1  where employeeId = ?)";
-    return EmployeeRepository::execute(sql, [&e](sqlite3_stmt *stmt)
-                                       { bindEmployee(stmt, e); });
+    std::string sql = R"( update employees set  
+    fullName=?,  
+    department=?,  
+    position=?,  
+    jobLevel=?,  
+    status=?,  
+    dateHired=?,  
+    dateSeparation=?,  
+    sssNumber=?,  
+    philHealthNumber=?,  
+    hdmfNumber=?,  
+    tin=?,  
+    bankAccountNumber=?,  
+    clockInTimeStr=?, 
+    clockOutTimeStr=?, 
+    monthlyBasicSalary=?,  
+    monthlyAllowances=?,  
+    personalEmail=?, 
+    personalMobileNumber=?,
+    isActive=?
+    where employeeId = ?)";
+    auto res = EmployeeRepository::execute(sql, [&e](sqlite3_stmt *stmt)
+                                           { bindEmployee(stmt, e); });
+    return res;
 };
 
 // DELETE
@@ -163,8 +188,7 @@ void EmployeeRepository::bindEmployee(sqlite3_stmt *stmt, const Employee &employ
     sqlite3_bind_text(stmt, column++, employee.personalEmail.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, column++, employee.personalMobileNumber.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, column++, employee.isActive);
-    sqlite3_bind_int(stmt, column++, employee.contactId);
-    sqlite3_bind_int(stmt, column++, employee.dependentId);
+    sqlite3_bind_text(stmt, column++, employee.employeeId.c_str(), -1, SQLITE_TRANSIENT);
 }
 
 Employee EmployeeRepository::mapEmployee(sqlite3_stmt *stmt)

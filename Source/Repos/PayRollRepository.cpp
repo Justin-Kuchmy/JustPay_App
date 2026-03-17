@@ -291,7 +291,8 @@ bool PayrollRepository::deletePayroll(int id)
     from payroll_records 
     where id = ?
     )";
-    return execute(sql, [&id](sqlite3_stmt *stmt) {});
+    return execute(sql, [&id](sqlite3_stmt *stmt)
+                   { sqlite3_bind_int(stmt, 1, id); });
 };
 
 int PayrollRepository::getLastPayrollId()
@@ -330,7 +331,9 @@ bool PayrollRepository::saveConfig(const PayrollConfig &config)
         philhealth_schedule = ?, 
         hdmf_schedule = ?
         )";
-    return execute(sql, [&config](sqlite3_stmt *stmt) {
-
-    });
+    return execute(sql, [&config](sqlite3_stmt *stmt)
+                   {
+        sqlite3_bind_int(stmt, 1, static_cast<int>(config.sssSchedule));
+        sqlite3_bind_int(stmt, 2, static_cast<int>(config.philHealthSchedule));
+        sqlite3_bind_int(stmt, 3, static_cast<int>(config.hdmfSchedule)); });
 }

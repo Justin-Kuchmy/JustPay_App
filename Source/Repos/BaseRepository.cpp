@@ -25,6 +25,16 @@ bool BaseRepository::execute(const std::string &sql, std::function<void(sqlite3_
     binder(stmt);
 
     int rc = sqlite3_step(stmt);
+    if (sqlite3_changes(db) == 0)
+    {
+        LOG_DEBUG("NO CHANGES DETECTED");
+        return false;
+    }
+    else
+    {
+        
+        LOG_DEBUG("CHANGES DETECTED");
+    }
     sqlite3_finalize(stmt);
 
     return rc == SQLITE_DONE;
