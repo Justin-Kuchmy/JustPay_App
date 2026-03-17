@@ -54,6 +54,7 @@ emailCrudentials.json
 
 #tests
 Tests/*.out
+!Tests/*.sql
 
 # CMake build artifacts
 build/
