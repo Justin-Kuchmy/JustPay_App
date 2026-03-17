@@ -26,7 +26,6 @@ public:
 
     // delete
     bool deleteLoanLedger(int id);
-    std::string getLastLoanLedgerId();
 };
 
 #endif
