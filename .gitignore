@@ -53,9 +53,7 @@ generated_payslips/
 emailCrudentials.json
 
 #tests
-Tests/TestRunner.cpp
 Tests/*.out
-Tests/
 
 # CMake build artifacts
 build/
