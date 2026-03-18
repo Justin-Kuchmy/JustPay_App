@@ -14,7 +14,38 @@ std::vector<sqlite3_int64> GovernmentRemittanceService::addRemittanceReports(con
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::generateFromPayroll(const std::vector<PayrollCalculationResults> *payrolls)
 {
-    return {};
+    std::vector<GovernmentRemittance> vGr{};
+    GovernmentRemittance gR{};
+    for (const PayrollCalculationResults &roll : *payrolls)
+    {
+
+        gR.payrollCalculationResultsId = roll.id;
+        gR.employeeId = roll.employeeId;
+        gR.fullName = roll.fullName;
+        gR.employeeDepartment = roll.employeeDepartment;
+        gR.payPeriodText = roll.payPeriodText;
+        gR.payPeriodHalf = roll.payPeriodHalf;
+        gR.sssPremium_EE = roll.sssPremium_EE;
+        gR.sssPremium_ER = roll.sssPremium_ER;
+        gR.sssPremiumTotal = roll.sssPremium_EE + roll.sssPremium_ER;
+        gR.sssSubmissionStatus = RemittanceStatus::PENDING;
+        gR.philHealthPremium_EE = roll.philHealthPremium_EE;
+        gR.philHealthPremium_ER = roll.philHealthPremium_ER;
+        gR.philHealthPremiumTotal = roll.philHealthPremium_EE + roll.philHealthPremium_ER;
+        gR.phicSubmissionStatus = RemittanceStatus::PENDING;
+        gR.hdmfPremium_EE = roll.hdmfPremium_EE;
+        gR.hdmfPremium_ER = roll.hdmfPremium_ER;
+        gR.hdmfPremiumTotal = roll.hdmfPremium_EE + roll.hdmfPremium_ER;
+        gR.hdmfSubmissionStatus = RemittanceStatus::PENDING;
+        gR.withHoldingTax = roll.withHoldingTax;
+        gR.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
+        gR.lastSubmittedDate = Date::getTodayDate();
+        gR.submittedByUserId = 0;
+        gR.dateCreated = Date::getTodayDate();
+        gR.dateModified = Date::getTodayDate();
+        vGr.push_back(gR);
+    }
+    return vGr;
 };
 std::optional<GovernmentRemittance> GovernmentRemittanceService::getById(int id)
 {
