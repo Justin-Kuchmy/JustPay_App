@@ -12,6 +12,7 @@ class GovernmentRemittanceRepository : public BaseRepository
 {
 private:
     static GovernmentRemittance mapRemittance(sqlite3_stmt *stmt);
+    static int bindRemittance(sqlite3_stmt *stmt, const GovernmentRemittance &remittance);
 
 public:
     struct MonthlySummary
@@ -44,9 +45,9 @@ public:
     MonthlySummary getMonthlySummary(const std::string &monthYear);
 
     // update -
-    bool markAsSubmitted(int remittanceId, const std::string &remittanceType, int submittedByUserId, const Date &submissionDate);
-    bool markAsConfirmed(int remittanceId, const std::string &remittanceType);
-    bool markAsRejected(int remittanceId, const std::string &remittanceType);
+    bool markAsSubmitted(int remittanceId, const RemittanceType &remittanceType);
+    bool markAsConfirmed(int remittanceId, const RemittanceType &remittanceType);
+    bool markAsRejected(int remittanceId, const RemittanceType &remittanceType);
     bool updateRemittance(const GovernmentRemittance &remittance);
     // delete
     bool deleteRemittance(int id);
