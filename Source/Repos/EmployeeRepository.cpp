@@ -76,12 +76,7 @@ std::optional<Employee> EmployeeRepository::getById(std::string id)
         LOG_DEBUG("No employee found for ID: " << id);
         return std::nullopt;
     }
-    cout << "\n\n\n\n"
-         << results.front().to_string() << "\n\n\n\n"
-         << endl;
-
     Employee e = results.front();
-
     return e;
 };
 
