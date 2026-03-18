@@ -108,7 +108,6 @@ TEST_F(GovernmentRemittanceRepoTest, InsertRemittance_Succeeds)
 {
     auto id = repo->insertRemittance(makeRemittance());
     EXPECT_GT(id, 0);
-    
 }
 
 TEST_F(GovernmentRemittanceRepoTest, InsertRemittanceReports_Batch_ReturnsAllIds)
@@ -126,249 +125,272 @@ TEST_F(GovernmentRemittanceRepoTest, InsertRemittanceReports_Batch_ReturnsAllIds
 
 // // ─── GetById ─────────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsNulloptIfNotFound)
-// {
-//     auto result = repo->getRemittanceById(99999);
-//     EXPECT_FALSE(result.has_value());
-// }
+TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsNulloptIfNotFound)
+{
+    auto result = repo->getRemittanceById(99999);
+    EXPECT_FALSE(result.has_value());
+}
 
-// TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsCorrectRecord)
-// {
-//     auto r = makeRemittance("01-0099", "March 2026", 1);
-//     auto id = repo->insertRemittance(r);
-//     ASSERT_GT(id, 0);
+TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsCorrectRecord)
+{
+    auto r = makeRemittance("01-0099", "March 2026", 1);
+    auto id = repo->insertRemittance(r);
+    ASSERT_GT(id, 0);
+    LOG_DEBUG("id " << id);
 
-//     auto result = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(result.has_value());
-//     EXPECT_EQ(result->employeeId, r.employeeId);
-//     EXPECT_EQ(result->payPeriodText, r.payPeriodText);
-//     EXPECT_EQ(result->payPeriodHalf, r.payPeriodHalf);
-// }
+    auto result = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result->employeeId, r.employeeId);
+    EXPECT_EQ(result->payPeriodText, r.payPeriodText);
+    EXPECT_EQ(result->payPeriodHalf, r.payPeriodHalf);
+}
 
-// // ─── GetByPayrollId ───────────────────────────────────────────────────────────
+// ─── GetByPayrollId ───────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsCorrectRecord)
-// {
-//     auto r = makeRemittance("01-0099", "March 2026", 1, 42);
-//     auto id = repo->insertRemittance(r);
-//     ASSERT_GT(id, 0);
+TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsCorrectRecord)
+{
+    auto r = makeRemittance("01-0099", "March 2026", 1, 42);
+    auto id = repo->insertRemittance(r);
+    ASSERT_GT(id, 0);
 
-//     auto result = repo->getRemittanceByPayrollId(42);
-//     ASSERT_TRUE(result.has_value());
-//     EXPECT_EQ(result->payrollCalculationResultsId, 42);
-// }
+    auto result = repo->getRemittanceByPayrollId(42);
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result->payrollCalculationResultsId, 42);
+}
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsNulloptIfNotFound)
-// {
-//     auto result = repo->getRemittanceByPayrollId(99999);
-//     EXPECT_FALSE(result.has_value());
-// }
+TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsNulloptIfNotFound)
+{
+    auto result = repo->getRemittanceByPayrollId(99999);
+    EXPECT_FALSE(result.has_value());
+}
 
-// // ─── GetByPeriod ─────────────────────────────────────────────────────────────
+// ─── GetByPeriod ─────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsAllForPeriod)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1));
-//     repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1)); // different period
+TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsAllForPeriod)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1));
+    repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1)); // different period
 
-//     auto results = repo->getRemittancesByPeriod("March 2026");
-//     EXPECT_EQ(results.size(), 2u);
-//     for (const auto &r : results)
-//         EXPECT_EQ(r.payPeriodText, "March 2026");
-// }
+    auto results = repo->getRemittancesByPeriod("March 2026");
+    EXPECT_EQ(results.size(), 2u);
+    for (const auto &r : results)
+        EXPECT_EQ(r.payPeriodText, "March 2026");
+}
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_FilteredByHalf)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 2));
-//     repo->insertRemittance(makeRemittance("02-0101", "March 2026", 2));
+TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_FilteredByHalf)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 2));
+    repo->insertRemittance(makeRemittance("02-0101", "March 2026", 2));
 
-//     auto firstHalf = repo->getRemittancesByPeriod("March 2026", 1);
-//     auto secondHalf = repo->getRemittancesByPeriod("March 2026", 2);
+    auto firstHalf = repo->getRemittancesByPeriod("March 2026", 1);
+    auto secondHalf = repo->getRemittancesByPeriod("March 2026", 2);
 
-//     EXPECT_EQ(firstHalf.size(), 1u);
-//     EXPECT_EQ(secondHalf.size(), 2u);
-// }
+    EXPECT_EQ(firstHalf.size(), 1u);
+    EXPECT_EQ(secondHalf.size(), 2u);
+}
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsEmptyForUnknownPeriod)
-// {
-//     auto results = repo->getRemittancesByPeriod("January 2000");
-//     EXPECT_TRUE(results.empty());
-// }
+TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsEmptyForUnknownPeriod)
+{
+    auto results = repo->getRemittancesByPeriod("January 2000");
+    EXPECT_TRUE(results.empty());
+}
 
-// // ─── GetByEmployee ────────────────────────────────────────────────────────────
+// ─── GetByEmployee ────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetByEmployee_ReturnsAllForEmployee)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-//     repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1, 2));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 3));
+TEST_F(GovernmentRemittanceRepoTest, GetByEmployee_ReturnsAllForEmployee)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1, 2));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 3));
 
-//     auto results = repo->getRemittancesByEmployee("01-0099");
-//     EXPECT_EQ(results.size(), 2u);
-//     for (const auto &r : results)
-//         EXPECT_EQ(r.employeeId, "01-0099");
-// }
+    auto results = repo->getRemittancesByEmployee("01-0099");
+    EXPECT_EQ(results.size(), 2u);
+    for (const auto &r : results)
+        EXPECT_EQ(r.employeeId, "01-0099");
+}
 
-// // ─── GetByStatus ─────────────────────────────────────────────────────────────
+// ─── GetByStatus ─────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetPending_ReturnsOnlyPendingRecords)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+TEST_F(GovernmentRemittanceRepoTest, GetPending_ReturnsOnlyPendingRecords)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
 
-//     auto pending = repo->getRemittancesByStatus(RemittanceStatus::PENDING);
-//     EXPECT_EQ(pending.size(), 2u);
-// }
+    auto pending = repo->getRemittancesByStatus(RemittanceStatus::PENDING);
+    EXPECT_EQ(pending.size(), 2u);
+}
 
-// // ─── GetAll ───────────────────────────────────────────────────────────────────
+// ─── GetAll ───────────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, GetAll_ReturnsAllRecords)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
-//     repo->insertRemittance(makeRemittance("02-0101", "April 2026", 2, 3));
+TEST_F(GovernmentRemittanceRepoTest, GetAll_ReturnsAllRecords)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+    repo->insertRemittance(makeRemittance("02-0101", "April 2026", 2, 3));
 
-//     auto all = repo->getAllRemittances();
-//     EXPECT_EQ(all.size(), 3u);
-// }
+    auto all = repo->getAllRemittances();
+    EXPECT_EQ(all.size(), 3u);
+}
 
-// // ─── Update ───────────────────────────────────────────────────────────────────
+// ─── Update ───────────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, UpdateRemittance_ModifiesExistingRecord)
-// {
-//     auto id = repo->insertRemittance(makeRemittance());
-//     ASSERT_GT(id, 0);
+TEST_F(GovernmentRemittanceRepoTest, UpdateRemittance_ModifiesExistingRecord)
+{
+    auto id = repo->insertRemittance(makeRemittance());
+    ASSERT_GT(id, 0);
 
-//     auto fetched = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(fetched.has_value());
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
 
-//     fetched->withHoldingTax = 9999.99;
-//     bool ok = repo->updateRemittance(*fetched);
-//     EXPECT_TRUE(ok);
+    fetched->withHoldingTax = 9999.99;
+    bool ok = repo->updateRemittance(fetched.value());
+    EXPECT_TRUE(ok);
 
-//     auto updated = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(updated.has_value());
-//     EXPECT_NEAR(updated->withHoldingTax, 9999.99, 0.01);
-// }
+    auto updated = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(updated.has_value());
+    EXPECT_NEAR(updated->withHoldingTax, 9999.99, 0.1);
+}
 
-// // ─── Status transitions ───────────────────────────────────────────────────────
+// ─── Status transitions ───────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, MarkAsSubmitted_UpdatesStatusAndAuditFields)
-// {
-//     auto id = repo->insertRemittance(makeRemittance());
-//     ASSERT_GT(id, 0);
+TEST_F(GovernmentRemittanceRepoTest, MarkAsSubmitted_UpdatesStatusAndAuditFields)
+{
+    auto id = repo->insertRemittance(makeRemittance());
+    ASSERT_GT(id, 0);
 
-//     Date submitDate(2026, 3, 31);
-//     bool ok = repo->markAsSubmitted(static_cast<int>(id), "sss", 1, submitDate);
-//     EXPECT_TRUE(ok);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
 
-//     auto result = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(result.has_value());
-//     EXPECT_EQ(result->sssSubmissionStatus, RemittanceStatus::SUBMITTED);
-//     EXPECT_EQ(result->submittedByUserId, 1);
-//     EXPECT_EQ(result->lastSubmittedDate.year, 2026);
-//     EXPECT_EQ(result->lastSubmittedDate.month, 3);
-//     EXPECT_EQ(result->lastSubmittedDate.day, 31);
-// }
+    fetched->sssSubmissionStatus = RemittanceStatus::SUBMITTED;
+    fetched->dateModified = Date::getTodayDate();
+    fetched->lastSubmittedDate = Date::getTodayDate();
+    bool ok = repo->markAsSubmitted(fetched->id, RemittanceType::SSS);
+    EXPECT_TRUE(ok);
 
-// TEST_F(GovernmentRemittanceRepoTest, MarkAsConfirmed_UpdatesStatus)
-// {
-//     auto id = repo->insertRemittance(makeRemittance());
-//     ASSERT_GT(id, 0);
+    auto result = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result->sssSubmissionStatus, RemittanceStatus::SUBMITTED);
+    EXPECT_EQ(result->lastSubmittedDate.year, 2026);
+    EXPECT_EQ(result->lastSubmittedDate.month, 3);
+    EXPECT_EQ(result->lastSubmittedDate.day, 18);
 
-//     repo->markAsSubmitted(static_cast<int>(id), "phic", 1, Date(2026, 3, 31));
-//     bool ok = repo->markAsConfirmed(static_cast<int>(id), "phic");
-//     EXPECT_TRUE(ok);
+    EXPECT_EQ(result->dateModified.year, 2026);
+    EXPECT_EQ(result->dateModified.month, 3);
+    EXPECT_EQ(result->dateModified.day, 18);
+}
 
-//     auto result = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(result.has_value());
-//     EXPECT_EQ(result->phicSubmissionStatus, RemittanceStatus::CONFIRMED);
-// }
+TEST_F(GovernmentRemittanceRepoTest, MarkAsConfirmed_UpdatesStatus)
+{
+    auto id = repo->insertRemittance(makeRemittance());
+    ASSERT_GT(id, 0);
 
-// TEST_F(GovernmentRemittanceRepoTest, MarkAsRejected_UpdatesStatus)
-// {
-//     auto id = repo->insertRemittance(makeRemittance());
-//     ASSERT_GT(id, 0);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
 
-//     repo->markAsSubmitted(static_cast<int>(id), "hdmf", 1, Date(2026, 3, 31));
-//     bool ok = repo->markAsRejected(static_cast<int>(id), "hdmf");
-//     EXPECT_TRUE(ok);
+    bool ok = repo->markAsConfirmed(fetched->id, RemittanceType::HDMF);
+    EXPECT_TRUE(ok);
 
-//     auto result = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(result.has_value());
-//     EXPECT_EQ(result->hdmfSubmissionStatus, RemittanceStatus::REJECTED);
-// }
+    auto result = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ(result->hdmfSubmissionStatus, RemittanceStatus::CONFIRMED);
 
-// // ─── Delete ───────────────────────────────────────────────────────────────────
+    EXPECT_EQ(result->dateModified.year, 2026);
+    EXPECT_EQ(result->dateModified.month, 3);
+    EXPECT_EQ(result->dateModified.day, 18);
+}
 
-// TEST_F(GovernmentRemittanceRepoTest, DeleteRemittance_RemovesRecord)
-// {
-//     auto id = repo->insertRemittance(makeRemittance());
-//     ASSERT_GT(id, 0);
+TEST_F(GovernmentRemittanceRepoTest, MarkAsRejected_UpdatesStatus)
+{
+    auto id = repo->insertRemittance(makeRemittance());
+    ASSERT_GT(id, 0);
 
-//     bool ok = repo->deleteRemittance(static_cast<int>(id));
-//     EXPECT_TRUE(ok);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
+    LOG_DEBUG(fetched->to_string());
 
-//     auto result = repo->getRemittanceById(static_cast<int>(id));
-//     EXPECT_FALSE(result.has_value());
-// }
+    bool ok = repo->markAsRejected(fetched->id, RemittanceType::PHIC);
+    EXPECT_TRUE(ok);
 
-// // ─── Model helper methods ─────────────────────────────────────────────────────
+    auto result = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(result.has_value());
+    LOG_DEBUG(result->to_string());
+    EXPECT_EQ(result->phicSubmissionStatus, RemittanceStatus::REJECTED);
 
-// TEST_F(GovernmentRemittanceRepoTest, TotalEmployeeContribution_SumsCorrectly)
-// {
-//     auto r = makeRemittance();
-//     auto id = repo->insertRemittance(r);
-//     auto fetched = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(fetched.has_value());
+    EXPECT_EQ(result->dateModified.year, 2026);
+    EXPECT_EQ(result->dateModified.month, 3);
+    EXPECT_EQ(result->dateModified.day, 18);
+}
 
-//     double expected = fetched->sssPremium_EE + fetched->philHealthPremium_EE + fetched->hdmfPremium_EE;
-//     EXPECT_NEAR(fetched->totalEmployeeContribution(), expected, 0.01);
-// }
+// ─── Delete ───────────────────────────────────────────────────────────────────
 
-// TEST_F(GovernmentRemittanceRepoTest, TotalEmployerContribution_SumsCorrectly)
-// {
-//     auto r = makeRemittance();
-//     auto id = repo->insertRemittance(r);
-//     auto fetched = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(fetched.has_value());
+TEST_F(GovernmentRemittanceRepoTest, DeleteRemittance_RemovesRecord)
+{
+    auto id = repo->insertRemittance(makeRemittance());
+    ASSERT_GT(id, 0);
 
-//     double expected = fetched->sssPremium_ER + fetched->philHealthPremium_ER + fetched->hdmfPremium_ER;
-//     EXPECT_NEAR(fetched->totalEmployerContribution(), expected, 0.01);
-// }
+    bool ok = repo->deleteRemittance(static_cast<int>(id));
+    EXPECT_TRUE(ok);
 
-// TEST_F(GovernmentRemittanceRepoTest, TotalGovernmentRemittance_SumsCorrectly)
-// {
-//     auto r = makeRemittance();
-//     auto id = repo->insertRemittance(r);
-//     auto fetched = repo->getRemittanceById(static_cast<int>(id));
-//     ASSERT_TRUE(fetched.has_value());
+    auto result = repo->getRemittanceById(static_cast<int>(id));
+    EXPECT_FALSE(result.has_value());
+}
 
-//     double expected = fetched->totalEmployeeContribution() + fetched->totalEmployerContribution() + fetched->withHoldingTax;
-//     EXPECT_NEAR(fetched->totalGovernmentRemittance(), expected, 0.01);
-// }
+// ─── Model helper methods ─────────────────────────────────────────────────────
 
-// // ─── Monthly summary ─────────────────────────────────────────────────────────
+TEST_F(GovernmentRemittanceRepoTest, TotalEmployeeContribution_SumsCorrectly)
+{
+    auto r = makeRemittance();
+    auto id = repo->insertRemittance(r);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
 
-// TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_AggregatesCorrectly)
-// {
-//     repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-//     repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+    double expected = fetched->sssPremium_EE + fetched->philHealthPremium_EE + fetched->hdmfPremium_EE;
+    EXPECT_NEAR(fetched->totalEmployeeContribution(), expected, 0.01);
+}
 
-//     auto summary = repo->getMonthlySummary("March 2026");
-//     EXPECT_EQ(summary.monthYear, "March 2026");
-//     EXPECT_NEAR(summary.totalSSSEE, 581.30 * 2, 0.01);
-//     EXPECT_NEAR(summary.totalPHICEE, 450.00 * 2, 0.01);
-//     EXPECT_NEAR(summary.totalHDMFEE, 100.00 * 2, 0.01);
-// }
+TEST_F(GovernmentRemittanceRepoTest, TotalEmployerContribution_SumsCorrectly)
+{
+    auto r = makeRemittance();
+    auto id = repo->insertRemittance(r);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
 
-// TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_ReturnsEmptyForUnknownMonth)
-// {
-//     auto summary = repo->getMonthlySummary("January 2000");
-//     EXPECT_EQ(summary.monthYear, "January 2000");
-//     EXPECT_DOUBLE_EQ(summary.totalSSSEE, 0.0);
-//     EXPECT_DOUBLE_EQ(summary.totalPHICEE, 0.0);
-//     EXPECT_DOUBLE_EQ(summary.totalHDMFEE, 0.0);
-// }
+    double expected = fetched->sssPremium_ER + fetched->philHealthPremium_ER + fetched->hdmfPremium_ER;
+    EXPECT_NEAR(fetched->totalEmployerContribution(), expected, 0.01);
+}
+
+TEST_F(GovernmentRemittanceRepoTest, TotalGovernmentRemittance_SumsCorrectly)
+{
+    auto r = makeRemittance();
+    auto id = repo->insertRemittance(r);
+    auto fetched = repo->getRemittanceById(static_cast<int>(id));
+    ASSERT_TRUE(fetched.has_value());
+
+    double expected = fetched->totalEmployeeContribution() + fetched->totalEmployerContribution() + fetched->withHoldingTax;
+    EXPECT_NEAR(fetched->totalGovernmentRemittance(), expected, 0.01);
+}
+
+// ─── Monthly summary ─────────────────────────────────────────────────────────
+
+TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_AggregatesCorrectly)
+{
+    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+
+    auto summary = repo->getMonthlySummary("March 2026");
+    EXPECT_EQ(summary.monthYear, "March 2026");
+    EXPECT_NEAR(summary.totalSSSEE, 581.30 * 2, 0.01);
+    EXPECT_NEAR(summary.totalPHICEE, 450.00 * 2, 0.01);
+    EXPECT_NEAR(summary.totalHDMFEE, 100.00 * 2, 0.01);
+}
+
+TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_ReturnsEmptyForUnknownMonth)
+{
+    auto summary = repo->getMonthlySummary("January 2000");
+    EXPECT_EQ(summary.monthYear, "January 2000");
+    EXPECT_DOUBLE_EQ(summary.totalSSSEE, 0.0);
+    EXPECT_DOUBLE_EQ(summary.totalPHICEE, 0.0);
+    EXPECT_DOUBLE_EQ(summary.totalHDMFEE, 0.0);
+}
