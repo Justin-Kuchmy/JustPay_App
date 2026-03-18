@@ -77,6 +77,13 @@ enum class RemittanceStatus
     REJECTED = 3
 };
 
+enum class RemittanceType
+{
+    SSS,
+    PHIC,
+    HDMF
+};
+
 // =========================
 // CONVERSION ENUM DECLARATIONS
 // =========================
