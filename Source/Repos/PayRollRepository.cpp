@@ -168,16 +168,13 @@ std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(con
     }
     int idx = 1;
     sqlite3_bind_text(stmt, idx++, payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
-    LOG_DEBUG("payPeriodText");
     if (employeeId.has_value())
     {
         sqlite3_bind_text(stmt, idx++, employeeId.value().c_str(), -1, SQLITE_TRANSIENT);
-        LOG_DEBUG("employeeId");
     }
     if (payPeriodHalf.has_value())
     {
         sqlite3_bind_int(stmt, idx++, payPeriodHalf.value());
-        LOG_DEBUG("payPeriodHalf");
     }
 
     while (sqlite3_step(stmt) == SQLITE_ROW)
