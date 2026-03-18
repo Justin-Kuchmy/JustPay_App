@@ -28,11 +28,10 @@ bool BaseRepository::execute(const std::string &sql, std::function<void(sqlite3_
     if (sqlite3_changes(db) == 0)
     {
         LOG_DEBUG("NO CHANGES DETECTED");
-        return false;
     }
     else
     {
-        
+
         LOG_DEBUG("CHANGES DETECTED");
     }
     sqlite3_finalize(stmt);
@@ -70,3 +69,4 @@ template std::vector<Dependent> BaseRepository::query(const std::string &sql, st
 template std::vector<LoanLedger> BaseRepository::query(const std::string &sql, std::function<LoanLedger(sqlite3_stmt *)> mapper);
 template std::vector<PayrollCalculationResults> BaseRepository::query(const std::string &sql, std::function<PayrollCalculationResults(sqlite3_stmt *)> mapper);
 template std::vector<JournalEntry> BaseRepository::query(const std::string &sql, std::function<JournalEntry(sqlite3_stmt *)> mapper);
+template std::vector<GovernmentRemittance> BaseRepository::query(const std::string &sql, std::function<GovernmentRemittance(sqlite3_stmt *)> mapper);
