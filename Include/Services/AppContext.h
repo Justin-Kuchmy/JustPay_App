@@ -9,6 +9,7 @@
 #include "Services/PayrollService.h"
 #include "Services/JournalEntryService.h"
 #include "Services/GovernmentRemittanceService.h"
+#include "Services/YearEndBenefitsService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Repositories/DependentRepository.h"
 #include "Repositories/EmergencyContactRepository.h"
@@ -17,6 +18,9 @@
 #include "Repositories/PayrollRepository.h"
 #include "Repositories/JournalEntryRepository.h"
 #include "Repositories/GovernmentRemittanceRepository.h"
+#include "Repositories/LeaveRepository.h"
+#include "Repositories/BudgetPeriodRepository.h"
+#include "Repositories/DepartmentBudgetRepository.h"
 #include <sqlite3.h>
 
 class EmployeeRepository;
@@ -27,6 +31,9 @@ class AttendanceLogRepository;
 class PayrollRepository;
 class JournalEntryRepository;
 class GovernmentRemittanceRepository;
+class LeaveRepository;
+class BudgetPeriodRepository;
+class DepartmentBudgetRepository;
 
 class EmployeeService;
 class DependentService;
@@ -36,6 +43,7 @@ class AttendanceLogService;
 class PayrollService;
 class JournalEntryService;
 class GovernmentRemittanceService;
+class YearEndBenefitsService;
 
 class AppContext
 {
@@ -51,6 +59,7 @@ public:
     PayrollService &payrollService() noexcept;
     JournalEntryService &journalEntryService() noexcept;
     GovernmentRemittanceService &governmentRemittanceService() noexcept;
+    YearEndBenefitsService &yearEndBenefitsService() noexcept;
 
 private:
     sqlite3 *m_db = nullptr;
@@ -62,6 +71,9 @@ private:
     PayrollRepository m_payrollRepo;
     JournalEntryRepository m_journalEntryRepo;
     GovernmentRemittanceRepository m_governmentRemittanceRepo;
+    LeaveRepository m_leaveRepo;
+    BudgetPeriodRepository m_budgetPeriodRepo;
+    DepartmentBudgetRepository m_departmentBudgetRepo;
 
     EmployeeService m_employeeService;
     DependentService m_dependentService;
@@ -71,6 +83,7 @@ private:
     PayrollService m_payrollService;
     JournalEntryService m_journalEntryService;
     GovernmentRemittanceService m_governmentRemittanceService;
+    YearEndBenefitsService m_yearEndBenefitsService;
 
     explicit AppContext(const std::string &dbName);
     ~AppContext() noexcept;
