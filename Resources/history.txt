@@ -16,3 +16,9 @@ journalEntry|  select * from journal_entries
 --END--
 governmentRemittance | select * from government_remittances
 --END--
+employeeleavebalances | select * from employee_leave_balances
+--END--
+departmentbudgets | select * from department_budgets
+--END--
+budgetperiods | select * from budget_periods
+--END--
