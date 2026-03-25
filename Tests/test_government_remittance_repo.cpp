@@ -268,17 +268,17 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsSubmitted_UpdatesStatusAndAuditFields
     fetched->lastSubmittedDate = Date::getTodayDate();
     bool ok = repo->markAsSubmitted(fetched->id, RemittanceType::SSS);
     EXPECT_TRUE(ok);
-
+    Date today = Date::getTodayDate();
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(result->sssSubmissionStatus, RemittanceStatus::SUBMITTED);
-    EXPECT_EQ(result->lastSubmittedDate.year, 2026);
-    EXPECT_EQ(result->lastSubmittedDate.month, 3);
-    EXPECT_EQ(result->lastSubmittedDate.day, 18);
+    EXPECT_EQ(result->lastSubmittedDate.year, today.year);
+    EXPECT_EQ(result->lastSubmittedDate.month, today.month);
+    EXPECT_EQ(result->lastSubmittedDate.day, today.day);
 
-    EXPECT_EQ(result->dateModified.year, 2026);
-    EXPECT_EQ(result->dateModified.month, 3);
-    EXPECT_EQ(result->dateModified.day, 18);
+    EXPECT_EQ(result->dateModified.year, today.year);
+    EXPECT_EQ(result->dateModified.month, today.month);
+    EXPECT_EQ(result->dateModified.day, today.day);
 }
 
 TEST_F(GovernmentRemittanceRepoTest, MarkAsConfirmed_UpdatesStatus)
@@ -295,10 +295,10 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsConfirmed_UpdatesStatus)
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(result->hdmfSubmissionStatus, RemittanceStatus::CONFIRMED);
-
-    EXPECT_EQ(result->dateModified.year, 2026);
-    EXPECT_EQ(result->dateModified.month, 3);
-    EXPECT_EQ(result->dateModified.day, 18);
+    Date today = Date::getTodayDate();
+    EXPECT_EQ(result->dateModified.year, today.year);
+    EXPECT_EQ(result->dateModified.month, today.month);
+    EXPECT_EQ(result->dateModified.day, today.day);
 }
 
 TEST_F(GovernmentRemittanceRepoTest, MarkAsRejected_UpdatesStatus)
@@ -317,10 +317,10 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsRejected_UpdatesStatus)
     ASSERT_TRUE(result.has_value());
     LOG_DEBUG(result->to_string());
     EXPECT_EQ(result->phicSubmissionStatus, RemittanceStatus::REJECTED);
-
-    EXPECT_EQ(result->dateModified.year, 2026);
-    EXPECT_EQ(result->dateModified.month, 3);
-    EXPECT_EQ(result->dateModified.day, 18);
+    Date today = Date::getTodayDate();
+    EXPECT_EQ(result->dateModified.year, today.year);
+    EXPECT_EQ(result->dateModified.month, today.month);
+    EXPECT_EQ(result->dateModified.day, today.day);
 }
 
 // ─── Delete ───────────────────────────────────────────────────────────────────
