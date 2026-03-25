@@ -1,0 +1,105 @@
+#include <gtest/gtest.h>
+#include "Repositories/BudgetPeriodRepository.h"
+#include <sqlite3.h>
+#include <memory>
+#include <cstdio>
+#include <filesystem>
+#include <fstream>
+
+static void runSqlScript(sqlite3 *db, const std::string &sqlFilePath)
+{
+    std::ifstream file(sqlFilePath);
+    ASSERT_TRUE(file.is_open()) << "Failed to open SQL file: " << sqlFilePath;
+    std::string sql((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+    char *errMsg = nullptr;
+    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, nullptr);
+    int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg);
+    if (rc != SQLITE_OK)
+    {
+        std::cerr << "SQLite error running script: " << sqlFilePath << "\n";
+        std::cerr << "   → Error message: " << (errMsg ? errMsg : "unknown") << "\n";
+
+        std::cerr << "   → Script snippet near failure:\n";
+        size_t pos = sql.find_last_of(';');
+        if (pos != std::string::npos)
+        {
+            std::string snippet = sql.substr(pos > 200 ? pos - 200 : 0, 200);
+            std::cerr << snippet << "\n";
+        }
+
+        ASSERT_EQ(rc, SQLITE_OK) << "SQL error: " << (errMsg ? errMsg : "unknown");
+    }
+    if (errMsg)
+        sqlite3_free(errMsg);
+};
+
+class BudgetPeriodRepoTest : public ::testing::Test
+{
+protected:
+    sqlite3 *db = nullptr;
+    std::unique_ptr<BudgetPeriodRepository> repo;
+
+    void SetUp() override
+    {
+        const char *dbName = "tests.db";
+        sqlite3_open(dbName, &db);
+
+        // Build absolute path to the SQL file
+        std::filesystem::path sqlPath = std::filesystem::path(__FILE__).parent_path() / "tests.sql";
+        runSqlScript(db, sqlPath.string());
+
+        repo = std::make_unique<BudgetPeriodRepository>(db);
+    }
+
+    void TearDown() override
+    {
+        sqlite3_close(db);
+        std::remove("tests.db");
+    }
+};
+
+TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_SucceedsWithValidData)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_ReturnsValidId)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, GetById_ReturnsCorrectPeriod)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, GetById_ReturnsNullopt_WhenNotFound)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, GetAll_ReturnsAllInsertedPeriods)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ModifiesExistingRecord)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_RemovesRecord)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_AllowsDifferentYears)
+{
+    EXPECT_EQ(1, 0);
+}
+TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_AllowsSameYearDifferentHalf)
+{
+    EXPECT_EQ(1, 0);
+}
