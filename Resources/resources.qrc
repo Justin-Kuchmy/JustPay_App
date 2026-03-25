@@ -11,6 +11,9 @@
     <file>sql/payroll.sql</file>
     <file>sql/journalentry.sql</file>
     <file>sql/governmentremittance.sql</file>
+    <file>sql/employeeleavebalances.sql</file>
+    <file>sql/budgetperiods.sql</file>
+    <file>sql/departmentbudgets.sql</file>
   </qresource>
 
   <qresource prefix="/QtTheme/">
