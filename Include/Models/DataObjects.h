@@ -96,15 +96,40 @@ inline std::string AccountType_to_string(int i);
 inline std::string EntryType_to_string(int i);
 inline std::string RemittanceStatus_to_string(RemittanceStatus status);
 
+struct YearEndBenefits
+{
+    std::string employeeId{""};
+    int year{1970};
+
+    double totalBasicSalary{0.0};
+
+    double thirteenthMonthPay{0.0};
+
+    double unusedLeaveDays{0.0};
+    double dailyRate{0.0};
+    double monetizedLeaveValue{0.0};
+};
+
+struct EmployeeLeaveBalance
+{
+    std::string employeeId{""};
+    int year{1970};
+
+    double totalLeaveEarned{0.0};
+    double leaveUsed{0.0};
+
+    double unusedLeaveDays{0.0};
+};
+
 struct JournalEntry
 {
-    int entryId;
-    AccountType accountType;
-    std::string accountName;
-    double debit;
-    double credit;
-    std::string periodText;
-    std::string periodHalf;
+    int entryId{0};
+    AccountType accountType{};
+    std::string accountName{""};
+    double debit{0.0};
+    double credit{0.0};
+    std::string periodText{""};
+    std::string periodHalf{""};
 };
 
 struct EmailCrudentials
@@ -162,6 +187,58 @@ struct Date
                (year == rhs.year && month > rhs.month) ||
                (year == rhs.year && month == rhs.month && day > rhs.day);
     }
+};
+
+struct BudgetPeriod
+{
+    int id{};
+    std::string label{};
+    int year{};
+    int half{};
+
+    Date startDate{};
+    Date endDate{};
+};
+
+struct DepartmentBudget
+{
+    int id{};
+    int departmentId{};
+    int periodId{};
+
+    double allocatedAmount{0.0};
+    std::string notes{};
+};
+
+// DTO
+struct MonthlyBudgetUtilizationReport
+{
+    int departmentId{};
+    std::string departmentName{};
+    std::string periodLabel{}; // e.g. "Jan 2026"
+
+    double totalSalaries{0.0};
+    double totalAllowances{0.0};
+    double totalGovRemittances{0.0};
+
+    double totalPayrollCost{0.0};
+
+    // budget (from DepartmentBudget)
+    double allocatedBudget{0.0};
+
+    double variance{0.0};
+};
+
+// DTO
+struct TaxReconciliationReport
+{
+    std::string employeeId{};
+
+    double annualTaxableIncome{0.0};
+    double computedTaxDue{0.0};
+    double totalTaxWithheld{0.0};
+
+    double variance{0.0};
 };
 
 struct Overtime
