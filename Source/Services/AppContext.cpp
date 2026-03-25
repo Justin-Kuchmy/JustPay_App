@@ -32,6 +32,9 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
                                                     m_payrollRepo(m_db),
                                                     m_journalEntryRepo(m_db),
                                                     m_governmentRemittanceRepo(m_db),
+                                                    m_leaveRepo(m_db),
+                                                    m_budgetPeriodRepo(m_db),
+                                                    m_departmentBudgetRepo(m_db),
                                                     m_employeeService(m_employeeRepo),
                                                     m_dependentService(m_dependentRepo),
                                                     m_emergencyContactService(m_emergencyContactRepo),
@@ -39,7 +42,9 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
                                                     m_attendanceLogService(m_attendanceLogRepo),
                                                     m_payrollService(m_payrollRepo),
                                                     m_journalEntryService(m_journalEntryRepo),
-                                                    m_governmentRemittanceService(m_governmentRemittanceRepo, m_payrollRepo)
+                                                    m_governmentRemittanceService(m_governmentRemittanceRepo, m_payrollRepo),
+                                                    m_yearEndBenefitsService(m_payrollRepo, m_leaveRepo)
+
 {
 
     m_employeeRepo.createTable();
@@ -50,6 +55,9 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
     m_payrollRepo.createTable();
     m_journalEntryRepo.createTable();
     m_governmentRemittanceRepo.createTable();
+    m_leaveRepo.createTable();
+    m_budgetPeriodRepo.createTable();
+    m_departmentBudgetRepo.createTable();
 };
 
 AppContext::~AppContext()
@@ -100,4 +108,9 @@ JournalEntryService &AppContext::journalEntryService() noexcept
 GovernmentRemittanceService &AppContext::governmentRemittanceService() noexcept
 {
     return m_governmentRemittanceService;
+}
+
+YearEndBenefitsService &AppContext::yearEndBenefitsService() noexcept
+{
+    return m_yearEndBenefitsService;
 }
