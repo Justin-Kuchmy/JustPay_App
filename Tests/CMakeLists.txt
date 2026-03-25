@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 enable_testing()
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+
 # Gather all test sources
 file(GLOB TEST_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp"
@@ -9,10 +14,12 @@ file(GLOB TEST_SOURCES
 
 file(GLOB DB_SOURCES
     "${CMAKE_SOURCE_DIR}/Source/Repos/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Services/YearEndBenefitsService.cpp"
 )
 
 file(GLOB DB_HEADERS
     "${CMAKE_SOURCE_DIR}/Include/Repositories/*.h"
+    "${CMAKE_SOURCE_DIR}/Include/Services/YearEndBenefitsService.h"
 )
 
 # Create the test executable
@@ -21,6 +28,8 @@ add_executable(JustPay_Tests
     ${DB_SOURCES}
     ${DB_HEADERS}
 )
+
+target_compile_features(JustPay_Tests PRIVATE cxx_std_20)
 
 # Include directories for repositories and database
 target_include_directories(JustPay_Tests
