@@ -74,7 +74,7 @@ sqlite3_int64 AttendanceLogRepository::insertAttendanceLog(const AttendanceLog &
 // read
 std::optional<AttendanceLog> AttendanceLogRepository::getById(int logId)
 {
-    const char *sql = "SELECT * from attendance_log where logId == ?";
+    const char *sql = "SELECT * from attendance_log where logId = ?";
     sqlite3_stmt *stmt = nullptr;
     std::optional<AttendanceLog> result = std::nullopt;
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
