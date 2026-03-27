@@ -59,47 +59,109 @@ protected:
     }
 };
 
-TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_SucceedsWithValidData)
-{
-    EXPECT_EQ(1, 0);
-}
 TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_ReturnsValidId)
 {
-    EXPECT_EQ(1, 0);
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_GT(id, 0);
 }
+
 TEST_F(BudgetPeriodRepoTest, GetById_ReturnsCorrectPeriod)
 {
-    EXPECT_EQ(1, 0);
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    auto newOpt = repo->getById(id);
+    EXPECT_TRUE(newOpt.has_value());
+    BudgetPeriod newBp = *newOpt;
+    EXPECT_EQ("2026-05-01", newBp.startDate.to_string());
+    EXPECT_EQ("2026-05-15", newBp.endDate.to_string());
+    EXPECT_EQ(1, newBp.half);
 }
 TEST_F(BudgetPeriodRepoTest, GetById_ReturnsNullopt_WhenNotFound)
 {
-    EXPECT_EQ(1, 0);
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    auto newOpt = repo->getById(id + 1);
+    EXPECT_EQ(newOpt, std::nullopt);
 }
+
 TEST_F(BudgetPeriodRepoTest, GetAll_ReturnsAllInsertedPeriods)
 {
-    EXPECT_EQ(1, 0);
+    auto vBudgets = repo->getAll();
+    EXPECT_EQ(vBudgets.size(), 2u);
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_GT(id, 0);
+    vBudgets = repo->getAll();
+    EXPECT_EQ(vBudgets.size(), 3u);
 }
-TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ModifiesExistingRecord)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_RemovesRecord)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
-{
-    EXPECT_EQ(1, 0);
-}
+
 TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_AllowsDifferentYears)
 {
-    EXPECT_EQ(1, 0);
+    BudgetPeriod bp1{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    BudgetPeriod bp2{0, "May 2026 - First Half", 2027, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id1 = repo->insertBudgetPeriod(bp1);
+    int id2 = repo->insertBudgetPeriod(bp2);
+    EXPECT_GT(id1, 0);
+    EXPECT_GT(id2, 0);
 }
 TEST_F(BudgetPeriodRepoTest, InsertBudgetPeriod_AllowsSameYearDifferentHalf)
 {
-    EXPECT_EQ(1, 0);
+    BudgetPeriod bp1{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    BudgetPeriod bp2{0, "May 2026 - First Half", 2026, 2, Date{2026, 05, 16}, Date{2026, 05, 31}};
+    int id1 = repo->insertBudgetPeriod(bp1);
+    int id2 = repo->insertBudgetPeriod(bp2);
+    EXPECT_GT(id1, 0);
+    EXPECT_GT(id2, 0);
+}
+
+TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ModifiesExistingRecord)
+{
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 5, 1}, Date{2026, 5, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_GT(id, 0);
+
+    auto newOpt = repo->getById(id);
+    ASSERT_TRUE(newOpt.has_value());
+
+    BudgetPeriod newObj = *newOpt;
+    newObj.label = "some new label";
+
+    EXPECT_TRUE(repo->updateBudgetPeriod(newObj));
+
+    auto updatedOpt = repo->getById(id);
+    ASSERT_TRUE(updatedOpt.has_value());
+
+    EXPECT_EQ(updatedOpt->label, "some new label");
+}
+
+TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_RemovesRecord)
+{
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_TRUE(repo->deleteBudgetPeriod(id));
+    auto newOpt = repo->getById(id);
+    EXPECT_FALSE(newOpt.has_value());
+}
+
+TEST_F(BudgetPeriodRepoTest, DeleteBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
+{
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_FALSE(repo->deleteBudgetPeriod(id + 99));
+}
+
+TEST_F(BudgetPeriodRepoTest, UpdateBudgetPeriod_ReturnsFalse_WhenIdDoesNotExist)
+{
+    BudgetPeriod bp{0, "May 2026 - First Half", 2026, 1, Date{2026, 05, 01}, Date{2026, 05, 15}};
+    int id = repo->insertBudgetPeriod(bp);
+    EXPECT_GT(id, 0);
+
+    auto newOpt = repo->getById(id);
+    EXPECT_TRUE(newOpt.has_value());
+    BudgetPeriod newObj = *newOpt;
+    newObj.label = "some new label";
+
+    EXPECT_TRUE(repo->deleteBudgetPeriod(newObj.id));
+    EXPECT_FALSE(repo->updateBudgetPeriod(newObj));
 }
