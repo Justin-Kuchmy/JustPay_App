@@ -499,20 +499,20 @@ VALUES
  ('02-0005', 2025, 18.0, 0.0);
 
 
-
 CREATE TABLE IF NOT EXISTS budget_periods (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     label       TEXT    NOT NULL,         
-    fiscal_year TEXT    NOT NULL,      
+    year INTEGER   NOT NULL,      
     half        INTEGER NOT NULL CHECK (half IN (1, 2)),
     start_date  TEXT    NOT NULL,          
     end_date    TEXT    NOT NULL
 );
 
 
-INSERT INTO budget_periods (label, fiscal_year, half, start_date, end_date) VALUES
-('January 2025 - 1st Half', 'FY2025', 1, '2025-01-01', '2025-01-15'),
-('January 2025 - 2nd Half', 'FY2025', 2, '2025-01-16', '2025-01-31');
+INSERT INTO budget_periods (label, year, half, start_date, end_date) VALUES
+('January 2025 - 1st Half', 2025, 1, '2025-01-01', '2025-01-15'),
+('January 2025 - 2nd Half', 2025, 2, '2025-01-16', '2025-01-31');
+
 
 
 
