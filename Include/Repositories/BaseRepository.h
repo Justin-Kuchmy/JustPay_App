@@ -28,7 +28,7 @@ protected:
     bool execute(const std::string &sql, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const;
     bool executeFile(const QString &filePath) const;
     template <typename T>
-    std::vector<T> query(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper)
+    std::vector<T> query(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const
     {
         std::vector<T> results;
         sqlite3_stmt *stmt; /* OUT: Statement handle */
@@ -39,6 +39,7 @@ protected:
             std::cerr << "Failed to prepare: " << sqlite3_errmsg(db) << std::endl;
             return results;
         }
+        binder(stmt);
         while (sqlite3_step(stmt) == SQLITE_ROW)
         {
             results.push_back(mapper(stmt));
@@ -49,7 +50,7 @@ protected:
     }
 
     template <typename T>
-    std::optional<T> querySingle(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {})
+    std::optional<T> querySingle(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const
     {
         std::optional<T> result = std::nullopt;
         sqlite3_stmt *stmt = nullptr;
