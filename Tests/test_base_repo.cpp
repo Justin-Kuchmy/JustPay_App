@@ -6,7 +6,6 @@
 using std::cout;
 using std::endl;
 
-// --- Dummy type ---
 struct TestItem
 {
     int id;
@@ -41,7 +40,6 @@ static void runSqlScript(sqlite3 *db, const std::string &sqlFilePath)
         sqlite3_free(errMsg);
 };
 
-// --- Concrete repo just to satisfy the abstract class ---
 class TestRepository : public BaseRepository
 {
 public:
@@ -49,23 +47,21 @@ public:
     bool createTable() const override { return true; }
 
     template <typename T>
-    std::vector<T> testQuery(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper)
+    std::vector<T> testQuery(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const
     {
-        return query<T>(sql, mapper);
+        return query<T>(sql, mapper, binder);
     }
 
     template <typename T>
-    std::optional<T> testQuerySingle(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {})
+    std::optional<T> testQuerySingle(const std::string &sql, std::function<T(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder = [](sqlite3_stmt *) {}) const
     {
         return querySingle<T>(sql, mapper, binder);
     }
 };
 
-// --- Forward declare the template instantiations ---
-template std::vector<TestItem> BaseRepository::query(const std::string &sql, std::function<TestItem(sqlite3_stmt *)> mapper);
-template std::optional<TestItem> BaseRepository::querySingle(const std::string &sql, std::function<TestItem(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder);
+template std::vector<TestItem> BaseRepository::query(const std::string &sql, std::function<TestItem(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
+template std::optional<TestItem> BaseRepository::querySingle(const std::string &sql, std::function<TestItem(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
 
-// --- Mapper ---
 TestItem mapTestItem(sqlite3_stmt *stmt)
 {
     return TestItem{
@@ -74,7 +70,6 @@ TestItem mapTestItem(sqlite3_stmt *stmt)
     };
 }
 
-// --- Fixture ---
 class BaseRepoTest : public ::testing::Test
 {
 protected:
@@ -98,7 +93,6 @@ protected:
     }
 };
 
-// --- Tests ---
 TEST_F(BaseRepoTest, QueryReturnsMultipleRows)
 {
     std::string sql = "SELECT * FROM base_repo_test_table";
