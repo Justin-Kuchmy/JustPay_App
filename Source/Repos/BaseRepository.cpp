@@ -70,5 +70,7 @@ template std::vector<PayrollCalculationResults> BaseRepository::query(const std:
 template std::vector<JournalEntry> BaseRepository::query(const std::string &sql, std::function<JournalEntry(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
 template std::vector<GovernmentRemittance> BaseRepository::query(const std::string &sql, std::function<GovernmentRemittance(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
 template std::vector<BudgetPeriod> BaseRepository::query(const std::string &sql, std::function<BudgetPeriod(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
+template std::vector<DepartmentBudget> BaseRepository::query(const std::string &sql, std::function<DepartmentBudget(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
 
 template std::optional<BudgetPeriod> BaseRepository::querySingle(const std::string &sql, std::function<BudgetPeriod(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
+template std::optional<DepartmentBudget> BaseRepository::querySingle(const std::string &sql, std::function<DepartmentBudget(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;

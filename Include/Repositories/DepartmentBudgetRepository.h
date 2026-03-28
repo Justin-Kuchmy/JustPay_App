@@ -9,7 +9,7 @@ class DepartmentBudgetRepository : public BaseRepository
 {
 private:
     static DepartmentBudget mapDepartmentBudget(sqlite3_stmt *stmt);
-    static int bindDepartmentBudget(sqlite3_stmt *stmt, const DepartmentBudget &budget);
+    static void bindDepartmentBudget(sqlite3_stmt *stmt, const DepartmentBudget &budget);
 
 public:
     explicit DepartmentBudgetRepository(sqlite3 *db);

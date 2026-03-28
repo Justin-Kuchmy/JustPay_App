@@ -59,59 +59,142 @@ protected:
     }
 };
 
-TEST_F(DepartmentBudgetRepoTest, InsertDepartmentBudget_SucceedsWithValidData)
-{
-    EXPECT_EQ(1, 0);
-}
 TEST_F(DepartmentBudgetRepoTest, InsertDepartmentBudget_ReturnsValidId)
 {
-    EXPECT_EQ(1, 0);
+    DepartmentBudget dBudget(0, Department::Operations, 1, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+
+    DepartmentBudget dBudget2(1, Department::Sales, 1, 30000, "notes go here");
+    int id2 = repo->insertDepartmentBudget(dBudget2);
+    EXPECT_GT(id2, 0);
 }
-TEST_F(DepartmentBudgetRepoTest, GetById_ReturnsCorrectBudget)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, GetById_ReturnsNullopt_WhenNotFound)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, GetByPeriod_ReturnsBudgetsForSpecificPeriod)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, GetByPeriod_ReturnsEmpty_WhenNoBudgetsExist)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, GetAll_ReturnsAllBudgets)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, UpdateDepartmentBudget_ModifiesExistingRecord)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, UpdateDepartmentBudget_ReturnsFalse_WhenIdDoesNotExist)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, DeleteDepartmentBudget_RemovesRecord)
-{
-    EXPECT_EQ(1, 0);
-}
-TEST_F(DepartmentBudgetRepoTest, DeleteDepartmentBudget_ReturnsFalse_WhenIdDoesNotExist)
-{
-    EXPECT_EQ(1, 0);
-}
+
 TEST_F(DepartmentBudgetRepoTest, InsertDepartmentBudget_AllowsMultipleDepartmentsSamePeriod)
 {
-    EXPECT_EQ(1, 0);
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
 }
 TEST_F(DepartmentBudgetRepoTest, InsertDepartmentBudget_AllowsSameDepartmentDifferentPeriods)
 {
-    EXPECT_EQ(1, 0);
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
 }
 TEST_F(DepartmentBudgetRepoTest, InsertDepartmentBudget_FailsForDuplicateDepartmentAndPeriod)
 {
-    EXPECT_EQ(1, 0);
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+}
+
+TEST_F(DepartmentBudgetRepoTest, GetById_ReturnsCorrectBudget)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+    auto newOpt = repo->getById(id);
+    EXPECT_TRUE(newOpt.has_value());
+    DepartmentBudget newdB = *newOpt;
+    EXPECT_EQ(newdB.department, Department::Operations);
+    EXPECT_EQ(newdB.period_Id, dBudget.period_Id);
+    EXPECT_EQ(newdB.id, id);
+}
+TEST_F(DepartmentBudgetRepoTest, GetById_ReturnsNullopt_WhenNotFound)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    auto newOpt = repo->getById(id + 1);
+    EXPECT_EQ(newOpt, std::nullopt);
+}
+TEST_F(DepartmentBudgetRepoTest, GetByPeriod_ReturnsBudgetsForSpecificPeriod)
+{
+    DepartmentBudget dBudget1(0, Department::Operations, 1, 50000, "notes go here");
+    DepartmentBudget dBudget2(0, Department::Admin, 1, 50000, "notes go here");
+    DepartmentBudget dBudget3(0, Department::Operations, 2, 50000, "notes go here");
+
+    int id1 = repo->insertDepartmentBudget(dBudget1);
+    int id2 = repo->insertDepartmentBudget(dBudget2);
+    int id3 = repo->insertDepartmentBudget(dBudget3);
+    EXPECT_GT(id1, 0);
+    EXPECT_GT(id2, 0);
+    EXPECT_GT(id3, 0);
+
+    std::vector<DepartmentBudget> opResult = repo->getByPeriod(1);
+    std::vector<DepartmentBudget> adminResult = repo->getByPeriod(2);
+    EXPECT_EQ(opResult.size(), 5u);
+    EXPECT_EQ(adminResult.size(), 1u);
+}
+TEST_F(DepartmentBudgetRepoTest, GetByPeriod_ReturnsEmpty_WhenNoBudgetsExist)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+
+    std::vector<DepartmentBudget> hrResult = repo->getByPeriod(99);
+    EXPECT_EQ(hrResult.size(), 0);
+}
+TEST_F(DepartmentBudgetRepoTest, GetAll_ReturnsAllBudgets)
+{
+    DepartmentBudget dBudget1(0, Department::Operations, 1, 50000, "notes go here");
+    DepartmentBudget dBudget2(0, Department::Admin, 1, 50000, "notes go here");
+    DepartmentBudget dBudget3(0, Department::Operations, 2, 50000, "notes go here");
+
+    int id1 = repo->insertDepartmentBudget(dBudget1);
+    int id2 = repo->insertDepartmentBudget(dBudget2);
+    int id3 = repo->insertDepartmentBudget(dBudget3);
+    EXPECT_GT(id1, 0);
+    EXPECT_GT(id2, 0);
+    EXPECT_GT(id3, 0);
+
+    std::vector<DepartmentBudget> allObjects = repo->getAll();
+    EXPECT_EQ(allObjects.size(), 6u);
+}
+TEST_F(DepartmentBudgetRepoTest, UpdateDepartmentBudget_ModifiesExistingRecord)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+
+    auto newOpt = repo->getById(id);
+    ASSERT_TRUE(newOpt.has_value());
+
+    DepartmentBudget newObj = *newOpt;
+    newObj.allocatedAmount = 60000;
+    EXPECT_TRUE(repo->updateDepartmentBudget(newObj));
+
+    auto updatedOpt = repo->getById(id);
+    ASSERT_TRUE(updatedOpt.has_value());
+    EXPECT_EQ(updatedOpt->allocatedAmount, 60000);
+}
+
+TEST_F(DepartmentBudgetRepoTest, DeleteDepartmentBudget_RemovesRecord)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 0, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_TRUE(repo->deleteDepartmentBudget(id));
+    auto newOpt = repo->getById(id);
+    EXPECT_FALSE(newOpt.has_value());
+}
+TEST_F(DepartmentBudgetRepoTest, DeleteDepartmentBudget_ReturnsFalse_WhenIdDoesNotExist)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 1, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_FALSE(repo->deleteDepartmentBudget(id + 99));
+}
+
+TEST_F(DepartmentBudgetRepoTest, UpdateDepartmentBudget_ReturnsFalse_WhenIdDoesNotExist)
+{
+    DepartmentBudget dBudget(0, Department::Operations, 1, 50000, "notes go here");
+    int id = repo->insertDepartmentBudget(dBudget);
+    EXPECT_GT(id, 0);
+
+    auto newOpt = repo->getById(id);
+    ASSERT_TRUE(newOpt.has_value());
+
+    DepartmentBudget newObj = *newOpt;
+    newObj.allocatedAmount = 60000;
+    EXPECT_TRUE(repo->deleteDepartmentBudget(newObj.id));
+    EXPECT_FALSE(repo->updateDepartmentBudget(newObj));
 }
