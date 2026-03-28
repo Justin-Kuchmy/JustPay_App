@@ -7,8 +7,8 @@ DROP TABLE IF EXISTS payroll_records;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS employee_leave_balances;
 DROP TABLE IF EXISTS test_item;
-DROP TABLE IF EXISTS budget_periods;
 DROP TABLE IF EXISTS department_budgets;
+DROP TABLE IF EXISTS budget_periods;
 
 
 
@@ -517,27 +517,18 @@ INSERT INTO budget_periods (label, year, half, start_date, end_date) VALUES
 
 
 CREATE TABLE department_budgets (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    department       TEXT    NOT NULL,   
-    period_id        INTEGER NOT NULL REFERENCES budget_periods(id),
-    allocated_amount REAL    NOT NULL DEFAULT 0.0,
-    notes            TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    department INTEGER    NOT NULL,   
+    period_id INTEGER NOT NULL REFERENCES budget_periods(id),
+    allocated_amount REAL NOT NULL DEFAULT 0.0,
+    notes TEXT,
     UNIQUE (department, period_id)     
 );
 
-INSERT INTO department_budgets (id, department, period_id, allocated_amount, notes) VALUES
-(1,  'HR',         1, 27672.70, 'January 2025 1st half - HR'),
-(2,  'Finance',    1, 63730.70, 'January 2025 1st half - Finance'),
-(3,  'IT',         1, 57036.10, 'January 2025 1st half - IT'),
-(4,  'Operations', 1, 61066.50, 'January 2025 1st half - Operations'),
-(5,  'Sales',      1, 42931.90, 'January 2025 1st half - Sales'),
-(6,  'Marketing',  1, 17903.60, 'January 2025 1st half - Marketing'),
-(7,  'HR',         2, 27845.40, 'January 2025 2nd half - HR'),
-(8,  'Finance',    2, 64076.10, 'January 2025 2nd half - Finance'),
-(9,  'IT',         2, 57381.50, 'January 2025 2nd half - IT'),
-(10, 'Operations', 2, 61411.90, 'January 2025 2nd half - Operations'),
-(11, 'Sales',      2, 41957.30, 'January 2025 2nd half - Sales'),
-(12, 'Marketing',  2, 17416.30, 'January 2025 2nd half - Marketing');
+INSERT INTO department_budgets (department, period_id, allocated_amount, notes) VALUES
+( 0, 1, 27672.70, 'January 2025 1st half - HR'),
+( 1, 1, 63730.70, 'January 2025 1st half - Finance'),
+( 2, 1, 57036.10, 'January 2025 1st half - IT');
 
 
 PRAGMA foreign_keys = OFF; 
