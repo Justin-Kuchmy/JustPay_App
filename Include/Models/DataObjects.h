@@ -203,8 +203,8 @@ struct BudgetPeriod
 struct DepartmentBudget
 {
     int id{};
-    int departmentId{};
-    int periodId{};
+    Department department{};
+    int period_Id{};
 
     double allocatedAmount{0.0};
     std::string notes{};
