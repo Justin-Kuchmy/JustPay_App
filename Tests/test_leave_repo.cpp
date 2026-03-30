@@ -63,21 +63,21 @@ protected:
 
 TEST_F(LeaveRepoTest, GetByEmpYear_ReturnsEmployeeLeaveBalanceIfExists)
 {
+    EXPECT_TRUE(repo->insert(EmployeeLeaveBalance("00-0001", 2025)));
     std::optional<EmployeeLeaveBalance> bal = repo->getByEmployeeAndYear("00-0001", 2025);
-    EmployeeLeaveBalance result{};
     EXPECT_TRUE(bal.has_value());
 }
 
 TEST_F(LeaveRepoTest, GetByEmpYear_ReturnsEmployeeLeaveBalanceWithCorrectValues)
 {
+    EXPECT_TRUE(repo->insert(EmployeeLeaveBalance("00-0001", 2025, 10.0, 5.0)));
     std::optional<EmployeeLeaveBalance> bal = repo->getByEmployeeAndYear("00-0001", 2025);
-    EmployeeLeaveBalance result{};
+    EmployeeLeaveBalance result = bal.has_value() ? *bal : EmployeeLeaveBalance{};
     EXPECT_TRUE(bal.has_value());
-    result = *bal;
     EXPECT_TRUE(result.employeeId == "00-0001");
-    EXPECT_TRUE(result.totalLeaveEarned == 15.0);
+    EXPECT_TRUE(result.totalLeaveEarned == 10.0);
     EXPECT_TRUE(result.leaveUsed == 5.0);
-    EXPECT_TRUE(result.unusedLeaveDays == 10.0);
+    EXPECT_TRUE(result.unusedLeaveDays == 5.0);
     EXPECT_TRUE(result.year == 2025);
 }
 
