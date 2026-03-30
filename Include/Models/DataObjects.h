@@ -108,6 +108,20 @@ struct YearEndBenefits
     double unusedLeaveDays{0.0};
     double dailyRate{0.0};
     double monetizedLeaveValue{0.0};
+
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "employeeId:  " << employeeId
+            << "\n year: " << year
+            << "\n totalBasicSalary: " << totalBasicSalary
+            << "\n thirteenthMonthPay: " << thirteenthMonthPay
+            << "\n unusedLeaveDays: " << unusedLeaveDays
+            << "\n dailyRate: " << dailyRate
+            << "\n monetizedLeaveValue: " << monetizedLeaveValue;
+
+        return oss.str();
+    }
 };
 
 struct EmployeeLeaveBalance
@@ -186,6 +200,42 @@ struct Date
         return (year > rhs.year) ||
                (year == rhs.year && month > rhs.month) ||
                (year == rhs.year && month == rhs.month && day > rhs.day);
+    }
+
+    bool operator<=(const Date &rhs) const
+    {
+        return !((*this) > rhs);
+    }
+
+    bool operator==(const Date &rhs) const
+    {
+        return year == rhs.year && month == rhs.month && day == rhs.day;
+    }
+
+    int daysUntil(const Date &other) const
+    {
+        auto toTimePoint = [](const Date &d)
+        {
+            std::tm tm{};
+            tm.tm_year = d.year - 1900;
+            tm.tm_mon = d.month - 1;
+            tm.tm_mday = d.day;
+            std::time_t t = std::mktime(&tm);
+            return std::chrono::system_clock::from_time_t(t);
+        };
+
+        auto tp1 = toTimePoint(*this);
+        auto tp2 = toTimePoint(other);
+        auto diff = std::chrono::duration_cast<std::chrono::hours>(tp2 - tp1).count();
+        return static_cast<int>(diff / 24);
+    }
+
+    Date addMonths(int months) const
+    {
+        int newMonth = month + months;
+        int newYear = year + (newMonth - 1) / 12;
+        newMonth = ((newMonth - 1) % 12) + 1;
+        return Date{newYear, newMonth, day};
     }
 };
 
