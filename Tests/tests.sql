@@ -490,14 +490,6 @@ CREATE TABLE employee_leave_balances (
     PRIMARY KEY (employee_id, year)
 );
 
-INSERT INTO employee_leave_balances (employee_id, year, total_leave_earned, leave_used)
-VALUES 
-('00-0001', 2025, 15.0, 5.0),
- ('01-0002', 2025, 20.0, 8.5),
- ('01-0003', 2024, 12.0, 12.0),
- ('02-0004', 2024, 10.0, 7.0),
- ('02-0005', 2025, 18.0, 0.0);
-
 
 CREATE TABLE IF NOT EXISTS budget_periods (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
