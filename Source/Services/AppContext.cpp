@@ -43,7 +43,8 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
                                                     m_payrollService(m_payrollRepo),
                                                     m_journalEntryService(m_journalEntryRepo),
                                                     m_governmentRemittanceService(m_governmentRemittanceRepo, m_payrollRepo),
-                                                    m_yearEndBenefitsService(m_payrollRepo, m_leaveRepo)
+                                                    m_leaveBalanceService(m_leaveRepo, m_employeeRepo),
+                                                    m_yearEndBenefitsService(m_payrollRepo, m_leaveBalanceService, m_employeeRepo)
 
 {
 
@@ -113,4 +114,9 @@ GovernmentRemittanceService &AppContext::governmentRemittanceService() noexcept
 YearEndBenefitsService &AppContext::yearEndBenefitsService() noexcept
 {
     return m_yearEndBenefitsService;
+}
+
+LeaveBalanceService &AppContext::leaveBalanceService() noexcept
+{
+    return m_leaveBalanceService;
 }
