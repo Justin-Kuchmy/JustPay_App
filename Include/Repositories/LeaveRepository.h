@@ -11,6 +11,7 @@ class LeaveRepository : public BaseRepository
 public:
     explicit LeaveRepository(sqlite3 *db);
     bool createTable() const override;
+    bool insert(const EmployeeLeaveBalance &empLeaveBalance);
     std::optional<EmployeeLeaveBalance> getByEmployeeAndYear(const std::string &employeeId, int year);
 };
 
