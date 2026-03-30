@@ -15,11 +15,13 @@ file(GLOB TEST_SOURCES
 file(GLOB DB_SOURCES
     "${CMAKE_SOURCE_DIR}/Source/Repos/*.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Services/YearEndBenefitsService.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Services/LeaveBalanceService.cpp"
 )
 
 file(GLOB DB_HEADERS
     "${CMAKE_SOURCE_DIR}/Include/Repositories/*.h"
     "${CMAKE_SOURCE_DIR}/Include/Services/YearEndBenefitsService.h"
+    "${CMAKE_SOURCE_DIR}/Include/Services/LeaveBalanceService.h"
 )
 
 # Create the test executable
