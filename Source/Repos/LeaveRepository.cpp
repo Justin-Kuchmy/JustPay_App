@@ -41,3 +41,20 @@ std::optional<EmployeeLeaveBalance> LeaveRepository::getByEmployeeAndYear(const 
         result = mapEmployeeLeaveBalance(stmt);
     return result;
 }
+
+bool LeaveRepository::insert(const EmployeeLeaveBalance &balance)
+{
+    const std::string sql = "INSERT INTO employee_leave_balances "
+                            "(employee_id, year, total_leave_earned, leave_used) "
+                            "VALUES (?, ?, ?, ?);";
+    sqlite3_stmt *stmt = nullptr;
+    sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
+    sqlite3_bind_text(stmt, 1, balance.employeeId.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, balance.year);
+    sqlite3_bind_double(stmt, 3, balance.totalLeaveEarned);
+    sqlite3_bind_double(stmt, 4, balance.leaveUsed);
+
+    int rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    return rc == SQLITE_DONE;
+}
