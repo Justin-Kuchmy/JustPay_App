@@ -12,8 +12,19 @@ class GovernRemittanceWidget : public BaseContentWidget
 public:
     GovernRemittanceWidget(QWidget *parent = nullptr);
     ~GovernRemittanceWidget();
+    GovernRemittanceWidget(const GovernRemittanceWidget &) = delete;
+    GovernRemittanceWidget &operator=(const GovernRemittanceWidget &) = delete;
+    void onRemittancePeriodChanged();
 
 private:
     Ui::GovernRemittanceWidget *ui;
+    QStringList remitsPayPeriods;
+    QStringList remitTypes;
+    std::vector<GovernmentRemittance> remits;
+    std::vector<GovernmentRemittance> *remitsPtr = nullptr;
+
+    GovernmentRemittanceModel *model;
+    GovernmentRemittanceFilterProxyModel *m_proxy;
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
 };
 #endif
