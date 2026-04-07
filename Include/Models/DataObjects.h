@@ -11,6 +11,7 @@
 #include <iostream>
 #define DEBUG_LOGS
 #include "../Utils/Log.h"
+#include <QDate>
 
 enum Department
 {
@@ -95,6 +96,7 @@ inline std::string status_to_string(int i);
 inline std::string AccountType_to_string(int i);
 inline std::string EntryType_to_string(int i);
 inline std::string RemittanceStatus_to_string(RemittanceStatus status);
+inline std::string month_to_text_string(int month);
 
 struct YearEndBenefits
 {
@@ -163,6 +165,23 @@ struct Date
     int month{};
     int day{};
 
+    static Date fromQDate(const QDate &d)
+    {
+        Date date{};
+        date.year = d.year();
+        date.month = d.month();
+        date.day = d.day();
+        return date;
+    }
+
+    Date &operator=(const QDate &qtDate)
+    {
+        this->year = qtDate.year();
+        this->month = qtDate.month();
+        this->day = qtDate.day();
+        return *this;
+    }
+
     static Date fromString(const std::string &s)
     {
         Date d;
@@ -172,6 +191,10 @@ struct Date
         return d;
     }
 
+    std::string toMonthYearString() const
+    {
+        return month_to_text_string(this->month) + " " + std::to_string(this->year);
+    }
     std::string to_string() const
     {
         std::ostringstream oss;
@@ -320,7 +343,7 @@ struct Overtime
         return static_cast<int>(sum);
     }
 
-    double calculatePay() const
+    double rateMultiplier() const
     {
         double sum = 0.0;
         sum += (regular / 60.0 * 1.25);
@@ -340,12 +363,12 @@ struct Overtime
     static double calculatePay(const std::string &json)
     {
         Overtime ot = fromJson(json);
-        return ot.calculatePay();
+        return ot.rateMultiplier();
     }
 
     static double extractNumber(const std::string &json, const std::string &key)
     {
-        auto pos = json.find("\'" + key + "\'");
+        auto pos = json.find("\"" + key + "\"");
         if (pos == std::string::npos)
             return 0.0;
 
@@ -409,9 +432,9 @@ struct AttendanceLog
     Overtime overtimeObj{};
     std::string notes{};
 
-    double getOvertimePay() const
+    double getRateMultiplier() const
     {
-        return overtimeObj.calculatePay();
+        return overtimeObj.rateMultiplier();
     }
 
     std::string to_string() const
@@ -577,7 +600,7 @@ public:
     std::string employeeId{""};
     std::string fullName{""};
     std::string employeeDepartment{""};
-    std::string payPeriodText{"August 2025"};
+    std::string payPeriodText{""};
     int payPeriodHalf{1};
     double monthlyBasicSalary{0.0};
     double monthlyAllowances{0.0};
@@ -617,6 +640,9 @@ public:
             << "\n sssPremium_EE: " << sssPremium_EE
             << "\n philHealthPremium_EE: " << philHealthPremium_EE
             << "\n hdmfPremium_EE: " << hdmfPremium_EE
+            << "\n sssPremium_ER: " << sssPremium_ER
+            << "\n philHealthPremium_ER: " << philHealthPremium_ER
+            << "\n hdmfPremium_ER: " << hdmfPremium_ER
             << "\n loanDeductionsPerPayroll: " << loanDeductionsPerPayroll
             << "\n totalDeductions: " << totalDeductions
             << "\n withHoldingTax: " << withHoldingTax
@@ -638,44 +664,19 @@ public:
     std::string payPeriodText{""};
     int payPeriodHalf{1};
 
-    double sssPremium_EE{0.0};
-    double sssPremium_ER{0.0};
-    double sssPremiumTotal{0.0};
-
-    double philHealthPremium_EE{0.0};
-    double philHealthPremium_ER{0.0};
-    double philHealthPremiumTotal{0.0};
-
-    double hdmfPremium_EE{0.0};
-    double hdmfPremium_ER{0.0};
-    double hdmfPremiumTotal{0.0};
-
+    double employee_Contrib{0.0};
+    double employer_Contrib{0.0};
+    double total_Contrib{0.0};
+    RemittanceType contrib_Type = {RemittanceType::SSS};
     double withHoldingTax{0.0};
 
-    RemittanceStatus sssSubmissionStatus{RemittanceStatus::PENDING};
-    RemittanceStatus phicSubmissionStatus{RemittanceStatus::PENDING};
-    RemittanceStatus hdmfSubmissionStatus{RemittanceStatus::PENDING};
+    RemittanceStatus submissionStatus{RemittanceStatus::PENDING};
     RemittanceStatus withHoldingTaxSubmissionStatus{RemittanceStatus::PENDING};
 
     Date lastSubmittedDate{Date(1970, 1, 1)};
     int submittedByUserId{};
     Date dateCreated{Date(1970, 1, 1)};
     Date dateModified{Date(1970, 1, 1)};
-
-    double totalEmployerContribution() const
-    {
-        return sssPremium_ER + philHealthPremium_ER + hdmfPremium_ER;
-    }
-
-    double totalEmployeeContribution() const
-    {
-        return sssPremium_EE + philHealthPremium_EE + hdmfPremium_EE;
-    }
-
-    double totalGovernmentRemittance() const
-    {
-        return totalEmployerContribution() + totalEmployeeContribution() + withHoldingTax;
-    }
 
     std::string to_string() const
     {
@@ -689,19 +690,12 @@ public:
             << "\n employeeDepartment: " << employeeDepartment
             << "\n payPeriodText: " << payPeriodText
             << "\n payPeriodHalf: " << payPeriodHalf
-            << "\n sssPremium_EE: " << sssPremium_EE
-            << "\n sssPremium_ER: " << sssPremium_ER
-            << "\n sssPremiumTotal: " << sssPremiumTotal
-            << "\n philHealthPremium_EE: " << philHealthPremium_EE
-            << "\n philHealthPremium_ER: " << philHealthPremium_ER
-            << "\n philHealthPremiumTotal: " << philHealthPremiumTotal
-            << "\n hdmfPremium_EE: " << hdmfPremium_EE
-            << "\n hdmfPremium_ER: " << hdmfPremium_ER
-            << "\n hdmfPremiumTotal: " << hdmfPremiumTotal
+            << "\n employee_Contrib: " << employee_Contrib
+            << "\n employer_Contrib: " << employer_Contrib
+            << "\n total_Contrib: " << total_Contrib
+            << "\n contrib_Type: " << static_cast<int>(contrib_Type)
             << "\n withHoldingTax: " << withHoldingTax
-            << "\n sssSubmissionStatus: " << RemittanceStatus_to_string(sssSubmissionStatus)
-            << "\n phicSubmissionStatus: " << RemittanceStatus_to_string(phicSubmissionStatus)
-            << "\n hdmfSubmissionStatus: " << RemittanceStatus_to_string(hdmfSubmissionStatus)
+            << "\n submissionStatus: " << RemittanceStatus_to_string(submissionStatus)
             << "\n withHoldingTaxSubmissionStatus: " << RemittanceStatus_to_string(withHoldingTaxSubmissionStatus)
             << "\n lastSubmittedDate: " << lastSubmittedDate.to_string()
             << "\n submittedByUserId: " << submittedByUserId
@@ -861,6 +855,53 @@ inline std::string RemittanceStatus_to_string(RemittanceStatus status)
         return "Submitted";
     default:
         return "Unknown";
+    }
+}
+inline std::string RemittanceType_to_string(RemittanceType type)
+{
+    switch (type)
+    {
+    case RemittanceType::SSS:
+        return "SSS";
+    case RemittanceType::PHIC:
+        return "PHIC";
+    case RemittanceType::HDMF:
+        return "HDMF";
+    default:
+        return "Unknown";
+    }
+}
+
+inline std::string month_to_text_string(int month)
+{
+    switch (month)
+    {
+    case 1:
+        return "January";
+    case 2:
+        return "February";
+    case 3:
+        return "March";
+    case 4:
+        return "April";
+    case 5:
+        return "May";
+    case 6:
+        return "June";
+    case 7:
+        return "July";
+    case 8:
+        return "August";
+    case 9:
+        return "September";
+    case 10:
+        return "October";
+    case 11:
+        return "November";
+    case 12:
+        return "December";
+    default:
+        return "unknown";
     }
 }
 
