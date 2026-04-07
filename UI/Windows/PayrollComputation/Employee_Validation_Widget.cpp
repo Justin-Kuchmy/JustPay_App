@@ -48,7 +48,7 @@ void EmployeeValidationWidget::loadDataBus()
 
                 const double hrRate{data.monthlyBasicSalary * MONTHS_PER_YEAR / WORKING_DAYS_PER_YEAR / WORKING_HOURS_PER_DAY};
 
-                const double pay{empOverTime.at(i).getOvertimePay()};
+                const double pay{empOverTime.at(i).getRateMultiplier()};
 
                 const double otPay{std::floor(pay * hrRate * 100.0) / 100.0};
                 data.overTimePay += otPay;
