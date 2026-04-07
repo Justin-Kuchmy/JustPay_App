@@ -121,11 +121,11 @@ TEST_F(PayrollRepoTest, GetById_ReturnsNulloptIfRecordDoesNotExist)
 TEST_F(PayrollRepoTest, GetAll_ReturnsAllPayrollRecords)
 {
     auto vP1 = repo->getAll();
-    ASSERT_TRUE(vP1.size() == 240);
+    ASSERT_TRUE(vP1.size() == 20);
     auto id = repo->insertPayroll(makePayroll());
     ASSERT_GT(id, 0);
     auto vP2 = repo->getAll();
-    ASSERT_TRUE(vP2.size() == 241);
+    ASSERT_TRUE(vP2.size() == 21);
 }
 
 TEST_F(PayrollRepoTest, GetByEmployeeId_ReturnsCorrectPayrollRecords)
@@ -240,18 +240,18 @@ TEST_F(PayrollRepoTest, NetPay_ComputesCorrectlyFromGrossAndDeductions)
 
 TEST_F(PayrollRepoTest, SaveAndLoadConfig_RoundTripsCorrectly)
 {
-    PayrollConfig config;
+    PayrollConfig config{};
     config.sssSchedule = DeductionSchedule::FirstHalf;
     config.philHealthSchedule = DeductionSchedule::SecondHalf;
-    config.hdmfSchedule = DeductionSchedule::SecondHalf;
+    config.hdmfSchedule = DeductionSchedule::BothHalves;
 
-    repo->saveConfig(config);
+    ASSERT_TRUE(repo->saveConfig(config));
 
     auto loaded = repo->loadConfig();
     ASSERT_TRUE(loaded.has_value());
     EXPECT_EQ(loaded->sssSchedule, DeductionSchedule::FirstHalf);
     EXPECT_EQ(loaded->philHealthSchedule, DeductionSchedule::SecondHalf);
-    EXPECT_EQ(loaded->hdmfSchedule, DeductionSchedule::SecondHalf);
+    EXPECT_EQ(loaded->hdmfSchedule, DeductionSchedule::BothHalves);
 }
 
 TEST_F(PayrollRepoTest, HandlesZeroAdjustmentsWithoutErrors)
@@ -272,29 +272,30 @@ TEST_F(PayrollRepoTest, HandlesZeroAdjustmentsWithoutErrors)
 TEST_F(PayrollRepoTest, HandlesMultipleEmployeesForSamePayPeriod)
 {
 
-    // repo already has 240 elements via sql file
+    // repo already has 20 elements via sql file
     repo->insertPayroll(makePayroll("01-0098", "March 2026", 1));
     repo->insertPayroll(makePayroll("01-0099", "March 2026", 1));
     repo->insertPayroll(makePayroll("01-0100", "March 2026", 1));
 
     auto all = repo->getAll();
-    EXPECT_EQ(all.size(), 243u);
+    EXPECT_EQ(all.size(), 23u);
+
+    std::cout
+        << ", employeeId 1: " << all[20].employeeId
+        << ", employeeId 2: " << all[21].employeeId
+        << ", employeeId 3: " << all[22].employeeId
+        << std::endl;
 
     // each should be a different employee
-    EXPECT_EQ(all[240].employeeId, "01-0098");
-    EXPECT_EQ(all[241].employeeId, "01-0099");
-    EXPECT_EQ(all[242].employeeId, "01-0100");
-    std::cout
-        << ", employeeId 1: " << all[0].employeeId
-        << ", employeeId 2: " << all[1].employeeId
-        << ", employeeId 3: " << all[2].employeeId
-        << std::endl;
+    EXPECT_EQ(all[20].employeeId, "01-0098");
+    EXPECT_EQ(all[21].employeeId, "01-0099");
+    EXPECT_EQ(all[22].employeeId, "01-0100");
 }
 
 TEST_F(PayrollRepoTest, PreventsDuplicatePayrollForSameEmployeeAndPayPeriod)
 {
     auto newId1 = repo->insertPayroll(makePayroll("00-0099", "July 2026", 1));
-    EXPECT_EQ(newId1, 241);
+    EXPECT_EQ(newId1, 21);
 
     auto newId2 = repo->insertPayroll(makePayroll("00-0099", "July 2026", 1));
     EXPECT_EQ(newId2, 0); // returns zero becuase its a duplicate
