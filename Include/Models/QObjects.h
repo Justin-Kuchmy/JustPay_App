@@ -126,7 +126,6 @@ private:
         return QVariant();
     }
 };
-
 class PayrollRegisterModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -206,18 +205,24 @@ public:
             case 9:
                 return QString("Gross Income");
             case 10:
-                return QString("SSS Premium EE");
+                return QString("Employee SSS ");
             case 11:
-                return QString("PHIC Premium EE");
+                return QString("Employee PHIC");
             case 12:
-                return QString("HDMF Premium EE");
+                return QString("Employee HDMF");
             case 13:
-                return QString("Loans");
+                return QString("Employer SSS");
             case 14:
-                return QString("Withholding Tax");
+                return QString("Employer PHIC");
             case 15:
-                return QString("Deductions");
+                return QString("Employer HDMF");
             case 16:
+                return QString("Loans");
+            case 17:
+                return QString("Withholding Tax");
+            case 18:
+                return QString("Deductions");
+            case 19:
                 return QString("Net Pay");
             default:
                 return QString("");
@@ -272,12 +277,18 @@ private:
         case 12:
             return item.hdmfPremium_EE;
         case 13:
-            return item.loanDeductionsPerPayroll;
+            return item.sssPremium_ER;
         case 14:
-            return item.withHoldingTax;
+            return item.philHealthPremium_ER;
         case 15:
-            return item.totalDeductions;
+            return item.hdmfPremium_ER;
         case 16:
+            return item.loanDeductionsPerPayroll;
+        case 17:
+            return item.withHoldingTax;
+        case 18:
+            return item.totalDeductions;
+        case 19:
             return item.netPay;
         }
         return QVariant();
@@ -494,6 +505,130 @@ class JournalEntryFilterProxyModel : public QSortFilterProxyModel
 public:
     JournalEntryFilterProxyModel(QObject *parent) {};
     ~JournalEntryFilterProxyModel() {};
+    void setPayPeriodFilter(const QString &period)
+    {
+
+        m_payPeriod = period;
+        QSortFilterProxyModel::invalidateFilter();
+    }
+    void setPayPeriodHalfFilter(const QString &periodhalf)
+    {
+
+        m_payPeriodHalf = periodhalf;
+        QSortFilterProxyModel::invalidateFilter();
+    }
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
+        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 4, sourceParent);
+        QModelIndex periodHalfIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 5, sourceParent);
+        QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
+        QString periodHalf = QSortFilterProxyModel::sourceModel()->data(periodHalfIndex).toString();
+
+        if (!m_payPeriod.isEmpty() && period != m_payPeriod)
+            return false;
+        if (!m_payPeriodHalf.isEmpty() && periodHalf != m_payPeriodHalf)
+            return false;
+        return true;
+    };
+
+private:
+    QString m_payPeriod;
+    QString m_payPeriodHalf;
+};
+class GovernmentRemittanceModel : public QAbstractItemModel
+{
+    Q_OBJECT
+public:
+    GovernmentRemittanceModel(QObject *parent) : QAbstractItemModel(parent), m_model{} {};
+    GovernmentRemittanceModel(QObject *parent, std::vector<GovernmentRemittance> *remits) : QAbstractItemModel(parent), m_model(remits) {}
+    ~GovernmentRemittanceModel() = default;
+    GovernmentRemittanceModel(const GovernmentRemittanceModel &) = delete;
+    GovernmentRemittanceModel &operator=(const GovernmentRemittanceModel &) = delete;
+
+    QModelIndex index(int row, int column, const QModelIndex &) const { return createIndex(row, column); }
+    QModelIndex parent(const QModelIndex & = QModelIndex()) const override { return QModelIndex(); }
+    int rowCount(const QModelIndex & = QModelIndex()) const override { return m_model ? static_cast<int>(m_model->size()) : 0; }
+    int columnCount(const QModelIndex & = QModelIndex()) const override { return m_columnCount; }
+    QVariant data(const QModelIndex &index, int role) const override
+    {
+        if (!index.isValid())
+            return QVariant();
+
+        if (role == Qt::DisplayRole)
+        {
+            return valueForColumn(static_cast<size_t>(index.row()), static_cast<size_t>(index.column()));
+        }
+        else if (role == Qt::UserRole)
+        {
+            return m_model->at(static_cast<size_t>(index.row())).id;
+        }
+        return QVariant();
+    }
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const
+    {
+        if (role != Qt::DisplayRole)
+            return QVariant();
+
+        if (orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+            case 0:
+                return QString("Employee ID");
+            case 1:
+                return QString("Contribution Type");
+            case 2:
+                return QString("Employee Share");
+            case 3:
+                return QString("Employer Share");
+            case 4:
+                return QString("Total");
+            case 5:
+                return QString("Period");
+            }
+        }
+        return QVariant();
+    }
+    void reloadData(const std::vector<GovernmentRemittance> &newRemits)
+    {
+        beginResetModel();
+        *m_model = newRemits;
+        endResetModel();
+    }
+
+private:
+    std::vector<GovernmentRemittance> *m_model;
+    const int m_columnCount = 6;
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
+    {
+        const auto &item = m_model->at(rowIndex);
+        QString employeeId{""};
+        switch (columnIndex)
+        {
+        case 0:
+            return QString::fromStdString(item.employeeId);
+        case 1:
+            return QString::fromStdString(RemittanceType_to_string(item.contrib_Type));
+        case 2:
+            return QString::fromStdString(std::to_string(item.employee_Contrib));
+        case 3:
+            return QString::fromStdString(std::to_string(item.employer_Contrib));
+        case 4:
+            return QString::fromStdString(std::to_string(item.total_Contrib));
+        case 5:
+            return QString::fromStdString(item.payPeriodText);
+        }
+        return QVariant();
+    }
+};
+class GovernmentRemittanceFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    GovernmentRemittanceFilterProxyModel(QObject *parent) {};
+    ~GovernmentRemittanceFilterProxyModel() {};
     void setPayPeriodFilter(const QString &period)
     {
 
