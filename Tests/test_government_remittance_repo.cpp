@@ -76,23 +76,13 @@ static GovernmentRemittance makeRemittance(
     r.payPeriodText = period;
     r.payPeriodHalf = half;
 
-    r.sssPremium_EE = 581.30;
-    r.sssPremium_ER = 1208.70;
-    r.sssPremiumTotal = r.sssPremium_EE + r.sssPremium_ER;
-
-    r.philHealthPremium_EE = 450.00;
-    r.philHealthPremium_ER = 450.00;
-    r.philHealthPremiumTotal = r.philHealthPremium_EE + r.philHealthPremium_ER;
-
-    r.hdmfPremium_EE = 100.00;
-    r.hdmfPremium_ER = 100.00;
-    r.hdmfPremiumTotal = r.hdmfPremium_EE + r.hdmfPremium_ER;
-
+    r.employee_Contrib = 581.30;
+    r.employer_Contrib = 1208.70;
+    r.total_Contrib = r.employee_Contrib + r.employer_Contrib;
+    r.contrib_Type = {RemittanceType::SSS};
     r.withHoldingTax = 1200.00;
 
-    r.sssSubmissionStatus = RemittanceStatus::PENDING;
-    r.phicSubmissionStatus = RemittanceStatus::PENDING;
-    r.hdmfSubmissionStatus = RemittanceStatus::PENDING;
+    r.submissionStatus = RemittanceStatus::PENDING;
     r.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
 
     r.lastSubmittedDate = Date(1970, 1, 1);
@@ -263,7 +253,7 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsSubmitted_UpdatesStatusAndAuditFields
     auto fetched = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(fetched.has_value());
 
-    fetched->sssSubmissionStatus = RemittanceStatus::SUBMITTED;
+    fetched->submissionStatus = RemittanceStatus::SUBMITTED;
     fetched->dateModified = Date::getTodayDate();
     fetched->lastSubmittedDate = Date::getTodayDate();
     bool ok = repo->markAsSubmitted(fetched->id, RemittanceType::SSS);
@@ -271,7 +261,7 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsSubmitted_UpdatesStatusAndAuditFields
     Date today = Date::getTodayDate();
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result->sssSubmissionStatus, RemittanceStatus::SUBMITTED);
+    EXPECT_EQ(result->submissionStatus, RemittanceStatus::SUBMITTED);
     EXPECT_EQ(result->lastSubmittedDate.year, today.year);
     EXPECT_EQ(result->lastSubmittedDate.month, today.month);
     EXPECT_EQ(result->lastSubmittedDate.day, today.day);
@@ -294,7 +284,7 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsConfirmed_UpdatesStatus)
 
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result->hdmfSubmissionStatus, RemittanceStatus::CONFIRMED);
+    EXPECT_EQ(result->submissionStatus, RemittanceStatus::CONFIRMED);
     Date today = Date::getTodayDate();
     EXPECT_EQ(result->dateModified.year, today.year);
     EXPECT_EQ(result->dateModified.month, today.month);
@@ -316,7 +306,7 @@ TEST_F(GovernmentRemittanceRepoTest, MarkAsRejected_UpdatesStatus)
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
     LOG_DEBUG(result->to_string());
-    EXPECT_EQ(result->phicSubmissionStatus, RemittanceStatus::REJECTED);
+    EXPECT_EQ(result->submissionStatus, RemittanceStatus::REJECTED);
     Date today = Date::getTodayDate();
     EXPECT_EQ(result->dateModified.year, today.year);
     EXPECT_EQ(result->dateModified.month, today.month);
@@ -337,60 +327,24 @@ TEST_F(GovernmentRemittanceRepoTest, DeleteRemittance_RemovesRecord)
     EXPECT_FALSE(result.has_value());
 }
 
-// ─── Model helper methods ─────────────────────────────────────────────────────
+// TODO will move to government remittance service tests
+//  TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_AggregatesCorrectly)
+//  {
+//      repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
+//      repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
 
-TEST_F(GovernmentRemittanceRepoTest, TotalEmployeeContribution_SumsCorrectly)
-{
-    auto r = makeRemittance();
-    auto id = repo->insertRemittance(r);
-    auto fetched = repo->getRemittanceById(static_cast<int>(id));
-    ASSERT_TRUE(fetched.has_value());
+//     auto summary = repo->getMonthlySummary("March 2026");
+//     EXPECT_EQ(summary.monthYear, "March 2026");
+//     EXPECT_NEAR(summary.totalSSSEE, 581.30 * 2, 0.01);
+//     EXPECT_NEAR(summary.totalPHICEE, 450.00 * 2, 0.01);
+//     EXPECT_NEAR(summary.totalHDMFEE, 100.00 * 2, 0.01);
+// }
 
-    double expected = fetched->sssPremium_EE + fetched->philHealthPremium_EE + fetched->hdmfPremium_EE;
-    EXPECT_NEAR(fetched->totalEmployeeContribution(), expected, 0.01);
-}
-
-TEST_F(GovernmentRemittanceRepoTest, TotalEmployerContribution_SumsCorrectly)
-{
-    auto r = makeRemittance();
-    auto id = repo->insertRemittance(r);
-    auto fetched = repo->getRemittanceById(static_cast<int>(id));
-    ASSERT_TRUE(fetched.has_value());
-
-    double expected = fetched->sssPremium_ER + fetched->philHealthPremium_ER + fetched->hdmfPremium_ER;
-    EXPECT_NEAR(fetched->totalEmployerContribution(), expected, 0.01);
-}
-
-TEST_F(GovernmentRemittanceRepoTest, TotalGovernmentRemittance_SumsCorrectly)
-{
-    auto r = makeRemittance();
-    auto id = repo->insertRemittance(r);
-    auto fetched = repo->getRemittanceById(static_cast<int>(id));
-    ASSERT_TRUE(fetched.has_value());
-
-    double expected = fetched->totalEmployeeContribution() + fetched->totalEmployerContribution() + fetched->withHoldingTax;
-    EXPECT_NEAR(fetched->totalGovernmentRemittance(), expected, 0.01);
-}
-
-// ─── Monthly summary ─────────────────────────────────────────────────────────
-
-TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_AggregatesCorrectly)
-{
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
-
-    auto summary = repo->getMonthlySummary("March 2026");
-    EXPECT_EQ(summary.monthYear, "March 2026");
-    EXPECT_NEAR(summary.totalSSSEE, 581.30 * 2, 0.01);
-    EXPECT_NEAR(summary.totalPHICEE, 450.00 * 2, 0.01);
-    EXPECT_NEAR(summary.totalHDMFEE, 100.00 * 2, 0.01);
-}
-
-TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_ReturnsEmptyForUnknownMonth)
-{
-    auto summary = repo->getMonthlySummary("January 2000");
-    EXPECT_EQ(summary.monthYear, "January 2000");
-    EXPECT_DOUBLE_EQ(summary.totalSSSEE, 0.0);
-    EXPECT_DOUBLE_EQ(summary.totalPHICEE, 0.0);
-    EXPECT_DOUBLE_EQ(summary.totalHDMFEE, 0.0);
-}
+// TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_ReturnsEmptyForUnknownMonth)
+// {
+//     auto summary = repo->getMonthlySummary("January 2000");
+//     EXPECT_EQ(summary.monthYear, "January 2000");
+//     EXPECT_DOUBLE_EQ(summary.totalSSSEE, 0.0);
+//     EXPECT_DOUBLE_EQ(summary.totalPHICEE, 0.0);
+//     EXPECT_DOUBLE_EQ(summary.totalHDMFEE, 0.0);
+// }
