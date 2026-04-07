@@ -6,112 +6,212 @@ GovernmentRemittanceService::GovernmentRemittanceService(GovernmentRemittanceRep
 
 sqlite3_int64 GovernmentRemittanceService::addRemittance(const GovernmentRemittance &r)
 {
-    return 0;
+    return remittanceRepo.insertRemittance(r);
 };
 std::vector<sqlite3_int64> GovernmentRemittanceService::addRemittanceReports(const std::vector<GovernmentRemittance> &r)
 {
-    return {};
+    return remittanceRepo.insertRemittanceReports(r);
 };
-std::vector<GovernmentRemittance> GovernmentRemittanceService::generateFromPayroll(const std::vector<PayrollCalculationResults> *payrolls)
+GovernmentRemittance GovernmentRemittanceService::createFromPayroll(const PayrollCalculationResults &payroll, RemittanceType type)
+{
+    GovernmentRemittance remittance{};
+    remittance.payrollCalculationResultsId = payroll.id;
+    remittance.employeeId = payroll.employeeId;
+    remittance.fullName = payroll.fullName;
+    remittance.contrib_Type = type;
+    remittance.employeeDepartment = payroll.employeeDepartment;
+    remittance.payPeriodText = payroll.payPeriodText;
+    remittance.payPeriodHalf = payroll.payPeriodHalf;
+    remittance.withHoldingTax = payroll.withHoldingTax;
+    remittance.lastSubmittedDate = Date::getTodayDate();
+    remittance.dateModified = Date::getTodayDate();
+    remittance.submissionStatus = RemittanceStatus::PENDING;
+    switch (type)
+    {
+    case RemittanceType::SSS:
+        remittance.employee_Contrib = payroll.sssPremium_EE;
+        remittance.employer_Contrib = payroll.sssPremium_ER;
+        remittance.total_Contrib = payroll.sssPremium_EE + payroll.sssPremium_ER;
+        break;
+    case RemittanceType::PHIC:
+        remittance.employee_Contrib = payroll.philHealthPremium_EE;
+        remittance.employer_Contrib = payroll.philHealthPremium_ER;
+        remittance.total_Contrib = payroll.philHealthPremium_EE + payroll.philHealthPremium_ER;
+        break;
+    case RemittanceType::HDMF:
+        remittance.employee_Contrib = payroll.hdmfPremium_EE;
+        remittance.employer_Contrib = payroll.hdmfPremium_ER;
+        remittance.total_Contrib = payroll.hdmfPremium_EE + payroll.hdmfPremium_ER;
+        break;
+    }
+    return remittance;
+}
+std::vector<GovernmentRemittance> GovernmentRemittanceService::createFromPayroll(const std::vector<PayrollCalculationResults> *payrolls)
 {
     std::vector<GovernmentRemittance> vGr{};
-    GovernmentRemittance gR{};
     for (const PayrollCalculationResults &roll : *payrolls)
     {
-
-        gR.payrollCalculationResultsId = roll.id;
-        gR.employeeId = roll.employeeId;
-        gR.fullName = roll.fullName;
-        gR.employeeDepartment = roll.employeeDepartment;
-        gR.payPeriodText = roll.payPeriodText;
-        gR.payPeriodHalf = roll.payPeriodHalf;
-        gR.sssPremium_EE = roll.sssPremium_EE;
-        gR.sssPremium_ER = roll.sssPremium_ER;
-        gR.sssPremiumTotal = roll.sssPremium_EE + roll.sssPremium_ER;
-        gR.sssSubmissionStatus = RemittanceStatus::PENDING;
-        gR.philHealthPremium_EE = roll.philHealthPremium_EE;
-        gR.philHealthPremium_ER = roll.philHealthPremium_ER;
-        gR.philHealthPremiumTotal = roll.philHealthPremium_EE + roll.philHealthPremium_ER;
-        gR.phicSubmissionStatus = RemittanceStatus::PENDING;
-        gR.hdmfPremium_EE = roll.hdmfPremium_EE;
-        gR.hdmfPremium_ER = roll.hdmfPremium_ER;
-        gR.hdmfPremiumTotal = roll.hdmfPremium_EE + roll.hdmfPremium_ER;
-        gR.hdmfSubmissionStatus = RemittanceStatus::PENDING;
-        gR.withHoldingTax = roll.withHoldingTax;
-        gR.withHoldingTaxSubmissionStatus = RemittanceStatus::PENDING;
-        gR.lastSubmittedDate = Date::getTodayDate();
-        gR.submittedByUserId = 0;
-        gR.dateCreated = Date::getTodayDate();
-        gR.dateModified = Date::getTodayDate();
-        vGr.push_back(gR);
+        switch (roll.payPeriodHalf)
+        {
+        case 1:
+            vGr.push_back(createFromPayroll(roll, RemittanceType::SSS));
+            break;
+        case 2:
+            vGr.push_back(createFromPayroll(roll, RemittanceType::PHIC));
+            vGr.push_back(createFromPayroll(roll, RemittanceType::HDMF));
+            break;
+        }
     }
     return vGr;
 };
 std::optional<GovernmentRemittance> GovernmentRemittanceService::getById(int id)
 {
-    return std::nullopt;
+    return remittanceRepo.getRemittanceById(id);
 };
 std::optional<GovernmentRemittance> GovernmentRemittanceService::getByPayrollId(int payrollId)
 {
-    return std::nullopt;
+    return remittanceRepo.getRemittanceByPayrollId(payrollId);
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::getByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf)
 {
-    return {};
+    return remittanceRepo.getRemittancesByPeriod(payPeriodText, payPeriodHalf);
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::getByEmployee(const std::string &employeeId)
 {
-    return {};
+    return remittanceRepo.getRemittancesByEmployee(employeeId);
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::getPending()
 {
-    return {};
+    return remittanceRepo.getRemittancesByStatus(RemittanceStatus::PENDING);
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::getAll()
 {
-    return {};
+    return remittanceRepo.getAllRemittances();
 };
-GovernmentRemittanceRepository::MonthlySummary getMonthlySummary(const std::string &monthYear)
+auto GovernmentRemittanceService::getMonthlySummary(const std::string &monthYear) -> MonthlySummary
 {
-    return {};
+    auto items = remittanceRepo.getRemittancesByPeriod(monthYear);
+    MonthlySummary summary{};
+    summary.monthYear = monthYear;
+    for (GovernmentRemittance &item : items)
+    {
+        switch (static_cast<int>(item.contrib_Type))
+        {
+        case 0:
+            summary.totalSSSEE += item.employee_Contrib;
+            summary.totalSSSER += item.employer_Contrib;
+            break;
+        case 1:
+            summary.totalPHICEE += item.employee_Contrib;
+            summary.totalPHICER += item.employer_Contrib;
+            break;
+        case 2:
+            summary.totalHDMFEE += item.employee_Contrib;
+            summary.totalHDMFER += item.employer_Contrib;
+            break;
+        }
+        summary.totalWithholdingTax += item.withHoldingTax;
+    }
+    return summary;
 };
-GovernmentRemittanceService::PeriodStatusSummary GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodText, int payPeriodHalf)
+auto GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodText) -> PeriodStatusSummary
 {
-    return {};
+    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodText);
+    PeriodStatusSummary pss{};
+    pss.payPeriodText = payPeriodText;
+    for (auto &item : items)
+    {
+        switch (item.contrib_Type)
+        {
+        case RemittanceType::SSS:
+            pss.sssRemittancesPending += (item.submissionStatus == RemittanceStatus::PENDING) ? 1 : 0;
+            pss.sssRemittancesSubmitted += (item.submissionStatus == RemittanceStatus::SUBMITTED) ? 1 : 0;
+            pss.sssRemittancesConfirmed += (item.submissionStatus == RemittanceStatus::CONFIRMED) ? 1 : 0;
+            break;
+        case RemittanceType::PHIC:
+            pss.phicRemittancesPending += (item.submissionStatus == RemittanceStatus::PENDING) ? 1 : 0;
+            pss.phicRemittancesSubmitted += (item.submissionStatus == RemittanceStatus::SUBMITTED) ? 1 : 0;
+            pss.phicRemittancesConfirmed += (item.submissionStatus == RemittanceStatus::CONFIRMED) ? 1 : 0;
+            break;
+        case RemittanceType::HDMF:
+            pss.hdmfRemittancesPending += (item.submissionStatus == RemittanceStatus::PENDING) ? 1 : 0;
+            pss.hdmfRemittancesSubmitted += (item.submissionStatus == RemittanceStatus::SUBMITTED) ? 1 : 0;
+            pss.hdmfRemittancesConfirmed += (item.submissionStatus == RemittanceStatus::CONFIRMED) ? 1 : 0;
+            break;
+        }
+    }
+    return pss;
 };
-GovernmentRemittanceService::PeriodTotals GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf)
+auto GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf) -> PeriodTotals
 {
-    return {};
+    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodText, payPeriodHalf);
+    PeriodTotals pt{};
+    pt.payPeriodHalf = payPeriodHalf;
+    pt.payPeriodText = payPeriodText;
+    std::unordered_set<std::string> uniqueEmployees;
+    for (auto &item : items)
+        uniqueEmployees.insert(item.employeeId);
+    pt.employeeCount = static_cast<int>(uniqueEmployees.size());
+    for (auto &item : items)
+    {
+        pt.totalSSSEE += item.contrib_Type == RemittanceType::SSS ? item.employee_Contrib : 0.0;
+        pt.totalSSSER += item.contrib_Type == RemittanceType::SSS ? item.employer_Contrib : 0.0;
+        pt.totalPHICEE += item.contrib_Type == RemittanceType::PHIC ? item.employee_Contrib : 0.0;
+        pt.totalPHICER += item.contrib_Type == RemittanceType::PHIC ? item.employer_Contrib : 0.0;
+        pt.totalHDMFEE += item.contrib_Type == RemittanceType::HDMF ? item.employee_Contrib : 0.0;
+        pt.totalHDMFER += item.contrib_Type == RemittanceType::HDMF ? item.employer_Contrib : 0.0;
+        pt.totalWithholdingTax += item.withHoldingTax;
+    }
+    return pt;
 };
 double GovernmentRemittanceService::getTotalEmployerContribution(const std::vector<GovernmentRemittance> &remittances)
 {
-    return 0.0;
+    double sum{0};
+    for (auto &remit : remittances)
+    {
+        sum += remit.employer_Contrib;
+    }
+    return sum;
 };
 double GovernmentRemittanceService::getTotalEmployeeContribution(const std::vector<GovernmentRemittance> &remittances)
 {
-    return 0.0;
+    double sum{0};
+    for (auto &remit : remittances)
+    {
+        sum += remit.employee_Contrib;
+    }
+    return sum;
 };
 double GovernmentRemittanceService::getTotalRemittance(const std::vector<GovernmentRemittance> &remittances)
 {
-    return 0.0;
+    return getTotalEmployeeContribution(remittances) + getTotalEmployerContribution(remittances);
 };
-bool GovernmentRemittanceService::submit(int remittanceId, const std::string &remittanceType, int submittedByUserId, const Date &submissionDate)
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getAllRemitsAggregatedToMonthly(std::vector<GovernmentRemittance> &data)
 {
-    return false;
+    for (auto &item : data)
+    {
+        LOG_DEBUG("Details: ");
+        LOG_DEBUG(item.to_string());
+    }
+    return data;
+}
+bool GovernmentRemittanceService::submit(int remittanceId, const RemittanceType &remittanceType)
+{
+    return remittanceRepo.markAsSubmitted(remittanceId, remittanceType);
 };
-bool GovernmentRemittanceService::confirm(int remittanceId, const std::string &remittanceType)
+bool GovernmentRemittanceService::confirm(int remittanceId, const RemittanceType &remittanceType)
 {
-    return false;
+    return remittanceRepo.markAsConfirmed(remittanceId, remittanceType);
 };
-bool GovernmentRemittanceService::reject(int remittanceId, const std::string &remittanceType)
+bool GovernmentRemittanceService::reject(int remittanceId, const RemittanceType &remittanceType)
 {
-    return false;
+    return remittanceRepo.markAsRejected(remittanceId, remittanceType);
 };
 bool GovernmentRemittanceService::update(const GovernmentRemittance &remittance)
 {
-    return false;
+    return remittanceRepo.updateRemittance(remittance);
 };
 bool GovernmentRemittanceService::remove(int id)
 {
-    return false;
+    return remittanceRepo.deleteRemittance(id);
 };
