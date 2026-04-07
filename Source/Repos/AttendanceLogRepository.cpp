@@ -95,19 +95,10 @@ std::optional<AttendanceLog> AttendanceLogRepository::getById(int logId)
 
 std::vector<AttendanceLog> AttendanceLogRepository::getAllById(std::string id)
 {
-    std::string sql = std::format("SELECT * from attendance_log where employeeId = '{}'", id);
+    const char *sql = "SELECT * from attendance_log where employeeId = ?";
 
-    auto results = this->query<AttendanceLog>(sql, mapAttendanceLog);
-
-    if (results.size() > 0)
-    {
-        return results;
-    }
-    else
-    {
-        LOG_DEBUG("failed to get anything from the db");
-        return {};
-    }
+    return query<AttendanceLog>(sql, mapAttendanceLog, [id](sqlite3_stmt *stmt)
+                                { sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_TRANSIENT); });
 }
 
 std::vector<AttendanceLog> AttendanceLogRepository::getAll()
@@ -129,19 +120,24 @@ std::vector<AttendanceLog> AttendanceLogRepository::getAll()
 // update
 bool AttendanceLogRepository::updateAttendanceLog(const AttendanceLog &al)
 {
-    LOG_DEBUG("logId " << al.logId);
-    LOG_DEBUG("updateAttendanceLog " << al.lateByMinute);
-    std::string sql = std::format("update attendance_log set employeeId='{}', log_date='{}', late_min={}, undertime_min={}, overtime_min={}, absent={}, notes='{}', overtime_json=\"{}\" where logId = '{}'",
-                                  al.employeeId,
-                                  al.logDate.to_string(),
-                                  al.lateByMinute,
-                                  al.underTimeByMinute,
-                                  al.overTimeByMinute,
-                                  al.isAbsent,
-                                  al.notes,
-                                  al.overtimeJson,
-                                  al.logId);
-    return AttendanceLogRepository::execute(sql);
+    LOG_DEBUG("logId: " << al.logId);
+    LOG_DEBUG("updateAttendanceLog: " << al.lateByMinute);
+    LOG_DEBUG("overTimeByMinute: " << al.overTimeByMinute);
+    const char *sql = R"(update attendance_log set 
+    employeeId= ?,
+    log_date=?,
+    late_min=?,
+    undertime_min=?,
+    overtime_min=?,
+    absent=?,
+    notes=?,
+    overtime_json=? 
+    where logId = ?;
+    )";
+    auto res = AttendanceLogRepository::execute(sql, [&al](sqlite3_stmt *stmt)
+                                                { bindAttendanceLog(stmt, al);
+                                                sqlite3_bind_int(stmt, 9, al.logId); });
+    return res;
 };
 
 // delete
