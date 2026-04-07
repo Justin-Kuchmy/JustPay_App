@@ -300,34 +300,12 @@ int PayrollRepository::getLastPayrollId()
 std::optional<PayrollConfig> PayrollRepository::loadConfig()
 {
     const char *sql = "select * from payroll_config";
-    sqlite3_stmt *stmt = nullptr;
-    std::optional<PayrollConfig> result = std::nullopt;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
-    {
-        LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
-        return result;
-    }
-
-    int rc = sqlite3_step(stmt);
-    if (rc == SQLITE_ROW)
-    {
-        result = mapPayrollConfig(stmt);
-    }
-
-    sqlite3_finalize(stmt);
-    return result;
+    return querySingle<PayrollConfig>(sql, mapPayrollConfig);
 }
 
 bool PayrollRepository::saveConfig(const PayrollConfig &config)
 {
-    // static_cast<int>(config.sssSchedule), static_cast<int>(config.philHealthSchedule), static_cast<int>(config.hdmfSchedule));
-    std::string sql = R"(
-        update Payroll_Config 
-        set sss_schedule = ?, 
-        philhealth_schedule = ?, 
-        hdmf_schedule = ?
-        )";
+    const char *sql = "update payroll_config set sss_schedule = ?, philhealth_schedule = ?, hdmf_schedule = ?";
     return execute(sql, [&config](sqlite3_stmt *stmt)
                    {
         sqlite3_bind_int(stmt, 1, static_cast<int>(config.sssSchedule));
