@@ -13,7 +13,7 @@ namespace PayrollCalc
 
     double calcPhilHealth_EE(double gross, bool applyPhilHealth)
     {
-        if (applyPhilHealth)
+        if (!applyPhilHealth)
             return 0.0;
         return std::clamp(gross,
                           static_cast<double>(PHIC_SALARY_FLOOR),
@@ -23,7 +23,7 @@ namespace PayrollCalc
 
     double calcHDMF_EE(double gross, bool applyHDMF)
     {
-        if (applyHDMF)
+        if (!applyHDMF)
             return 0.0;
         return std::min(gross,
                         static_cast<double>(HDMF_SALARY_CAP)) *
@@ -40,28 +40,31 @@ namespace PayrollCalc
     {
         if (!applySSS)
             return 0.0;
-        return std::min(gross,
-                        static_cast<double>(SSS_SALARY_CAP)) *
-               SSS_ER_RATE;
+        double res = std::min(gross,
+                              static_cast<double>(SSS_SALARY_CAP)) *
+                     SSS_ER_RATE;
+        return res;
     }
 
     double calcPhilHealth_ER(double gross, bool applyPhilHealth)
     {
-        if (applyPhilHealth)
+        if (!applyPhilHealth)
             return 0.0;
-        return std::clamp(gross,
-                          static_cast<double>(PHIC_SALARY_FLOOR),
-                          static_cast<double>(PHIC_SALARY_CAP)) *
-               PHIC_ER_RATE;
+        double res = std::clamp(gross,
+                                static_cast<double>(PHIC_SALARY_FLOOR),
+                                static_cast<double>(PHIC_SALARY_CAP)) *
+                     PHIC_ER_RATE;
+        return res;
     }
 
     double calcHDMF_ER(double gross, bool applyHDMF)
     {
-        if (applyHDMF)
+        if (!applyHDMF)
             return 0.0;
-        return std::min(gross,
-                        static_cast<double>(HDMF_SALARY_CAP)) *
-               HDMF_ER_RATE;
+        double res = std::min(gross,
+                              static_cast<double>(HDMF_SALARY_CAP)) *
+                     HDMF_ER_RATE;
+        return res;
     }
 
     double calcWithholding(double taxableIncome)
@@ -69,6 +72,7 @@ namespace PayrollCalc
         double withholdingTax = 0.0;
         for (size_t i{NUM_BRACKETS}; i > 0; --i)
         {
+            LOG_DEBUG("taxableIncome < SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound: " << taxableIncome << " < " << SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound);
             if (taxableIncome < SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound)
             {
                 continue;
@@ -79,6 +83,7 @@ namespace PayrollCalc
                     SEMI_MONTHLY_TAX_BRACKETS[i - 1].baseTax +
                     SEMI_MONTHLY_TAX_BRACKETS[i - 1].rate *
                         (taxableIncome - SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound);
+                LOG_DEBUG("withholdingTax = " << withholdingTax);
                 break;
             }
         }
