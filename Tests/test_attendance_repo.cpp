@@ -100,16 +100,20 @@ TEST_F(AttendanceRepoTest, GetAll_ReturnsAttendanceLogIfExists)
 {
     std::vector<AttendanceLog> al = repo->getAll();
     ASSERT_TRUE(al.size());
-    EXPECT_EQ(al.size(), 2);
+    EXPECT_EQ(al.size(), 20);
 }
 
 TEST_F(AttendanceRepoTest, UpdateAttendanceLog_ModifiesExistingRecord)
 {
-    std::optional<AttendanceLog> AttendanceLog = repo->getById(1);
-    ASSERT_TRUE(AttendanceLog.has_value());
-    AttendanceLog.value().overTimeByMinute = 60;
-    ASSERT_TRUE(repo->updateAttendanceLog(AttendanceLog.value()));
-    EXPECT_EQ(repo->getById(1).value().overTimeByMinute, 60);
+    std::optional<AttendanceLog> attendanceLog = repo->getById(1);
+    ASSERT_TRUE(attendanceLog.has_value());
+    AttendanceLog logObj = attendanceLog.value();
+    logObj.overTimeByMinute = 60;
+    bool updatedBool = repo->updateAttendanceLog(logObj);
+    ASSERT_TRUE(updatedBool);
+    auto updatedObj = repo->getById(1);
+    ASSERT_TRUE(updatedObj.has_value());
+    EXPECT_EQ(updatedObj.value().overTimeByMinute, 60);
 }
 TEST_F(AttendanceRepoTest, DeleteAttendanceLog_RemovesRecord)
 {
