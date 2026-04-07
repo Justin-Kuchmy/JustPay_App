@@ -51,7 +51,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="payrollPeriodFilter">
+           <widget class="QComboBox" name="payPeriodFilter">
             <property name="placeholderText">
              <string>PayrollPeriod</string>
             </property>
@@ -61,7 +61,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="departmentFilter">
+        <widget class="QComboBox" name="contributionTypeFilter">
          <property name="placeholderText">
           <string>ContributionType</string>
          </property>
@@ -109,7 +109,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableView" name="remitTableView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -130,75 +130,15 @@
        <property name="lineWidth">
         <number>0</number>
        </property>
-       <attribute name="horizontalHeaderVisible">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="horizontalHeaderCascadingSectionResizes">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderDefaultSectionSize">
+       <attribute name="horizontalHeaderMinimumSectionSize">
         <number>176</number>
        </attribute>
-       <column>
-        <property name="text">
-         <string>Employee</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Contribution_Type</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Employee_Share</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Employee_share</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Total</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Period</string>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-       </column>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>49</number>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
       </widget>
      </item>
      <item>
