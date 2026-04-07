@@ -11,13 +11,22 @@ namespace PayrollCalc
         double rate;       // rate on excess
     };
     constexpr TaxBracket SEMI_MONTHLY_TAX_BRACKETS[] = {
-        {0.0, 0.0, 0.0},          // 0-10,417
-        {10417.01, 0.0, 0.15},    // 10,417.01 - 16,666
-        {16667.0, 937.5, 0.20},   // 16,667 - 33,332
-        {33333.0, 4270.7, 0.25},  // 33,333 - 83,332
-        {83333.0, 16770.7, 0.30}, // 83,333 - 333,332
-        {333333.0, 91770.7, 0.35} // >333,333
+        {0.0, 0.0, 0.0},          // 0-10417
+        {10417.01, 0.0, 0.15},    // 10417.01 - 16666
+        {16667.0, 937.5, 0.20},   // 16667 - 33332
+        {33333.0, 4270.7, 0.25},  // 33333 - 83332
+        {83333.0, 16770.7, 0.30}, // 83333 - 333332
+        {333333.0, 91770.7, 0.35} // >333333
     };
+
+    constexpr TaxBracket MONTHLY_TAX_BRACKETS[] = {
+        {0.0, 0.0, 0.0},              // 0-20,832
+        {20833.0, 0.0, 0.15},         // 20,833.01 - 33,332
+        {33333.0, 1875.0, 0.20},      // 33,333 - 66,666
+        {66667.0, 8541.83, 0.25},     // 66,667 - 166,666
+        {166667.0, 33541.80, 0.30},   // 166,667 - 666,666
+        {666667.0, 183541.80, 0.35}}; // > 666,667
+
     constexpr size_t NUM_BRACKETS = sizeof(SEMI_MONTHLY_TAX_BRACKETS) / sizeof(TaxBracket);
     constexpr long SSS_SALARY_CAP = 35000;
     constexpr long PHIC_SALARY_FLOOR = 10000;
@@ -42,8 +51,10 @@ namespace PayrollCalc
 
     inline bool applies(DeductionSchedule schedule, int half)
     {
-        return schedule == DeductionSchedule::BothHalves ||
-               static_cast<int>(schedule) == half;
+        bool isBoth = (schedule == DeductionSchedule::BothHalves);
+        int scheduledValue = static_cast<int>(schedule);
+        bool validSingle = (scheduledValue == half);
+        return isBoth || validSingle;
     }
 }
 #endif
