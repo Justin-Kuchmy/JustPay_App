@@ -3,23 +3,25 @@
 
 #include <QDialog>
 #include <QMessageBox>
-#include "../Include/Models/DataObjects.h"
+#include "Models/Core/employee.h"
 
-namespace Ui {
-class AddDependentDialog;
+namespace Ui
+{
+    class AddDependentDialog;
 }
 
-class AddDependentDialog : public QDialog {
+class AddDependentDialog : public QDialog
+{
     Q_OBJECT
 
 public:
     explicit AddDependentDialog(QWidget *parent = nullptr);
     ~AddDependentDialog();
-    AddDependentDialog(const AddDependentDialog&) = delete; 
-    AddDependentDialog& operator=(const AddDependentDialog&) = delete;
+    AddDependentDialog(const AddDependentDialog &) = delete;
+    AddDependentDialog &operator=(const AddDependentDialog &) = delete;
 
     Dependent getDependentData() const;
-    
+
 private slots:
     void onOKClicked();
     void onCancelClicked();
@@ -28,6 +30,5 @@ private:
     Ui::AddDependentDialog *ui;
     Dependent m_Dependent;
 };
-
 
 #endif

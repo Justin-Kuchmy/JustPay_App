@@ -1,7 +1,7 @@
 #ifndef EMPLOYEEREPO_H
 #define EMPLOYEEREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/Core/employee.h"
 #include <sqlite3.h>
 
 class EmployeeRepository : public BaseRepository

@@ -9,7 +9,7 @@
 #include <QModelIndex>
 #include <QSortFilterProxyModel>
 #include "Services/AppContext.h"
-#include "./DataObjects.h"
+#include "Models/Core/DataObjects.h"
 #include "Services/EmployeeService.h"
 #include <QLocale>
 

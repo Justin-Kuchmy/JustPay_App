@@ -1,4 +1,4 @@
-#ifndef BASEMENU_HPP 
+#ifndef BASEMENU_HPP
 #define BASEMENU_HPP
 
 #include <QWidget>
@@ -10,19 +10,17 @@
 #include <QVector>
 #include <unordered_map>
 #include <string>
-#include "./Models/QObjects.h"
-
-
+#include "Models/Core/QObjects.h"
 
 class BaseMenu : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BaseMenu(const MenuData& data, bool isRootMenu,  QWidget* parent = nullptr);
+    explicit BaseMenu(const MenuData &data, bool isRootMenu, QWidget *parent = nullptr);
 
 signals:
-    void submenuRequested(const QString& submenuName);
-    void actionRequested(const QString& actionName);
+    void submenuRequested(const QString &submenuName);
+    void actionRequested(const QString &actionName);
     void backRequested();
 };
 

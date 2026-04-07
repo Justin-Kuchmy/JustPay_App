@@ -72,7 +72,6 @@ namespace PayrollCalc
         double withholdingTax = 0.0;
         for (size_t i{NUM_BRACKETS}; i > 0; --i)
         {
-            LOG_DEBUG("taxableIncome < SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound: " << taxableIncome << " < " << SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound);
             if (taxableIncome < SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound)
             {
                 continue;

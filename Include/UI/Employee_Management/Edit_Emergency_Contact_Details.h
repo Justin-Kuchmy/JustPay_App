@@ -2,27 +2,30 @@
 #define EDITEMERGENCYCONTACTDETAILS_H
 
 #include <QDialog>
-#include "../Include/Models/DataObjects.h"
+#include "Models/Core/employee.h"
 #include <QListWidgetItem>
 #include <QWidget>
 #include <QString>
 #include <QLabel>
 #include <QPushButton>
 
-namespace Ui {
-class EditEmergencyContactDetails;
+namespace Ui
+{
+    class EditEmergencyContactDetails;
 }
 
-class EditEmergencyContactDetails : public QWidget {
+class EditEmergencyContactDetails : public QWidget
+{
     Q_OBJECT
 public:
     explicit EditEmergencyContactDetails(QWidget *parent = nullptr);
     ~EditEmergencyContactDetails();
-    EditEmergencyContactDetails(const EditEmergencyContactDetails&) = delete; 
-    EditEmergencyContactDetails& operator=(const EditEmergencyContactDetails&) = delete;
+    EditEmergencyContactDetails(const EditEmergencyContactDetails &) = delete;
+    EditEmergencyContactDetails &operator=(const EditEmergencyContactDetails &) = delete;
     void setContactContext(std::optional<Contact> &contact);
 private slots:
     void onSaveClicked();
+
 private:
     Ui::EditEmergencyContactDetails *ui;
     std::unique_ptr<Contact> m_Contact;

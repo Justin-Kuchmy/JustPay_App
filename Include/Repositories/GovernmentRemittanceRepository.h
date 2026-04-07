@@ -2,7 +2,7 @@
 
 #ifndef GOVERNMENT_REMITTANCE_REPOSITORY_H
 #define GOVERNMENT_REMITTANCE_REPOSITORY_H
-#include "Models/DataObjects.h"
+#include "Models/remittance.h"
 #include "Repositories/BaseRepository.h"
 #include <sqlite3.h>
 #include <vector>

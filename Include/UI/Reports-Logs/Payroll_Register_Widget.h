@@ -3,8 +3,8 @@
 #include <QWidget>
 #include <QDate>
 #include "Utils/BaseContentWidget.h"
-#include "Models/DataObjects.h"
-#include "Models/QObjects.h"
+#include "Models/payroll.h"
+#include "Models/Core/QObjects.h"
 #include <QSortFilterProxyModel>
 #include <QFileDialog>
 #include <QMessageBox>

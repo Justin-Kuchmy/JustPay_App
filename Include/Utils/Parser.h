@@ -1,12 +1,12 @@
-#ifndef PARSER_HPP 
+#ifndef PARSER_HPP
 #define PARSER_HPP
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
-#include <optional>   
+#include <optional>
 #include <unordered_map>
 #include <vector>
-#include "./Models/QObjects.h"
+#include "Models/Core/QObjects.h"
 #define DEBUG_LOGS
 #include "../Utils/Log.h"
 
@@ -19,6 +19,5 @@ public:
     ~Parser();
     std::unordered_map<std::string, MenuData> menuMap;
 };
-
 
 #endif

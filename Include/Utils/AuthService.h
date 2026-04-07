@@ -2,7 +2,7 @@
 #define AUTHSERVICE_H
 #include <QFile>
 #include <QDir>
-#include "../Include/Models/DataObjects.h"
+#include "Models/accounting.h"
 #include <QFile>
 #include <fstream>
 #include <iostream>

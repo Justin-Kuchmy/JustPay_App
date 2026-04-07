@@ -8,7 +8,8 @@
 #include <QPrinter>
 #include <QSslSocket>
 #include "Utils/BaseContentWidget.h"
-#include "Models/DataObjects.h"
+#include "Models/payroll.h"
+#include "Models/Core/employee.h"
 #include <QDir>
 #include <fstream>
 #include <QFileDialog>

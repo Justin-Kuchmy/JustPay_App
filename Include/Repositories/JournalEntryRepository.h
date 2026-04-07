@@ -1,7 +1,7 @@
 #ifndef JOURNALENTRYREPO_H
 #define JOURNALENTRYREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/accounting.h"
 #include <sqlite3.h>
 
 class JournalEntryRepository : public BaseRepository

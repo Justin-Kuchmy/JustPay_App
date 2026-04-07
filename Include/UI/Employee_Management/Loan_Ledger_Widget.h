@@ -7,19 +7,21 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QMessageBox>
-#include "../Include/Models/DataObjects.h"
+#include "Models/Core/employee.h"
 
-namespace Ui {
-class LoanLedgerWidget;
+namespace Ui
+{
+    class LoanLedgerWidget;
 }
-class LoanLedgerWidget : public QWidget {
+class LoanLedgerWidget : public QWidget
+{
     Q_OBJECT
 public:
     LoanLedgerWidget(QWidget *parent = nullptr);
     ~LoanLedgerWidget();
-    LoanLedgerWidget(const LoanLedgerWidget&) = delete; 
-    LoanLedgerWidget& operator=(const LoanLedgerWidget&) = delete;    
-    void setLoanLedgerContext(std::vector<LoanLedger> *loanLedger, std::string& employeeId);
+    LoanLedgerWidget(const LoanLedgerWidget &) = delete;
+    LoanLedgerWidget &operator=(const LoanLedgerWidget &) = delete;
+    void setLoanLedgerContext(std::vector<LoanLedger> *loanLedger, std::string &employeeId);
 private slots:
     void onSaveClicked();
     void onAddClicked();
@@ -29,13 +31,13 @@ private slots:
     void updateDeductionPerPayroll();
     void setDefaults();
     void populateLoanList();
+
 private:
     Ui::LoanLedgerWidget *ui;
-    std::vector<LoanLedger>* loanLedgers = nullptr;
-    LoanLedger* selectedLoanLedger = nullptr;
+    std::vector<LoanLedger> *loanLedgers = nullptr;
+    LoanLedger *selectedLoanLedger = nullptr;
     LoanLedger m_LoanLedger;
     std::string employeeId;
     int8_t paymentsPerMonth{};
-
 };
 #endif

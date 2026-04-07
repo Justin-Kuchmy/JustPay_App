@@ -1,7 +1,7 @@
 #ifndef EMAILLOGINWIDGET_H
 #define EMAILLOGINWIDGET_H
 
-#include "../Include/Models/DataObjects.h"
+#include "Models/accounting.h"
 #include <QWidget>
 #include <QString>
 #include <QLabel>

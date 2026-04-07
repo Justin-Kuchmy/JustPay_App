@@ -2,7 +2,8 @@
 #define DEPARTMENTBUDGETREPOSITORY_H
 
 #include "Repositories/BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/reporting.h"
+#include "Models/Primitives/enums.h"
 #include <sqlite3.h>
 
 class DepartmentBudgetRepository : public BaseRepository

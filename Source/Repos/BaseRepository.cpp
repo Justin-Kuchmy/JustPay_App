@@ -1,5 +1,4 @@
 #include "Repositories/BaseRepository.h"
-#include "Models/DataObjects.h"
 #include "Utils/Log.h"
 
 BaseRepository::BaseRepository(sqlite3 *db) : db(db)
@@ -61,17 +60,3 @@ bool BaseRepository::executeFile(const QString &filePath) const
     }
     return true;
 }
-
-template std::vector<Employee> BaseRepository::query(const std::string &sql, std::function<Employee(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<Contact> BaseRepository::query(const std::string &sql, std::function<Contact(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<Dependent> BaseRepository::query(const std::string &sql, std::function<Dependent(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<LoanLedger> BaseRepository::query(const std::string &sql, std::function<LoanLedger(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<PayrollCalculationResults> BaseRepository::query(const std::string &sql, std::function<PayrollCalculationResults(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<PayrollConfig> BaseRepository::query(const std::string &sql, std::function<PayrollConfig(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<JournalEntry> BaseRepository::query(const std::string &sql, std::function<JournalEntry(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<GovernmentRemittance> BaseRepository::query(const std::string &sql, std::function<GovernmentRemittance(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<BudgetPeriod> BaseRepository::query(const std::string &sql, std::function<BudgetPeriod(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::vector<DepartmentBudget> BaseRepository::query(const std::string &sql, std::function<DepartmentBudget(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-
-template std::optional<BudgetPeriod> BaseRepository::querySingle(const std::string &sql, std::function<BudgetPeriod(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;
-template std::optional<DepartmentBudget> BaseRepository::querySingle(const std::string &sql, std::function<DepartmentBudget(sqlite3_stmt *)> mapper, std::function<void(sqlite3_stmt *)> binder) const;

@@ -8,6 +8,7 @@
 #include "Utils/DialogFactory.h"
 #include "Services/AppContext.h"
 #include <iterator>
+#include "Models/Core/employee.h"
 
 AddTimeLogDialog::AddTimeLogDialog(QWidget *parent) : QDialog(parent), ui(new Ui::AddTimeLogDialog),
                                                       jsonDataFromDialog{""}, allEmployees{}, selectedAttendanceLog{}, selectedEmployee{}

@@ -1,7 +1,7 @@
 #ifndef JOURNALENTRYSERVICE_H
 #define JOURNALENTRYSERVICE_H
 #include "Repositories/JournalEntryRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/accounting.h"
 #include <optional>
 #include <vector>
 

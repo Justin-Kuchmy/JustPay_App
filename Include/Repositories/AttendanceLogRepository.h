@@ -1,7 +1,7 @@
 #ifndef ATTENDANCELOGREPO_H
 #define ATTENDANCELOGREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/overtime.h"
 #include <sqlite3.h>
 
 class AttendanceLogRepository : public BaseRepository

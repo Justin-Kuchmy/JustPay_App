@@ -9,27 +9,30 @@
 #include <QSortFilterProxyModel>
 #include <QDialogButtonBox>
 #include <QMessageBox>
-#include "Models/DataObjects.h"
-#include "Models/QObjects.h"
+#include "Models/overtime.h"
+#include "Models/Core/employee.h"
+#include "Models/Core/QObjects.h"
 
-namespace Ui {
+namespace Ui
+{
     class EmployeeAttendanceWidget;
 }
-class EmployeeAttendanceWidget : public QWidget {
+class EmployeeAttendanceWidget : public QWidget
+{
     Q_OBJECT
 public:
     EmployeeAttendanceWidget(QWidget *parent = nullptr);
     ~EmployeeAttendanceWidget();
-    EmployeeAttendanceWidget(const EmployeeAttendanceWidget&) = delete; 
-    EmployeeAttendanceWidget& operator=(const EmployeeAttendanceWidget&) = delete;
-    void setEmployeeAttendanceContext(std::vector<AttendanceLog> *attendanceLog, std::string& employeeId);
+    EmployeeAttendanceWidget(const EmployeeAttendanceWidget &) = delete;
+    EmployeeAttendanceWidget &operator=(const EmployeeAttendanceWidget &) = delete;
+    void setEmployeeAttendanceContext(std::vector<AttendanceLog> *attendanceLog, std::string &employeeId);
 private slots:
 
 private:
     Ui::EmployeeAttendanceWidget *ui;
-    std::vector<AttendanceLog>* attendanceLogs = nullptr;
-    AttendanceLogModel* model;
-    QSortFilterProxyModel* proxyModel;
+    std::vector<AttendanceLog> *attendanceLogs = nullptr;
+    AttendanceLogModel *model;
+    QSortFilterProxyModel *proxyModel;
 
     // LoanLedger* selectedLoanLedger = nullptr;
     // LoanLedger m_LoanLedger;

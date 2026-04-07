@@ -1,33 +1,34 @@
 #ifndef LOANLEDGERDIALOG_H
-#define LOANLEDGERDIALOG_H 
+#define LOANLEDGERDIALOG_H
 #include <QDialog>
 #include <QMessageBox>
 #include "Services/AppContext.h"
-#include "../Include/Models/DataObjects.h"
+#include "Models/Core/employee.h"
 
-namespace Ui {
+namespace Ui
+{
     class AddLoanLedgerDialog;
 }
 
-class AddLoanLedgerDialog: public QDialog {
-Q_OBJECT
+class AddLoanLedgerDialog : public QDialog
+{
+    Q_OBJECT
 
-public: 
+public:
     explicit AddLoanLedgerDialog(QWidget *parent = nullptr);
     ~AddLoanLedgerDialog();
-    AddLoanLedgerDialog(const AddLoanLedgerDialog&) = delete; 
-    AddLoanLedgerDialog& operator=(const AddLoanLedgerDialog&) = delete;
+    AddLoanLedgerDialog(const AddLoanLedgerDialog &) = delete;
+    AddLoanLedgerDialog &operator=(const AddLoanLedgerDialog &) = delete;
     LoanLedger getLoanLedgerData() const;
 
-private slots: 
+private slots:
     void onOKClicked();
     void onCancelClicked();
 
 private:
     Ui::AddLoanLedgerDialog *ui;
-    LoanLedger m_LoanLedger; 
-    std::string m_employeeId; 
-
+    LoanLedger m_LoanLedger;
+    std::string m_employeeId;
 };
 
 #endif

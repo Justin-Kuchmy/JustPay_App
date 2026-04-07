@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "Helpers/PayrollCalculations.h"
-#include "Models/DataObjects.h"
+#include "Models/Primitives/enums.h"
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 

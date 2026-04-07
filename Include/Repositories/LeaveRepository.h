@@ -1,7 +1,7 @@
 #ifndef LEAVEREPO_H
 #define LEAVEREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/Core/employee.h"
 #include <sqlite3.h>
 
 class LeaveRepository : public BaseRepository

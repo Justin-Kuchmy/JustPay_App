@@ -2,7 +2,7 @@
 #define BUDGETPERIODREPOSITORY_H
 
 #include "Repositories/BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/Primitives/date.h"
 #include <sqlite3.h>
 
 class BudgetPeriodRepository : public BaseRepository

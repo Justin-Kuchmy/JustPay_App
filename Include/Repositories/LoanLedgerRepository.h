@@ -1,7 +1,7 @@
 #ifndef LOANLEDGEREPO_H
 #define LOANLEDGEREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/Core/employee.h"
 #include <sqlite3.h>
 
 class LoanLedgerRepository : public BaseRepository

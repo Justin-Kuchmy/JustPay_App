@@ -1,7 +1,8 @@
 #ifndef PAYROLLCALCULATIONS_H
 #define PAYROLLCALCULATIONS_H
 #include <algorithm>
-#include "Models/DataObjects.h"
+#include "Models/Primitives/enums.h"
+#include "Models/payroll.h"
 namespace PayrollCalc
 {
     struct TaxBracket

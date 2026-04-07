@@ -1,7 +1,7 @@
 #ifndef PayRollEPO_H
 #define PayRollEPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/payroll.h"
 #include <sqlite3.h>
 
 class PayrollRepository : public BaseRepository

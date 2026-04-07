@@ -2,7 +2,7 @@
 #define EMPLOYEEDETAILSWIDGET_H
 
 #include <QDialog>
-#include "../Include/Models/DataObjects.h"
+#include "Models/Core/employee.h"
 #include <QListWidgetItem>
 #include <QWidget>
 #include <QString>

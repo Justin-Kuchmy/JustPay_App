@@ -1,7 +1,8 @@
 #ifndef DEPENDENTREPO_H
 #define DEPENDENTREPO_H
 #include "BaseRepository.h"
-#include "../Models/DataObjects.h"
+#include "Models/Core/employee.h"
+
 #include <sqlite3.h>
 
 class DependentRepository : public BaseRepository

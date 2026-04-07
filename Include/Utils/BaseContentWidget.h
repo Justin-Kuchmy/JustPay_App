@@ -1,4 +1,4 @@
-#ifndef BASECONTENTWIDGET_HPP 
+#ifndef BASECONTENTWIDGET_HPP
 #define BASECONTENTWIDGET_HPP
 
 #include <QWidget>
@@ -10,13 +10,13 @@
 #include <QVector>
 #include <unordered_map>
 #include <string>
-#include "./Models/QObjects.h"
+#include "Models/Core/QObjects.h"
 
-
-class BaseContentWidget : public QWidget {
+class BaseContentWidget : public QWidget
+{
     Q_OBJECT
 public:
-    explicit BaseContentWidget(QWidget* parent = nullptr);
+    explicit BaseContentWidget(QWidget *parent = nullptr);
     virtual ~BaseContentWidget();
 signals:
     void backRequested();
