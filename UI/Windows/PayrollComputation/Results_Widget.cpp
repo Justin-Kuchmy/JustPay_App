@@ -41,6 +41,8 @@ ResultsWidget::~ResultsWidget()
 
 void ResultsWidget::loadTableData()
 {
+    PayrollCalculationResults obj = dataBus->at(0);
+    LOG_DEBUG("loadTableData: " << obj.to_string());
     ui->table_results->setRowCount(dataBus->size());
     ui->table_results->setColumnCount(COL_COUNT);
     ui->value_payPeriod->setText(QString::fromStdString(dataBus->at(0).payPeriodText));
@@ -82,9 +84,9 @@ void ResultsWidget::loadTableData()
 }
 void ResultsWidget::submitGovernRemitt()
 {
-    // TODO need to make a call to a service that will accept a batch, then combine them into monthly,
-    AppContext::instance().governmentRemittanceService().generateFromPayroll(dataBus);
-    // QMessageBox::Information(this, "Good", "Government Remittance Submitted");
+    GovernmentRemittanceService service = AppContext::instance().governmentRemittanceService();
+    service.addRemittanceReports(service.createFromPayroll(dataBus));
+
     QMessageBox::information(this, QString::fromStdString("Good"), QString::fromStdString("Government Remittance Submitted"));
     enableGovernmentRemitSubmit = !enableGovernmentRemitSubmit;
     ui->submitGovernmentRemittButton->setEnabled(enableGovernmentRemitSubmit);
