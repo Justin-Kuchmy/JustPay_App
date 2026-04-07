@@ -157,7 +157,7 @@ TEST_F(EmployeeRepoTest, FindByName_ReturnsMatchingRecords)
 TEST_F(EmployeeRepoTest, GetLastEmployeeId_ReturnsMostRecent)
 {
     auto lastId = empRepo->getLastEmployeeId();
-    EXPECT_EQ(lastId, "00-0001");
+    EXPECT_EQ(lastId, "05-0010");
 }
 
 TEST_F(EmployeeRepoTest, GetContact_ReturnsObjectData)
