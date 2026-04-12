@@ -16,12 +16,18 @@ file(GLOB DB_SOURCES
     "${CMAKE_SOURCE_DIR}/Source/Repos/*.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Services/YearEndBenefitsService.cpp"
     "${CMAKE_SOURCE_DIR}/Source/Services/LeaveBalanceService.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Services/PayrollService.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Helpers/PayrollCalculations.cpp"
+    "${CMAKE_SOURCE_DIR}/Source/Services/GovernmentRemittanceService.cpp"
 )
 
 file(GLOB DB_HEADERS
     "${CMAKE_SOURCE_DIR}/Include/Repositories/*.h"
     "${CMAKE_SOURCE_DIR}/Include/Services/YearEndBenefitsService.h"
     "${CMAKE_SOURCE_DIR}/Include/Services/LeaveBalanceService.h"
+    "${CMAKE_SOURCE_DIR}/Include/Services/PayrollService.h"
+    "${CMAKE_SOURCE_DIR}/Include/Helpers/PayrollCalculations.h"
+    "${CMAKE_SOURCE_DIR}/Include/Services/GovernmentRemittanceService.h"
 )
 
 # Create the test executable
