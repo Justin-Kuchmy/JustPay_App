@@ -34,6 +34,17 @@ public:
 
     // DELETE
     bool deletePayroll(int id);
+
+    // calculations
+    bool applies(DeductionSchedule schedule, int half);
+
+    double computeSSS(const PayrollCalculationResults &emp);
+    double computePhilHealth(const PayrollCalculationResults &emp);
+    double computeHDMF(const PayrollCalculationResults &emp);
+    double computeTaxableIncome(const PayrollCalculationResults &emp);
+    double computeWithholding(double taxableIncome);
+    double computeTotalDeductions(const PayrollCalculationResults &emp);
+    double computeNetPay(const PayrollCalculationResults &emp);
 };
 
 #endif
