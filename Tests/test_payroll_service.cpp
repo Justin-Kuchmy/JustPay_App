@@ -42,7 +42,6 @@ class PayrollDbTest : public ::testing::Test
 protected:
     sqlite3 *db = nullptr;
     std::unique_ptr<PayrollRepository> payrollRepo;
-    std::unique_ptr<PayrollService> payrollService;
 
     void SetUp() override
     {
@@ -52,15 +51,11 @@ protected:
         std::filesystem::path sqlPath = std::filesystem::path(__FILE__).parent_path() / "tests.sql";
         runSqlScript(db, sqlPath.string());
 
-        payrollService.reset();
-
         payrollRepo = std::make_unique<PayrollRepository>(db);
-        payrollService = std::make_unique<PayrollService>(*payrollRepo);
     }
 
     void TearDown() override
     {
-        payrollService.reset();
         payrollRepo.reset();
         sqlite3_close(db);
         std::remove("tests.db");
