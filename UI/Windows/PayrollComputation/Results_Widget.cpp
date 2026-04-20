@@ -85,7 +85,7 @@ void ResultsWidget::loadTableData()
 void ResultsWidget::submitGovernRemitt()
 {
     GovernmentRemittanceService service = AppContext::instance().governmentRemittanceService();
-    service.addRemittanceReports(service.createFromPayroll(dataBus));
+    service.addRemittanceReports(service.createFromPayroll(*dataBus));
 
     QMessageBox::information(this, QString::fromStdString("Good"), QString::fromStdString("Government Remittance Submitted"));
     enableGovernmentRemitSubmit = !enableGovernmentRemitSubmit;
