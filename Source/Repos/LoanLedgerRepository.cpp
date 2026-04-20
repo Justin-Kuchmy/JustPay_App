@@ -121,7 +121,7 @@ std::vector<LoanLedger> LoanLedgerRepository::getAllById(std::string id)
     }
     else
     {
-        LOG_DEBUG("failed to get anything from the db");
+        // no loans for this employee
         return {};
     }
 };
