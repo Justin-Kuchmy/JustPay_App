@@ -46,10 +46,10 @@ GovernmentRemittance GovernmentRemittanceService::createFromPayroll(const Payrol
     }
     return remittance;
 }
-std::vector<GovernmentRemittance> GovernmentRemittanceService::createFromPayroll(const std::vector<PayrollCalculationResults> *payrolls)
+std::vector<GovernmentRemittance> GovernmentRemittanceService::createFromPayroll(const std::vector<PayrollCalculationResults> &payrolls)
 {
     std::vector<GovernmentRemittance> vGr{};
-    for (const PayrollCalculationResults &roll : *payrolls)
+    for (const PayrollCalculationResults &roll : payrolls)
     {
         switch (roll.payPeriodHalf)
         {
@@ -142,11 +142,12 @@ auto GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payP
     }
     return pss;
 };
-auto GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf) -> PeriodTotals
+auto GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, std::optional<int> payPeriodHalf) -> PeriodTotals
 {
     auto items = remittanceRepo.getRemittancesByPeriod(payPeriodText, payPeriodHalf);
     PeriodTotals pt{};
-    pt.payPeriodHalf = payPeriodHalf;
+    if (payPeriodHalf.has_value())
+        pt.payPeriodHalf = *payPeriodHalf;
     pt.payPeriodText = payPeriodText;
     std::unordered_set<std::string> uniqueEmployees;
     for (auto &item : items)
@@ -186,15 +187,6 @@ double GovernmentRemittanceService::getTotalRemittance(const std::vector<Governm
 {
     return getTotalEmployeeContribution(remittances) + getTotalEmployerContribution(remittances);
 };
-std::vector<GovernmentRemittance> GovernmentRemittanceService::getAllRemitsAggregatedToMonthly(std::vector<GovernmentRemittance> &data)
-{
-    for (auto &item : data)
-    {
-        LOG_DEBUG("Details: ");
-        LOG_DEBUG(item.to_string());
-    }
-    return data;
-}
 bool GovernmentRemittanceService::submit(int remittanceId, const RemittanceType &remittanceType)
 {
     return remittanceRepo.markAsSubmitted(remittanceId, remittanceType);
