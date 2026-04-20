@@ -3,6 +3,7 @@
 #include "Utils/Log.h"
 #include <algorithm>
 #include <QDate>
+using namespace PayrollCalc;
 
 PayrollService::PayrollService(PayrollRepository &r) : repo(r)
 {
@@ -110,4 +111,51 @@ bool PayrollService::saveConfig(const PayrollConfig &config)
 bool PayrollService::deletePayroll(int id)
 {
     return this->repo.deletePayroll(id);
+}
+
+double PayrollService::computeSSS(const PayrollCalculationResults &emp)
+{
+    return PayrollCalc::calcSSS_EE(emp.monthlyBasicSalary, emp.applySSS);
+}
+
+double PayrollService::computePhilHealth(const PayrollCalculationResults &emp)
+{
+    return PayrollCalc::calcPhilHealth_EE(emp.monthlyBasicSalary, emp.applyPhilHealth);
+}
+
+double PayrollService::computeHDMF(const PayrollCalculationResults &emp)
+{
+    return PayrollCalc::calcHDMF_EE(emp.monthlyBasicSalary, emp.applyHDMF);
+}
+
+double PayrollService::computeTaxableIncome(const PayrollCalculationResults &emp)
+{
+    return PayrollCalc::calcTaxableIncome(emp);
+}
+
+double PayrollService::computeWithholding(double taxableIncome)
+{
+    return PayrollCalc::calcWithholding(taxableIncome);
+}
+
+double PayrollService::computeTotalDeductions(const PayrollCalculationResults &emp)
+{
+    return emp.withHoldingTax +
+           emp.sssPremium_EE +
+           emp.philHealthPremium_EE +
+           emp.hdmfPremium_EE +
+           emp.loanDeductionsPerPayroll;
+}
+
+double PayrollService::computeNetPay(const PayrollCalculationResults &emp)
+{
+    return emp.grossIncome - emp.totalDeductions;
+}
+
+bool PayrollService::applies(DeductionSchedule schedule, int half)
+{
+    bool isBoth = (schedule == DeductionSchedule::BothHalves);
+    int scheduledValue = static_cast<int>(schedule);
+    bool validSingle = (scheduledValue == half);
+    return isBoth || validSingle;
 }
