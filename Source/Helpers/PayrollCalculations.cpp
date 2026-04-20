@@ -30,7 +30,7 @@ namespace PayrollCalc
                HDMF_EMP_RATE;
     }
 
-    double calcTaxableIncome(PayrollCalculationResults &emp)
+    double calcTaxableIncome(const PayrollCalculationResults &emp)
     {
         double taxableIncome = emp.monthlyBasicSalary + emp.overTimePay - emp.sssPremium_EE - emp.philHealthPremium_EE - emp.hdmfPremium_EE;
         return taxableIncome;
@@ -82,7 +82,6 @@ namespace PayrollCalc
                     SEMI_MONTHLY_TAX_BRACKETS[i - 1].baseTax +
                     SEMI_MONTHLY_TAX_BRACKETS[i - 1].rate *
                         (taxableIncome - SEMI_MONTHLY_TAX_BRACKETS[i - 1].lowerBound);
-                LOG_DEBUG("withholdingTax = " << withholdingTax);
                 break;
             }
         }
