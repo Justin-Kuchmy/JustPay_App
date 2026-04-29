@@ -12,6 +12,6 @@ protected:
 
 public:
     explicit BudgetUtilService(PayrollService &pService, GovernmentRemittanceService &gService);
-    std::vector<MonthlyBudgetUtilizationReport> getMonthlyBudget();
+    std::vector<MonthlyBudgetUtilizationReport> getMonthlyBudget(const std::string &period = "");
 };
 #endif
