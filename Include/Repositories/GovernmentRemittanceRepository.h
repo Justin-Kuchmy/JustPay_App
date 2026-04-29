@@ -26,7 +26,7 @@ public:
     // read
     std::optional<GovernmentRemittance> getRemittanceById(int id);
     std::optional<GovernmentRemittance> getRemittanceByPayrollId(int payrollId);
-    std::vector<GovernmentRemittance> getRemittancesByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf = std::nullopt);
+    std::vector<GovernmentRemittance> getRemittancesByPeriod(const std::string &payPeriodDate, std::optional<int> payPeriodHalf = std::nullopt);
     std::vector<GovernmentRemittance> getRemittancesByEmployee(const std::string &employeeId);
     std::vector<GovernmentRemittance> getRemittancesByStatus(RemittanceStatus status);
     std::vector<GovernmentRemittance> getAllRemittances();
