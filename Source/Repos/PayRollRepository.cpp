@@ -25,8 +25,8 @@ void PayrollRepository::bindPayroll(sqlite3_stmt *stmt, const PayrollCalculation
     int idx = 1;
     sqlite3_bind_text(stmt, idx++, prRecord.employeeId.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, idx++, prRecord.fullName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, prRecord.employeeDepartment.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, prRecord.payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, idx++, prRecord.employeeDepartment);
+    sqlite3_bind_text(stmt, idx++, prRecord.payPeriodDate.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, idx++, prRecord.payPeriodHalf);
 
     sqlite3_bind_double(stmt, idx++, prRecord.monthlyBasicSalary);
@@ -61,24 +61,23 @@ PayrollCalculationResults PayrollRepository::mapPayroll(sqlite3_stmt *stmt)
     const unsigned char *fullName = sqlite3_column_text(stmt, 2);
     payrollRecord.fullName = fullName ? reinterpret_cast<const char *>(fullName) : std::string{};
 
-    const unsigned char *employeeDepartment = sqlite3_column_text(stmt, 3);
-    payrollRecord.employeeDepartment = employeeDepartment ? reinterpret_cast<const char *>(employeeDepartment) : std::string{};
+    payrollRecord.employeeDepartment = sqlite3_column_int(stmt, 3);
 
-    const unsigned char *payPeriodText = sqlite3_column_text(stmt, 4);
-    payrollRecord.payPeriodText = payPeriodText ? reinterpret_cast<const char *>(payPeriodText) : std::string{};
+    const unsigned char *payPeriodDate = sqlite3_column_text(stmt, 4);
+    payrollRecord.payPeriodDate = payPeriodDate ? reinterpret_cast<const char *>(payPeriodDate) : std::string{};
 
     payrollRecord.payPeriodHalf = sqlite3_column_int(stmt, 5);
 
-    payrollRecord.monthlyBasicSalary = sqlite3_column_int(stmt, 6);
-    payrollRecord.monthlyAllowances = sqlite3_column_int(stmt, 7);
-    payrollRecord.overTimePay = sqlite3_column_int(stmt, 8);
-    payrollRecord.adjustments = sqlite3_column_int(stmt, 9);
-    payrollRecord.grossIncome = sqlite3_column_int(stmt, 10);
-    payrollRecord.sssPremium_EE = sqlite3_column_int(stmt, 11);
-    payrollRecord.philHealthPremium_EE = sqlite3_column_int(stmt, 12);
-    payrollRecord.hdmfPremium_EE = sqlite3_column_int(stmt, 13);
-    payrollRecord.loanDeductionsPerPayroll = sqlite3_column_int(stmt, 14);
-    payrollRecord.withHoldingTax = sqlite3_column_int(stmt, 15);
+    payrollRecord.monthlyBasicSalary = sqlite3_column_double(stmt, 6);
+    payrollRecord.monthlyAllowances = sqlite3_column_double(stmt, 7);
+    payrollRecord.overTimePay = sqlite3_column_double(stmt, 8);
+    payrollRecord.adjustments = sqlite3_column_double(stmt, 9);
+    payrollRecord.grossIncome = sqlite3_column_double(stmt, 10);
+    payrollRecord.sssPremium_EE = sqlite3_column_double(stmt, 11);
+    payrollRecord.philHealthPremium_EE = sqlite3_column_double(stmt, 12);
+    payrollRecord.hdmfPremium_EE = sqlite3_column_double(stmt, 13);
+    payrollRecord.loanDeductionsPerPayroll = sqlite3_column_double(stmt, 14);
+    payrollRecord.withHoldingTax = sqlite3_column_double(stmt, 15);
     payrollRecord.totalDeductions = sqlite3_column_double(stmt, 16);
     payrollRecord.netPay = sqlite3_column_double(stmt, 17);
     const unsigned char *date = sqlite3_column_text(stmt, 18);
@@ -104,7 +103,7 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
             employee_id,
             full_name,
             department,
-            pay_period_text,
+            pay_period_date,
             pay_period_half,
             basic_salary,
             allowances,
@@ -150,9 +149,9 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
 
     return sqlite3_last_insert_rowid(db);
 };
-std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
+std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(const std::string &payPeriodDate, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
 {
-    std::string sql = "SELECT * FROM payroll_records WHERE pay_period_text = ?";
+    std::string sql = "SELECT * FROM payroll_records WHERE pay_period_date = ?";
     if (employeeId.has_value())
         sql += " AND employee_id = ?";
     if (payPeriodHalf.has_value())
@@ -167,7 +166,7 @@ std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(con
         return results;
     }
     int idx = 1;
-    sqlite3_bind_text(stmt, idx++, payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, idx++, payPeriodDate.c_str(), -1, SQLITE_TRANSIENT);
     if (employeeId.has_value())
     {
         sqlite3_bind_text(stmt, idx++, employeeId.value().c_str(), -1, SQLITE_TRANSIENT);
@@ -186,7 +185,23 @@ std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(con
     sqlite3_finalize(stmt);
     return results;
 }
-
+std::string PayrollRepository::getLatestPeriod()
+{
+    const char *sql = "SELECT DISTINCT pay_period_date FROM payroll_records ORDER BY pay_period_date DESC LIMIT 1";
+    sqlite3_stmt *stmt = nullptr;
+    std::string result{};
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
+        return result;
+    }
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        result = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+    }
+    sqlite3_finalize(stmt);
+    return result;
+}
 // read
 std::optional<PayrollCalculationResults> PayrollRepository::getById(int id)
 {
@@ -254,11 +269,11 @@ std::vector<PayrollCalculationResults> PayrollRepository::getAll()
 bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 {
     std::string sql = std::format(
-        "UPDATE payroll_records SET employee_id = '{}', full_name = '{}', department = '{}', pay_period_text = '{}', pay_period_half = {}, basic_salary = {}, allowances = {}, overtime_pay = {}, adjustments = {}, gross_income = {}, sss_premium_ee = {}, philhealth_premium_ee = {}, hdmf_premium_ee = {}, loan_deductions = {}, withholding_tax = {}, total_deductions = {}, net_pay = {}, sss_premium_er = {}, philhealth_premium_er = {}, hdmf_premium_er = {} WHERE id = {}",
+        "UPDATE payroll_records SET employee_id = '{}', full_name = '{}', department={}, pay_period_date = '{}', pay_period_half = {}, basic_salary = {}, allowances = {}, overtime_pay = {}, adjustments = {}, gross_income = {}, sss_premium_ee = {}, philhealth_premium_ee = {}, hdmf_premium_ee = {}, loan_deductions = {}, withholding_tax = {}, total_deductions = {}, net_pay = {}, sss_premium_er = {}, philhealth_premium_er = {}, hdmf_premium_er = {} WHERE id = {}",
         prRecord.employeeId,
         prRecord.fullName,
         prRecord.employeeDepartment,
-        prRecord.payPeriodText,
+        prRecord.payPeriodDate,
         prRecord.payPeriodHalf,
         prRecord.monthlyBasicSalary,
         prRecord.monthlyAllowances,
@@ -277,6 +292,7 @@ bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
         prRecord.hdmfPremium_ER,
         prRecord.id);
 
+    LOG_DEBUG(sql);
     return execute(sql);
 };
 
