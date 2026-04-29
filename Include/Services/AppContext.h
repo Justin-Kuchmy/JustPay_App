@@ -11,6 +11,7 @@
 #include "Services/GovernmentRemittanceService.h"
 #include "Services/YearEndBenefitsService.h"
 #include "Services/LeaveBalanceService.h"
+#include "Services/BudgetUtilService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Repositories/DependentRepository.h"
 #include "Repositories/EmergencyContactRepository.h"
@@ -46,6 +47,7 @@ class JournalEntryService;
 class GovernmentRemittanceService;
 class YearEndBenefitsService;
 class LeaveBalanceService;
+class BudgetUtilService;
 
 class AppContext
 {
@@ -63,6 +65,7 @@ public:
     GovernmentRemittanceService &governmentRemittanceService() noexcept;
     YearEndBenefitsService &yearEndBenefitsService() noexcept;
     LeaveBalanceService &leaveBalanceService() noexcept;
+    BudgetUtilService &budgetUtilService() noexcept;
 
 private:
     sqlite3 *m_db = nullptr;
@@ -88,6 +91,7 @@ private:
     GovernmentRemittanceService m_governmentRemittanceService;
     LeaveBalanceService m_leaveBalanceService;
     YearEndBenefitsService m_yearEndBenefitsService;
+    BudgetUtilService m_budgetUtilService;
 
     explicit AppContext(const std::string &dbName);
     ~AppContext() noexcept;
