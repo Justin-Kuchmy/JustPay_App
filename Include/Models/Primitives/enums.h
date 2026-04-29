@@ -134,6 +134,29 @@ inline std::string department_to_string(int i)
     }
 }
 
+inline Department department_from_string(const std::string &s)
+{
+    if (s == "HR")
+        return Department::HR;
+    if (s == "Finance")
+        return Department::Finance;
+    if (s == "IT")
+        return Department::IT;
+    if (s == "Operations")
+        return Department::Operations;
+    if (s == "Sales")
+        return Department::Sales;
+    if (s == "Marketing")
+        return Department::Marketing;
+    if (s == "Admin")
+        return Department::Admin;
+    if (s == "Legal")
+        return Department::Legal;
+    if (s == "Engineering")
+        return Department::Engineering;
+    throw std::invalid_argument("Unknown department: " + s);
+}
+
 // --- JobLevel ---
 
 inline std::string joblevel_to_string(int i)
