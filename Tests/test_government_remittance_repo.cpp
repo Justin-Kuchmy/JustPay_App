@@ -72,8 +72,8 @@ static GovernmentRemittance makeRemittance(
     r.payrollCalculationResultsId = payrollId;
     r.employeeId = employeeId;
     r.fullName = "Juan dela Cruz";
-    r.employeeDepartment = "Engineering";
-    r.payPeriodText = period;
+    r.employeeDepartment = 8;
+    r.payPeriodDate = period;
     r.payPeriodHalf = half;
 
     r.employee_Contrib = 581.30;
@@ -131,7 +131,7 @@ TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsCorrectRecord)
     auto result = repo->getRemittanceById(static_cast<int>(id));
     ASSERT_TRUE(result.has_value());
     EXPECT_EQ(result->employeeId, r.employeeId);
-    EXPECT_EQ(result->payPeriodText, r.payPeriodText);
+    EXPECT_EQ(result->payPeriodDate, r.payPeriodDate);
     EXPECT_EQ(result->payPeriodHalf, r.payPeriodHalf);
 }
 
@@ -165,7 +165,7 @@ TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsAllForPeriod)
     auto results = repo->getRemittancesByPeriod("March 2026");
     EXPECT_EQ(results.size(), 2u);
     for (const auto &r : results)
-        EXPECT_EQ(r.payPeriodText, "March 2026");
+        EXPECT_EQ(r.payPeriodDate, "March 2026");
 }
 
 TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_FilteredByHalf)
