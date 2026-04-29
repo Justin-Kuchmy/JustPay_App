@@ -42,7 +42,7 @@ sqlite3_int64 JournalEntryRepository::insertJournalEntry(const JournalEntry &jou
             accountName, 
             debit, 
             credit, 
-            pay_period_text, 
+            pay_period_date, 
             pay_period_half
         ) values (?,?,?,?,?,?,)
     )";
