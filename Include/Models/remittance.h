@@ -10,8 +10,8 @@ public:
     int payrollCalculationResultsId{};
     std::string employeeId{""};
     std::string fullName{""};
-    std::string employeeDepartment{""};
-    std::string payPeriodText{""};
+    int employeeDepartment{0};
+    std::string payPeriodDate{""};
     int payPeriodHalf{1};
 
     double employee_Contrib{0.0};
@@ -38,7 +38,7 @@ public:
             << "\n employeeId: " << employeeId
             << "\n fullName: " << fullName
             << "\n employeeDepartment: " << employeeDepartment
-            << "\n payPeriodText: " << payPeriodText
+            << "\n payPeriodDate: " << payPeriodDate
             << "\n payPeriodHalf: " << payPeriodHalf
             << "\n employee_Contrib: " << employee_Contrib
             << "\n employer_Contrib: " << employer_Contrib
