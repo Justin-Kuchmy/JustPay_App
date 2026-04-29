@@ -12,9 +12,17 @@ class YearEndBenefitWidget : public BaseContentWidget
 public:
     YearEndBenefitWidget(QWidget *parent = nullptr);
     ~YearEndBenefitWidget();
+    YearEndBenefitWidget(const YearEndBenefitWidget &) = delete;
+    YearEndBenefitWidget &operator=(const YearEndBenefitWidget &) = delete;
 
 private:
     Ui::YearEndBenefitWidget *ui;
+    QStringList yearStringList;
+
+    std::vector<YearEndBenefits> yearEndBenefits;
+    std::vector<YearEndBenefits> *yearEndBenefitsPtr = nullptr;
+    YearEndBenefitsModel *model;
+    YearEndBenefitsFilterProxyModel *m_proxy;
 };
 
 #endif
