@@ -20,7 +20,7 @@ GovernmentRemittance GovernmentRemittanceService::createFromPayroll(const Payrol
     remittance.fullName = payroll.fullName;
     remittance.contrib_Type = type;
     remittance.employeeDepartment = payroll.employeeDepartment;
-    remittance.payPeriodText = payroll.payPeriodText;
+    remittance.payPeriodDate = payroll.payPeriodDate;
     remittance.payPeriodHalf = payroll.payPeriodHalf;
     remittance.withHoldingTax = payroll.withHoldingTax;
     remittance.lastSubmittedDate = Date::getTodayDate();
@@ -72,9 +72,9 @@ std::optional<GovernmentRemittance> GovernmentRemittanceService::getByPayrollId(
 {
     return remittanceRepo.getRemittanceByPayrollId(payrollId);
 };
-std::vector<GovernmentRemittance> GovernmentRemittanceService::getByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf)
+std::vector<GovernmentRemittance> GovernmentRemittanceService::getByPeriod(const std::string &payPeriodDate, std::optional<int> payPeriodHalf)
 {
-    return remittanceRepo.getRemittancesByPeriod(payPeriodText, payPeriodHalf);
+    return remittanceRepo.getRemittancesByPeriod(payPeriodDate, payPeriodHalf);
 };
 std::vector<GovernmentRemittance> GovernmentRemittanceService::getByEmployee(const std::string &employeeId)
 {
@@ -114,11 +114,11 @@ auto GovernmentRemittanceService::getMonthlySummary(const std::string &monthYear
     }
     return summary;
 };
-auto GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodText) -> PeriodStatusSummary
+auto GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payPeriodDate) -> PeriodStatusSummary
 {
-    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodText);
+    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodDate);
     PeriodStatusSummary pss{};
-    pss.payPeriodText = payPeriodText;
+    pss.payPeriodDate = payPeriodDate;
     for (auto &item : items)
     {
         switch (item.contrib_Type)
@@ -142,13 +142,13 @@ auto GovernmentRemittanceService::getPeriodStatusSummary(const std::string &payP
     }
     return pss;
 };
-auto GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodText, std::optional<int> payPeriodHalf) -> PeriodTotals
+auto GovernmentRemittanceService::getPeriodTotals(const std::string &payPeriodDate, std::optional<int> payPeriodHalf) -> PeriodTotals
 {
-    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodText, payPeriodHalf);
+    auto items = remittanceRepo.getRemittancesByPeriod(payPeriodDate, payPeriodHalf);
     PeriodTotals pt{};
     if (payPeriodHalf.has_value())
         pt.payPeriodHalf = *payPeriodHalf;
-    pt.payPeriodText = payPeriodText;
+    pt.payPeriodDate = payPeriodDate;
     std::unordered_set<std::string> uniqueEmployees;
     for (auto &item : items)
         uniqueEmployees.insert(item.employeeId);
