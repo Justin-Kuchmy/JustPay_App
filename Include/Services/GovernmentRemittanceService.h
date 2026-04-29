@@ -25,7 +25,7 @@ public:
 
     struct PeriodStatusSummary
     {
-        std::string payPeriodText;
+        std::string payPeriodDate;
         int payPeriodHalf;
         int sssRemittancesPending{0};
         int sssRemittancesSubmitted{0};
@@ -40,7 +40,7 @@ public:
 
     struct PeriodTotals
     {
-        std::string payPeriodText;
+        std::string payPeriodDate;
         int payPeriodHalf{1};
         int employeeCount{0};
         double totalSSSEE{0.0};
@@ -73,13 +73,13 @@ public:
     GovernmentRemittance createFromPayroll(const PayrollCalculationResults &payrolls, RemittanceType type);
     std::optional<GovernmentRemittance> getById(int id);
     std::optional<GovernmentRemittance> getByPayrollId(int payrollId);
-    std::vector<GovernmentRemittance> getByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf = std::nullopt);
+    std::vector<GovernmentRemittance> getByPeriod(const std::string &payPeriodDate, std::optional<int> payPeriodHalf = std::nullopt);
     std::vector<GovernmentRemittance> getByEmployee(const std::string &employeeId);
     std::vector<GovernmentRemittance> getPending();
     std::vector<GovernmentRemittance> getAll();
     MonthlySummary getMonthlySummary(const std::string &monthYear);
-    PeriodStatusSummary getPeriodStatusSummary(const std::string &payPeriodText);
-    PeriodTotals getPeriodTotals(const std::string &payPeriodText, std::optional<int> payPeriodHalf = std::nullopt);
+    PeriodStatusSummary getPeriodStatusSummary(const std::string &payPeriodDate);
+    PeriodTotals getPeriodTotals(const std::string &payPeriodDate, std::optional<int> payPeriodHalf = std::nullopt);
     double getTotalEmployerContribution(const std::vector<GovernmentRemittance> &remittances);
     double getTotalEmployeeContribution(const std::vector<GovernmentRemittance> &remittances);
     double getTotalRemittance(const std::vector<GovernmentRemittance> &remittances);
