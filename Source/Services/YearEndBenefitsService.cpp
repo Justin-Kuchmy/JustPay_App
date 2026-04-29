@@ -12,32 +12,38 @@ YearEndBenefitsService::YearEndBenefitsService(PayrollRepository &r, LeaveBalanc
 YearEndBenefitsService::~YearEndBenefitsService()
 {
 }
-YearEndBenefits YearEndBenefitsService::compute(std::string employeeId, int year)
+std::vector<YearEndBenefits> YearEndBenefitsService::compute()
 {
-    YearEndBenefits yearEnd{};
-    yearEnd.employeeId = employeeId;
-    yearEnd.year = year;
+    std::vector<PayrollCalculationResults> payrolls = payrollRepo.getAll();
+    std::map<std::pair<std::string, int>, YearEndBenefits> benefitsMap;
 
-    std::vector<PayrollCalculationResults> payrolls = payrollRepo.getAllById(employeeId);
-
-    std::erase_if(payrolls, [year](const PayrollCalculationResults &item)
-                  { size_t pos = item.payPeriodText.find(' ');
-                    return pos == std::string::npos || std::stoi(item.payPeriodText.substr(pos + 1)) != year; });
-
-    for (auto &item : payrolls)
+    for (const auto &roll : payrolls)
     {
-        yearEnd.totalBasicSalary += item.monthlyBasicSalary;
-        yearEnd.thirteenthMonthPay += (item.monthlyBasicSalary / 12);
+        size_t pos = roll.payPeriodDate.find(' ');
+        int year = std::stoi(roll.payPeriodDate.substr(0, pos));
+        auto key = std::make_pair(roll.employeeId, year);
+
+        auto &yearEnd = benefitsMap[key];
+        yearEnd.employeeId = roll.employeeId;
+        yearEnd.year = year;
+
+        yearEnd.totalBasicSalary += roll.monthlyBasicSalary;
+        yearEnd.thirteenthMonthPay += (roll.monthlyBasicSalary / 12);
     }
+    std::vector<YearEndBenefits> benefitsForAll{};
+    for (auto &[key, yearEnd] : benefitsMap)
+    {
 
-    auto empOpt = empRepo.getById(employeeId);
-    double currentBasicSalary = empOpt.has_value() ? empOpt->monthlyBasicSalary : 0.0;
+        auto empOpt = empRepo.getById(yearEnd.employeeId);
+        double currentBasicSalary = empOpt.has_value() ? empOpt->monthlyBasicSalary : 0.0;
 
-    EmployeeLeaveBalance leaveCredits = leaveBalanceService.computeLeaveBalance(employeeId, year);
+        EmployeeLeaveBalance leaveCredits = leaveBalanceService.computeLeaveBalance(yearEnd.employeeId, yearEnd.year);
 
-    yearEnd.unusedLeaveDays = leaveCredits.unusedLeaveDays;
-    yearEnd.dailyRate = currentBasicSalary * 12.0 / 314.0;
-    yearEnd.monetizedLeaveValue = yearEnd.dailyRate * yearEnd.unusedLeaveDays;
+        yearEnd.unusedLeaveDays = leaveCredits.unusedLeaveDays;
+        yearEnd.dailyRate = currentBasicSalary * 12.0 / 314.0;
+        yearEnd.monetizedLeaveValue = yearEnd.dailyRate * yearEnd.unusedLeaveDays;
 
-    return yearEnd;
+        benefitsForAll.push_back(yearEnd);
+    }
+    return benefitsForAll;
 }
