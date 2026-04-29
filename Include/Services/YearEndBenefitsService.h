@@ -14,7 +14,7 @@ protected:
 public:
     explicit YearEndBenefitsService(PayrollRepository &payrollRepo, LeaveBalanceService &leaveBalanceService, EmployeeRepository &empRepo);
     ~YearEndBenefitsService();
-    YearEndBenefits compute(std::string employeeId, int year);
+    std::vector<YearEndBenefits> compute();
 };
 
 #endif
