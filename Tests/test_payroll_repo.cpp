@@ -43,13 +43,13 @@ static void runSqlScript(sqlite3 *db, const std::string &sqlFilePath)
         sqlite3_free(errMsg);
 };
 
-static PayrollCalculationResults makePayroll(const std::string &employeeId = "00-0001", const std::string &period = "January 2026", int half = 1)
+static PayrollCalculationResults makePayroll(const std::string &employeeId = "00-0001", const std::string &period = "2026 01", int half = 1)
 {
     PayrollCalculationResults p;
     p.employeeId = employeeId;
     p.fullName = "Alice Santos";
-    p.employeeDepartment = "HR";
-    p.payPeriodText = period;
+    p.employeeDepartment = 0;
+    p.payPeriodDate = period;
     p.payPeriodHalf = half;
     p.monthlyBasicSalary = 30000.0;
     p.monthlyAllowances = 2000.0;
@@ -133,10 +133,10 @@ TEST_F(PayrollRepoTest, GetByEmployeeId_ReturnsCorrectPayrollRecords)
     std::string newId = "01-0099";
     int monthFirstHalf = 1;
     int monthSecondHalf = 2;
-    repo->insertPayroll(makePayroll(newId, "March 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newId, "March 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newId, "April 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newId, "April 2026", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newId, "2026 03", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newId, "2026 03", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newId, "2026 04", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newId, "2026 04", monthSecondHalf));
     auto vP = repo->getAllById(newId);
     ASSERT_TRUE(vP.size() == 4);
     for (auto &item : vP)
@@ -149,23 +149,23 @@ TEST_F(PayrollRepoTest, GetByPayPeriod_ReturnsMatchingRecords)
     std::string newIdTwo = "01-0100";
     int monthFirstHalf = 1;
     int monthSecondHalf = 2;
-    repo->insertPayroll(makePayroll(newIdOne, "March 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newIdOne, "March 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newIdOne, "April 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newIdOne, "April 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newIdOne, "May 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newIdTwo, "March 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newIdTwo, "March 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newIdTwo, "April 2026", monthFirstHalf));
-    repo->insertPayroll(makePayroll(newIdTwo, "April 2026", monthSecondHalf));
-    repo->insertPayroll(makePayroll(newIdTwo, "May 2026", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdOne, "2026 03", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newIdOne, "2026 03", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdOne, "2026 04", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newIdOne, "2026 04", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdOne, "2026 05", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdTwo, "2026 03", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newIdTwo, "2026 03", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdTwo, "2026 04", monthFirstHalf));
+    repo->insertPayroll(makePayroll(newIdTwo, "2026 04", monthSecondHalf));
+    repo->insertPayroll(makePayroll(newIdTwo, "2026 05", monthSecondHalf));
 
-    ASSERT_TRUE(repo->getPayrollByPeriod("March 2026").size() == 4);
-    ASSERT_TRUE(repo->getPayrollByPeriod("March 2026", newIdOne).size() == 2);
-    ASSERT_TRUE(repo->getPayrollByPeriod("March 2026", std::nullopt, 1).size() == 2);
-    ASSERT_TRUE(repo->getPayrollByPeriod("March 2026", newIdOne, 1).size() == 1);
-    ASSERT_TRUE(repo->getPayrollByPeriod("May 2026").size() == 2);
-    ASSERT_TRUE(repo->getPayrollByPeriod("June 2026").size() == 0);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 03").size() == 4);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 03", newIdOne).size() == 2);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 03", std::nullopt, 1).size() == 2);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 03", newIdOne, 1).size() == 1);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 05").size() == 2);
+    ASSERT_TRUE(repo->getPayrollByPeriod("2026 06").size() == 0);
 }
 
 TEST_F(PayrollRepoTest, UpdatePayrollCalculationResults_ModifiesExistingRecord)
@@ -273,9 +273,9 @@ TEST_F(PayrollRepoTest, HandlesMultipleEmployeesForSamePayPeriod)
 {
 
     // repo already has 20 elements via sql file
-    repo->insertPayroll(makePayroll("01-0098", "March 2026", 1));
-    repo->insertPayroll(makePayroll("01-0099", "March 2026", 1));
-    repo->insertPayroll(makePayroll("01-0100", "March 2026", 1));
+    repo->insertPayroll(makePayroll("01-0098", "2026 03", 1));
+    repo->insertPayroll(makePayroll("01-0099", "2026 03", 1));
+    repo->insertPayroll(makePayroll("01-0100", "2026 03", 1));
 
     auto all = repo->getAll();
     EXPECT_EQ(all.size(), 23u);
@@ -294,13 +294,13 @@ TEST_F(PayrollRepoTest, HandlesMultipleEmployeesForSamePayPeriod)
 
 TEST_F(PayrollRepoTest, PreventsDuplicatePayrollForSameEmployeeAndPayPeriod)
 {
-    auto newId1 = repo->insertPayroll(makePayroll("00-0099", "July 2026", 1));
+    auto newId1 = repo->insertPayroll(makePayroll("00-0099", "2026 07", 1));
     EXPECT_EQ(newId1, 21);
 
-    auto newId2 = repo->insertPayroll(makePayroll("00-0099", "July 2026", 1));
+    auto newId2 = repo->insertPayroll(makePayroll("00-0099", "2026 07", 1));
     EXPECT_EQ(newId2, 0); // returns zero becuase its a duplicate
 
-    auto result = repo->getPayrollByPeriod("July 2026", "00-0099", 1);
+    auto result = repo->getPayrollByPeriod("2026 07", "00-0099", 1);
     ASSERT_TRUE(result.size() == 1);
 
     std::string empId = "00-0099";
