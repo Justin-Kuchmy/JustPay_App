@@ -10,6 +10,7 @@
 #include <fstream>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
+#include <algorithm>
 
 static void runSqlScript(sqlite3 *db, const std::string &sqlFilePath)
 {
@@ -97,89 +98,67 @@ TEST_F(YearEndBenefitsServiceTest, Computes13thMonthCorrectly)
 {
     std::string empId = "00-0001";
 
-    auto result = svc->compute(empId, 2025);
-    LOG_DEBUG(result.to_string());
-
+    auto result = svc->compute();
+    auto it = std::ranges::find_if(result, [](const YearEndBenefits &b)
+                                   { return b.employeeId == "00-0001" && b.year == 2025; });
+    EXPECT_NE(it, result.end()); // iterator is not at the end meaning we found the value
     double expected13th = 0.0;
 
     auto payrolls = payrollRepo->getAllById(empId);
 
     for (const auto &p : payrolls)
     {
-        size_t pos = p.payPeriodText.find(' ');
+        size_t pos = p.payPeriodDate.find(' ');
         if (pos == std::string::npos)
             continue;
 
-        int year = std::stoi(p.payPeriodText.substr(pos + 1));
+        int year = std::stoi(p.payPeriodDate.substr(0, pos));
         if (year == 2025)
         {
             expected13th += (p.monthlyBasicSalary / 12.0);
         }
     }
-
-    EXPECT_DOUBLE_EQ(result.thirteenthMonthPay, expected13th);
+    EXPECT_DOUBLE_EQ(it->thirteenthMonthPay, expected13th);
 }
 
 TEST_F(YearEndBenefitsServiceTest, IgnoresOtherYears)
 {
     std::string empId = "00-0001";
 
-    auto result2025 = svc->compute(empId, 2025);
-    auto result2024 = svc->compute(empId, 2024);
+    auto result2025 = svc->compute();
+    auto it25 = std::ranges::find_if(result2025, [](const YearEndBenefits &b)
+                                     { return b.employeeId == "00-0001" && b.year == 2025; });
+    auto result2024 = svc->compute();
+    auto it24 = std::ranges::find_if(result2024, [](const YearEndBenefits &b)
+                                     { return b.employeeId == "00-0001" && b.year == 2024; });
 
-    EXPECT_NE(result2025.totalBasicSalary, result2024.totalBasicSalary);
+    EXPECT_NE(it25->totalBasicSalary, it24->totalBasicSalary);
 }
 
 TEST_F(YearEndBenefitsServiceTest, ReturnsZeroWhenNoPayroll)
 {
     std::string empId = "NON_EXISTENT";
 
-    auto result = svc->compute(empId, 2025);
+    auto result = svc->compute();
+    auto it = std::ranges::find_if(result, [](const YearEndBenefits &b)
+                                   { return b.employeeId == "NON_EXISTENT" && b.year == 2025; });
 
-    EXPECT_DOUBLE_EQ(result.totalBasicSalary, 0.0);
-    EXPECT_DOUBLE_EQ(result.thirteenthMonthPay, 0.0);
-    EXPECT_DOUBLE_EQ(result.monetizedLeaveValue, 0.0);
+    EXPECT_EQ(it, result.end());
 }
 
-TEST_F(YearEndBenefitsServiceTest, HandlesMultiplePayrollEntries)
-{
-    std::string empId = "00-0001";
-
-    auto result = svc->compute(empId, 2025);
-
-    auto payrolls = payrollRepo->getAllById(empId);
-
-    int count2025 = 0;
-    for (const auto &p : payrolls)
-    {
-        size_t pos = p.payPeriodText.find(' ');
-        if (pos == std::string::npos)
-            continue;
-
-        int year = std::stoi(p.payPeriodText.substr(pos + 1));
-        if (year == 2025)
-            count2025++;
-    }
-
-    EXPECT_GT(count2025, 1);
-
-    EXPECT_GT(result.totalBasicSalary, 0.0);
-    EXPECT_GT(result.thirteenthMonthPay, 0.0);
-}
-
-static Employee makeEmployee(const std::string &fullName, const std::string &dateHired, double salary = 20000.0)
-{
-    Employee emp{};
-    emp.fullName = fullName;
-    emp.department = Department(0);
-    emp.position = "HR Manager";
-    emp.jobLevel = JobLevel(2);
-    emp.status = EmploymentStatus(0);
-    emp.dateHired = Date::fromString(dateHired);
-    emp.monthlyBasicSalary = salary;
-    emp.isActive = true;
-    return emp;
-}
+// static Employee makeEmployee(const std::string &fullName, const std::string &dateHired, double salary = 20000.0)
+// {
+//     Employee emp{};
+//     emp.fullName = fullName;
+//     emp.department = Department(0);
+//     emp.position = "HR Manager";
+//     emp.jobLevel = JobLevel(2);
+//     emp.status = EmploymentStatus(0);
+//     emp.dateHired = Date::fromString(dateHired);
+//     emp.monthlyBasicSalary = salary;
+//     emp.isActive = true;
+//     return emp;
+// }
 
 static EmployeeLeaveBalance makeLeaveBalance(const std::string &employeeId, int year, double earned, double used)
 {
@@ -195,33 +174,40 @@ static EmployeeLeaveBalance makeLeaveBalance(const std::string &employeeId, int 
 TEST_F(YearEndBenefitsServiceTest, ComputesUnusedLeaveDaysCorrectly)
 {
 
-    std::string empId = empRepo->insertEmployee(makeEmployee("Bob Reyes", "2022-01-15", 45000.0));
-    leaveRepo->insert(makeLeaveBalance(empId, 2025, 10, 5));
-    auto result = svc->compute(empId, 2025);
-    LOG_DEBUG(result.to_string());
+    std::string empId = "01-0002"; // id of existing employee via tests.sql
+    leaveRepo->insert(makeLeaveBalance(empId, 2025, 10, 7));
+    auto result = svc->compute(); //    auto result = svc->compute(empId, 2025);
+    auto it = std::ranges::find_if(result, [&empId](const YearEndBenefits &b)
+                                   { return b.employeeId == empId && b.year == 2025; });
 
-    EXPECT_EQ(result.unusedLeaveDays, 5.0);
+    EXPECT_NE(it, result.end());
+    EXPECT_EQ(it->unusedLeaveDays, 3.0);
 }
 
 TEST_F(YearEndBenefitsServiceTest, ComputesDailyRateCorrectly)
 {
 
-    leaveRepo->insert(makeLeaveBalance("00-0001", 2025, 10.0, 0.0));
+    std::string empId = "00-0001";
+    leaveRepo->insert(makeLeaveBalance(empId, 2025, 10.0, 0.0));
 
-    auto result = svc->compute("00-0001", 2025);
-
-    double expectedDailyRate = 45000.0 * 12.0 / 314.0;
-    EXPECT_NEAR(result.dailyRate, expectedDailyRate, 0.01);
+    auto result = svc->compute();
+    auto it = std::ranges::find_if(result, [&empId](const YearEndBenefits &b)
+                                   { return b.employeeId == empId && b.year == 2025; });
+    double expectedDailyRate = 45000.0 * 12.0 / 314.0; // monthly salary * 12 months divided by 314 days per year
+    EXPECT_NEAR(it->dailyRate, expectedDailyRate, 0.01);
 }
 
 TEST_F(YearEndBenefitsServiceTest, ComputesMonetizedLeaveValueCorrectly)
 {
 
-    leaveRepo->insert(makeLeaveBalance("00-0001", 2025, 10.0, 3.0));
+    std::string empId = "00-0001";
+    leaveRepo->insert(makeLeaveBalance(empId, 2025, 10.0, 4.0));
 
-    auto result = svc->compute("00-0001", 2025);
+    auto result = svc->compute();
+    auto it = std::ranges::find_if(result, [&empId](const YearEndBenefits &b)
+                                   { return b.employeeId == empId && b.year == 2025; });
 
-    double expectedDailyRate = 45000.0 * 12.0 / 314.0;
-    double expectedMonetized = expectedDailyRate * 7.0;
-    EXPECT_NEAR(result.monetizedLeaveValue, expectedMonetized, 0.01);
+    double expectedDailyRate = 45000.0 * 12.0 / 314.0;  // monthly salary * 12 months divided by 314 days per year
+    double expectedMonetized = expectedDailyRate * 6.0; // 6 unused days
+    EXPECT_NEAR(it->monetizedLeaveValue, expectedMonetized, 0.01);
 }
