@@ -14,8 +14,8 @@ GovernmentRemittance GovernmentRemittanceRepository::mapRemittance(sqlite3_stmt 
     gr.payrollCalculationResultsId = sqlite3_column_int(stmt, idx++);
     gr.employeeId = reinterpret_cast<const char *>(sqlite3_column_text(stmt, idx++));
     gr.fullName = reinterpret_cast<const char *>(sqlite3_column_text(stmt, idx++));
-    gr.employeeDepartment = reinterpret_cast<const char *>(sqlite3_column_text(stmt, idx++));
-    gr.payPeriodText = reinterpret_cast<const char *>(sqlite3_column_text(stmt, idx++));
+    gr.employeeDepartment = sqlite3_column_int(stmt, idx++);
+    gr.payPeriodDate = reinterpret_cast<const char *>(sqlite3_column_text(stmt, idx++));
     gr.payPeriodHalf = sqlite3_column_int(stmt, idx++);
     gr.employee_Contrib = sqlite3_column_double(stmt, idx++);
     gr.employer_Contrib = sqlite3_column_double(stmt, idx++);
@@ -45,7 +45,7 @@ sqlite3_int64 GovernmentRemittanceRepository::insertRemittance(const GovernmentR
             employee_id,
             full_name,
             employee_department,
-            pay_period_text,
+            pay_period_date,
             pay_period_half,
             employee_Contrib,
             employer_Contrib,
@@ -128,15 +128,15 @@ std::vector<GovernmentRemittance> GovernmentRemittanceRepository::getRemittances
                                        { sqlite3_bind_int(stmt, 1, static_cast<int>(status)); });
 };
 
-std::vector<GovernmentRemittance> GovernmentRemittanceRepository::getRemittancesByPeriod(const std::string &payPeriodText, std::optional<int> payPeriodHalf)
+std::vector<GovernmentRemittance> GovernmentRemittanceRepository::getRemittancesByPeriod(const std::string &payPeriodDate, std::optional<int> payPeriodHalf)
 {
 
-    std::string sql = "select * from government_remittances where pay_period_text = ?";
+    std::string sql = "select * from government_remittances where pay_period_date = ?";
     if (payPeriodHalf.has_value())
         sql += " AND pay_period_half = ?";
-    return query<GovernmentRemittance>(sql, mapRemittance, [payPeriodText, payPeriodHalf](sqlite3_stmt *stmt)
+    return query<GovernmentRemittance>(sql, mapRemittance, [payPeriodDate, payPeriodHalf](sqlite3_stmt *stmt)
                                        { 
-                                        sqlite3_bind_text(stmt, 1, payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+                                        sqlite3_bind_text(stmt, 1, payPeriodDate.c_str(), -1, SQLITE_TRANSIENT);
                                         if (payPeriodHalf.has_value()) sqlite3_bind_int(stmt, 2, payPeriodHalf.value()); });
 }
 
@@ -189,7 +189,7 @@ bool GovernmentRemittanceRepository::updateRemittance(const GovernmentRemittance
                 employee_id =?,
                 full_name =?,
                 employee_department = ?,
-                pay_period_text = ?,
+                pay_period_date = ?,
                 pay_period_half = ?,
                 employee_Contrib = ?,
                 employer_Contrib = ?,
@@ -222,8 +222,8 @@ int GovernmentRemittanceRepository::bindRemittance(sqlite3_stmt *stmt, const Gov
     sqlite3_bind_int(stmt, idx++, r.payrollCalculationResultsId);
     sqlite3_bind_text(stmt, idx++, r.employeeId.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, idx++, r.fullName.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, r.employeeDepartment.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, idx++, r.payPeriodText.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, idx++, r.employeeDepartment);
+    sqlite3_bind_text(stmt, idx++, r.payPeriodDate.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt, idx++, r.payPeriodHalf);
     sqlite3_bind_double(stmt, idx++, r.employee_Contrib);
     sqlite3_bind_double(stmt, idx++, r.employer_Contrib);
