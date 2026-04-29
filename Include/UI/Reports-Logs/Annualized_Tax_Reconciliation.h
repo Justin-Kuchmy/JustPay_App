@@ -12,8 +12,18 @@ class AnnualTaxWidget : public BaseContentWidget
 public:
     AnnualTaxWidget(QWidget *parent = nullptr);
     ~AnnualTaxWidget();
+    AnnualTaxWidget(const AnnualTaxWidget &) = delete;
+    AnnualTaxWidget &operator=(const AnnualTaxWidget &) = delete;
+    void onYearChanged();
 
 private:
     Ui::AnnualTaxWidget *ui;
+    QStringList yearStringList;
+    QStringList departmentStringList;
+    std::vector<TaxReconciliationReport> taxReports;
+    std::vector<TaxReconciliationReport> *taxReportsPtr = nullptr;
+
+    TaxReconciliationReportModel *model;
+    TaxReconciliationReportFilterProxyModel *m_proxy;
 };
 #endif
