@@ -12,8 +12,17 @@ class BudgetUtilWidget : public BaseContentWidget
 public:
     BudgetUtilWidget(QWidget *parent = nullptr);
     ~BudgetUtilWidget();
+    BudgetUtilWidget(const BudgetUtilWidget &) = delete;
+    BudgetUtilWidget &operator=(const BudgetUtilWidget &) = delete;
 
 private:
     Ui::BudgetUtilWidget *ui;
+    QStringList payPeriodStringList;
+    QStringList departmentStringList;
+    std::vector<MonthlyBudgetUtilizationReport> reports;
+    std::vector<MonthlyBudgetUtilizationReport> *reportsPtr = nullptr;
+
+    MonthlyBudgetUtilizationReportModel *model;
+    MonthlyBudgetUtilizationReportFilterProxyModel *m_proxy;
 };
 #endif
