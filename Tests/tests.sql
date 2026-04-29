@@ -115,9 +115,9 @@ CREATE TABLE IF NOT EXISTS payroll_records (
 
     employee_id        VARCHAR(50)  NOT NULL,
     full_name          VARCHAR(100) NOT NULL,
-    department         VARCHAR(100) NOT NULL,
+    department         INTEGER NOT NULL,
 
-    pay_period_text   VARCHAR(50)  NOT NULL, 
+    pay_period_date   VARCHAR(50)  NOT NULL, 
     pay_period_half  INTEGER NOT NULL CHECK (pay_period_half IN (1, 2)),
 
     basic_salary       DECIMAL(12, 2) NOT NULL,
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS payroll_records (
     sss_premium_er        DECIMAL(12, 2) NOT NULL,
     philhealth_premium_er DECIMAL(12, 2) NOT NULL,
     hdmf_premium_er       DECIMAL(12, 2) NOT NULL,
-    UNIQUE (employee_id, pay_period_text, pay_period_half)
+    UNIQUE (employee_id, pay_period_date, pay_period_half)
 );
 
 CREATE TABLE IF NOT EXISTS government_remittances (
@@ -148,8 +148,8 @@ CREATE TABLE IF NOT EXISTS government_remittances (
     payroll_calculation_results_id INTEGER NOT NULL,
     employee_id TEXT NOT NULL,
     full_name TEXT NOT NULL,
-    employee_department TEXT,
-    pay_period_text TEXT NOT NULL,
+    employee_department INTEGER,
+    pay_period_date TEXT NOT NULL,
     pay_period_half INTEGER NOT NULL,
     employee_Contrib REAL DEFAULT 0.0,
     employer_Contrib REAL DEFAULT 0.0,
@@ -238,27 +238,27 @@ INSERT INTO attendance_log (employeeId, log_date, late_min, undertime_min, overt
 ('05-0010','2025-01-15',0,0,0,0,NULL,'{"regular":0,"rest_day":0,"rest_day_plus":0,"legal_holiday":0,"legal_holiday_plus":0,"special_holiday":0,"special_holiday_plus":0,"rest_plus_legal":0,"rest_plus_special":0,"night_shift_diff":0}'),
 ('05-0010','2025-01-31',0,0,0,0,NULL,'{"regular":0,"rest_day":0,"rest_day_plus":0,"legal_holiday":0,"legal_holiday_plus":0,"special_holiday":0,"special_holiday_plus":0,"rest_plus_legal":0,"rest_plus_special":0,"night_shift_diff":0}');
 
-INSERT INTO payroll_records (employee_id,full_name,department,pay_period_text,pay_period_half,basic_salary,allowances,overtime_pay,adjustments,gross_income,sss_premium_ee,philhealth_premium_ee,hdmf_premium_ee,loan_deductions,withholding_tax,total_deductions,net_pay,sss_premium_er,philhealth_premium_er,hdmf_premium_er) VALUES
-('00-0001','Alice Santos','HR','January 2025',1,22500.00,2500.00,404.14,0.00,25404.14,1125.00,0.00,0.00,1041.67,0.00,2166.67,23237.47,1788.75,0.00,0.00),
-('00-0001','Alice Santos','HR','January 2025',2,22500.00,2500.00,0.00,0.00,25000.00,0.00,562.50,200.00,1041.67,1698.07,3502.24,21497.76,0.00,562.50,200.00),
-('01-0002','Bob Reyes','Finance','January 2025',1,14000.00,1000.00,0.00,0.00,15000.00,700.00,0.00,0.00,0.00,0.00,700.00,14300.00,1113.00,0.00,0.00),
-('01-0002','Bob Reyes','Finance','January 2025',2,14000.00,1000.00,0.00,0.00,15000.00,0.00,350.00,200.00,0.00,454.95,1004.95,13995.05,0.00,350.00,200.00),
-('01-0003','Mary Mabulay','Finance','January 2025',1,40000.00,2500.00,0.00,0.00,42500.00,1750.00,0.00,0.00,0.00,0.00,1750.00,40750.00,2782.50,0.00,0.00),
-('01-0003','Mary Mabulay','Finance','January 2025',2,40000.00,2500.00,479.30,0.00,42979.30,0.00,1000.00,200.00,1666.67,5757.28,8623.95,34355.35,0.00,1000.00,200.00),
-('02-0004','Carlos Dela Cruz','IT','January 2025',1,27500.00,1500.00,658.95,0.00,29658.95,1375.00,0.00,0.00,1250.00,0.00,2625.00,27033.95,2186.25,0.00,0.00),
-('02-0004','Carlos Dela Cruz','IT','January 2025',2,27500.00,1500.00,988.43,0.00,29988.43,0.00,687.50,200.00,1250.00,3124.49,5261.99,24726.44,0.00,687.50,200.00),
-('02-0005','Janine Uy','IT','January 2025',1,21000.00,1250.00,0.00,0.00,22250.00,1050.00,0.00,0.00,0.00,0.00,1050.00,21200.00,1669.50,0.00,0.00),
-('02-0005','Janine Uy','IT','January 2025',2,21000.00,1250.00,0.00,0.00,22250.00,0.00,525.00,200.00,0.00,1659.10,2384.10,19865.90,0.00,525.00,200.00),
-('03-0006','Patrick Gomez','Operations','January 2025',1,19000.00,750.00,0.00,0.00,19750.00,950.00,0.00,0.00,0.00,0.00,950.00,18800.00,1510.50,0.00,0.00),
-('03-0006','Patrick Gomez','Operations','January 2025',2,19000.00,750.00,0.00,0.00,19750.00,0.00,475.00,200.00,0.00,1269.10,1944.10,17805.90,0.00,475.00,200.00),
-('03-0007','Lea Navarro','Operations','January 2025',1,32500.00,2500.00,973.31,0.00,35973.31,1625.00,0.00,0.00,0.00,0.00,1625.00,34348.31,2583.75,0.00,0.00),
-('03-0007','Lea Navarro','Operations','January 2025',2,32500.00,2500.00,0.00,0.00,35000.00,0.00,812.50,200.00,0.00,3901.60,4914.10,30085.90,0.00,812.50,200.00),
-('04-0008','Jasmine Co','Sales','January 2025',1,12500.00,600.00,0.00,0.00,13100.00,625.00,0.00,0.00,0.00,0.00,625.00,12475.00,993.75,0.00,0.00),
-('04-0008','Jasmine Co','Sales','January 2025',2,12500.00,600.00,0.00,0.00,13100.00,0.00,312.50,200.00,0.00,235.57,748.07,12351.93,0.00,312.50,200.00),
-('04-0009','Miguel Tan','Sales','January 2025',1,23500.00,1500.00,0.00,0.00,25000.00,1175.00,0.00,0.00,0.00,0.00,1175.00,23825.00,1868.25,0.00,0.00),
-('04-0009','Miguel Tan','Sales','January 2025',2,23500.00,1500.00,422.18,0.00,25422.18,0.00,587.50,200.00,2500.00,2231.04,5518.54,19903.64,0.00,587.50,200.00),
-('05-0010','Katrina Ramos','Marketing','January 2025',1,15000.00,750.00,0.00,0.00,15750.00,750.00,0.00,0.00,0.00,0.00,750.00,15000.00,1192.50,0.00,0.00),
-('05-0010','Katrina Ramos','Marketing','January 2025',2,15000.00,750.00,0.00,0.00,15750.00,0.00,375.00,200.00,0.00,601.20,1176.20,14573.80,0.00,375.00,200.00);
+INSERT INTO payroll_records (employee_id,full_name,department,pay_period_date,pay_period_half,basic_salary,allowances,overtime_pay,adjustments,gross_income,sss_premium_ee,philhealth_premium_ee,hdmf_premium_ee,loan_deductions,withholding_tax,total_deductions,net_pay,sss_premium_er,philhealth_premium_er,hdmf_premium_er) VALUES
+('00-0001','Alice Santos',0,'2025 01',1,22500.00,2500.00,404.14,0.00,25404.14,1125.00,0.00,0.00,1041.67,0.00,2166.67,23237.47,1788.75,0.00,0.00),
+('00-0001','Alice Santos',0,'2025 01',2,22500.00,2500.00,0.00,0.00,25000.00,0.00,562.50,200.00,1041.67,1698.07,3502.24,21497.76,0.00,562.50,200.00),
+('01-0002','Bob Reyes',1,'2025 01',1,14000.00,1000.00,0.00,0.00,15000.00,700.00,0.00,0.00,0.00,0.00,700.00,14300.00,1113.00,0.00,0.00),
+('01-0002','Bob Reyes',1,'2025 01',2,14000.00,1000.00,0.00,0.00,15000.00,0.00,350.00,200.00,0.00,454.95,1004.95,13995.05,0.00,350.00,200.00),
+('01-0003','Mary Mabulay',1,'2025 01',1,40000.00,2500.00,0.00,0.00,42500.00,1750.00,0.00,0.00,0.00,0.00,1750.00,40750.00,2782.50,0.00,0.00),
+('01-0003','Mary Mabulay',1,'2025 01',2,40000.00,2500.00,479.30,0.00,42979.30,0.00,1000.00,200.00,1666.67,5757.28,8623.95,34355.35,0.00,1000.00,200.00),
+('02-0004','Carlos Dela Cruz',2,'2025 01',1,27500.00,1500.00,658.95,0.00,29658.95,1375.00,0.00,0.00,1250.00,0.00,2625.00,27033.95,2186.25,0.00,0.00),
+('02-0004','Carlos Dela Cruz',2,'2025 01',2,27500.00,1500.00,988.43,0.00,29988.43,0.00,687.50,200.00,1250.00,3124.49,5261.99,24726.44,0.00,687.50,200.00),
+('02-0005','Janine Uy',2,'2025 01',1,21000.00,1250.00,0.00,0.00,22250.00,1050.00,0.00,0.00,0.00,0.00,1050.00,21200.00,1669.50,0.00,0.00),
+('02-0005','Janine Uy',2,'2025 01',2,21000.00,1250.00,0.00,0.00,22250.00,0.00,525.00,200.00,0.00,1659.10,2384.10,19865.90,0.00,525.00,200.00),
+('03-0006','Patrick Gomez',3,'2025 01',1,19000.00,750.00,0.00,0.00,19750.00,950.00,0.00,0.00,0.00,0.00,950.00,18800.00,1510.50,0.00,0.00),
+('03-0006','Patrick Gomez',3,'2025 01',2,19000.00,750.00,0.00,0.00,19750.00,0.00,475.00,200.00,0.00,1269.10,1944.10,17805.90,0.00,475.00,200.00),
+('03-0007','Lea Navarro',3,'2025 01',1,32500.00,2500.00,973.31,0.00,35973.31,1625.00,0.00,0.00,0.00,0.00,1625.00,34348.31,2583.75,0.00,0.00),
+('03-0007','Lea Navarro',3,'2025 01',2,32500.00,2500.00,0.00,0.00,35000.00,0.00,812.50,200.00,0.00,3901.60,4914.10,30085.90,0.00,812.50,200.00),
+('04-0008','Jasmine Co',4,'2025 01',1,12500.00,600.00,0.00,0.00,13100.00,625.00,0.00,0.00,0.00,0.00,625.00,12475.00,993.75,0.00,0.00),
+('04-0008','Jasmine Co',4,'2025 01',2,12500.00,600.00,0.00,0.00,13100.00,0.00,312.50,200.00,0.00,235.57,748.07,12351.93,0.00,312.50,200.00),
+('04-0009','Miguel Tan',4,'2025 01',1,23500.00,1500.00,0.00,0.00,25000.00,1175.00,0.00,0.00,0.00,0.00,1175.00,23825.00,1868.25,0.00,0.00),
+('04-0009','Miguel Tan',4,'2025 01',2,23500.00,1500.00,422.18,0.00,25422.18,0.00,587.50,200.00,2500.00,2231.04,5518.54,19903.64,0.00,587.50,200.00),
+('05-0010','Katrina Ramos',5,'2025 01',1,15000.00,750.00,0.00,0.00,15750.00,750.00,0.00,0.00,0.00,0.00,750.00,15000.00,1192.50,0.00,0.00),
+('05-0010','Katrina Ramos',5,'2025 01',2,15000.00,750.00,0.00,0.00,15750.00,0.00,375.00,200.00,0.00,601.20,1176.20,14573.80,0.00,375.00,200.00);
 
 CREATE TABLE IF NOT EXISTS base_repo_test_table (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -290,8 +290,8 @@ CREATE TABLE IF NOT EXISTS budget_periods (
 
 
 INSERT INTO budget_periods (label, year, half, start_date, end_date) VALUES
-('January 2025 - 1st Half', 2025, 1, '2025-01-01', '2025-01-15'),
-('January 2025 - 2nd Half', 2025, 2, '2025-01-16', '2025-01-31');
+('2025-01 - 1st Half', 2025, 1, '2025-01-01', '2025-01-15'),
+('2025-01 - 2nd Half', 2025, 2, '2025-01-16', '2025-01-31');
 
 
 
@@ -306,9 +306,9 @@ CREATE TABLE department_budgets (
 );
 
 INSERT INTO department_budgets (department, period_id, allocated_amount, notes) VALUES
-( 0, 1, 27672.70, 'January 2025 1st half - HR'),
-( 1, 1, 63730.70, 'January 2025 1st half - Finance'),
-( 2, 1, 57036.10, 'January 2025 1st half - IT');
+( 0, 1, 27672.70, '2025-01 1st half - HR'),
+( 1, 1, 63730.70, '2025-01 1st half - Finance'),
+( 2, 1, 57036.10, '2025-01 1st half - IT');
 
 
 PRAGMA foreign_keys = OFF; 
