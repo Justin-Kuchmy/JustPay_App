@@ -38,8 +38,8 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsAggregatedT
                       return a.employeeId < b.employeeId; // sort by employee ID first
 
                   // same employee → sort by month/year
-                  QDate da = QDate::fromString(QString::fromStdString(a.payPeriodText), "MMMM yyyy");
-                  QDate db = QDate::fromString(QString::fromStdString(b.payPeriodText), "MMMM yyyy");
+                  QDate da = QDate::fromString(QString::fromStdString(a.payPeriodDate), "MMMM yyyy");
+                  QDate db = QDate::fromString(QString::fromStdString(b.payPeriodDate), "MMMM yyyy");
 
                   return da < db;
               });
@@ -50,10 +50,10 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsAggregatedT
         auto &secondHalfObj = data.at(i + 1);
         PayrollCalculationResults combined{firstHalfObj};
         if (firstHalfObj.employeeId == secondHalfObj.employeeId &&
-            firstHalfObj.payPeriodText == secondHalfObj.payPeriodText)
+            firstHalfObj.payPeriodDate == secondHalfObj.payPeriodDate)
         {
             combined.employeeId = firstHalfObj.employeeId;
-            combined.payPeriodText = firstHalfObj.payPeriodText;
+            combined.payPeriodDate = firstHalfObj.payPeriodDate;
             combined.monthlyBasicSalary = firstHalfObj.monthlyBasicSalary + secondHalfObj.monthlyBasicSalary;
             combined.monthlyAllowances = firstHalfObj.monthlyAllowances + secondHalfObj.monthlyAllowances;
             combined.overTimePay = firstHalfObj.overTimePay + secondHalfObj.overTimePay;
@@ -85,9 +85,15 @@ std::vector<PayrollCalculationResults> PayrollService::getAllPayrollsByEmployeeI
     return this->repo.getAllById(id);
 }
 
-std::vector<PayrollCalculationResults> PayrollService::getPayrollByPeriod(const std::string &payPeriodText, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
+std::vector<PayrollCalculationResults> PayrollService::getPayrollByPeriod(const std::string &payPeriodDate, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
 {
-    return this->repo.getPayrollByPeriod(payPeriodText, employeeId, payPeriodHalf);
+    return this->repo.getPayrollByPeriod(payPeriodDate, employeeId, payPeriodHalf);
+}
+
+std::vector<PayrollCalculationResults> PayrollService::getLatestPeriodPayrolls()
+{
+    auto latestPeriod = repo.getLatestPeriod();
+    return repo.getPayrollByPeriod(latestPeriod);
 }
 
 std::optional<PayrollConfig> PayrollService::loadConfig()
