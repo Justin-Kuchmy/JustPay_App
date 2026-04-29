@@ -94,7 +94,7 @@ protected:
     }
 };
 
-PayrollCalculationResults makeEmployeePayroll(double salary, std::string payPeriodText, double allowances = 0.0, Contributions type = {true, false, false}, double otPay = 0.0, double loan = 0.0, int payPeriodHalf = 1)
+PayrollCalculationResults makeEmployeePayroll(double salary, std::string payPeriodDate, double allowances = 0.0, Contributions type = {true, false, false}, double otPay = 0.0, double loan = 0.0, int payPeriodHalf = 1)
 {
     PayrollCalculationResults emp{};
     emp.id = 1;
@@ -107,7 +107,7 @@ PayrollCalculationResults makeEmployeePayroll(double salary, std::string payPeri
     emp.overTimePay = otPay;
     emp.loanDeductionsPerPayroll = loan;
     emp.payPeriodHalf = payPeriodHalf;
-    emp.payPeriodText = payPeriodText;
+    emp.payPeriodDate = payPeriodDate;
     emp.sssPremium_EE = PayrollCalc::calcSSS_EE(emp.monthlyBasicSalary, emp.applySSS);
     emp.sssPremium_ER = PayrollCalc::calcSSS_ER(emp.monthlyBasicSalary, emp.applySSS);
 
@@ -197,7 +197,7 @@ TEST_F(GovRemitServiceTest, getMonthlySummary_returnsCorrectSummaryForValidMonth
     GovernmentRemittanceService::MonthlySummary expected{};
 
     std::erase_if(remits, [&mthYearToFind](const GovernmentRemittance &item)
-                  { return item.payPeriodText != mthYearToFind; });
+                  { return item.payPeriodDate != mthYearToFind; });
 
     expected.monthYear = mthYearToFind;
     for (GovernmentRemittance &item : remits)
@@ -264,7 +264,7 @@ TEST_F(GovRemitServiceTest, getMonthlySummary_handlesInvalidMonthYearFormat)
 
 TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForFirstHalf)
 {
-    // PeriodTotals getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf);
+    // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
 
     PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     PayrollCalculationResults payrollTwo = makeEmployeePayroll(32500, "May 2025", 2500.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 1235.00, 575.00, 1);
@@ -286,7 +286,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForFirstHalf)
 
 TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForSecondHalf)
 {
-    // PeriodTotals getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf);
+    // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
     PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     PayrollCalculationResults payrollTwo = makeEmployeePayroll(18000.00, "May 2025", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
@@ -306,7 +306,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForSecondHalf)
 }
 TEST_F(GovRemitServiceTest, getPeriodTotals_returnsZeroTotalsForPeriodWithNoData)
 {
-    // PeriodTotals getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf);
+    // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
     GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("December 2099", 1);
 
     EXPECT_EQ(totals.employeeCount, 0);
@@ -320,7 +320,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsZeroTotalsForPeriodWithNoData
 }
 TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPayPeriodHalf)
 {
-    // PeriodTotals getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf);
+    // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
     PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
@@ -335,7 +335,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPayPeriodHalf)
 }
 TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPeriodText)
 {
-    // PeriodTotals getPeriodTotals(const std::string &payPeriodText, int payPeriodHalf);
+    // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
     PayrollCalculationResults payrollOne = makeEmployeePayroll(14000, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
