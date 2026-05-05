@@ -29,6 +29,15 @@ namespace PayrollCalc
         {666667.0, 200833.33, 0.35} // >666,667
     };
 
+    constexpr TaxBracket ANNUAL_TAX_BRACKETS[] = {
+        {0.0, 0.0, 0.0},              // 0 - 250,000
+        {250000.0, 0.0, 0.15},        // 250,001 - 400,000
+        {400000.0, 22500.0, 0.20},    // 400,001 - 800,000
+        {800000.0, 102500.0, 0.25},   // 800,001 - 2,000,000
+        {2000000.0, 402500.0, 0.30},  // 2,000,001 - 8,000,000
+        {8000000.0, 2202500.0, 0.35}, // >8,000,000
+    };
+
     constexpr size_t NUM_BRACKETS = sizeof(SEMI_MONTHLY_TAX_BRACKETS) / sizeof(TaxBracket);
     constexpr long SSS_SALARY_CAP = 35000;
     constexpr long PHIC_SALARY_FLOOR = 10000;
@@ -50,6 +59,7 @@ namespace PayrollCalc
     double calcPhilHealth_ER(double gross, bool applyPhilHealth);
     double calcHDMF_ER(double gross, bool applyHDMF);
     double calcWithholding(double taxableIncome);
+    double calcAnnualTaxDue(double annualTaxableIncome);
 
     inline float truncateForCurrency(double v)
     {
