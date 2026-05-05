@@ -76,10 +76,21 @@ struct MonthlyBudgetUtilizationReport
 struct TaxReconciliationReport
 {
     std::string employeeId{};
+    std::string employeeName{};
 
-    double annualTaxableIncome{0.0};
-    double computedTaxDue{0.0};
-    double totalTaxWithheld{0.0};
+    double grossIncome{0.0};
+    double thirteenthMonthAndLeave{0.0};
+    double deMinimis{0.0};
+    double govtContributions{0.0};
+    double nonTaxableTotal{0.0}; // computed
 
-    double variance{0.0};
+    double basicPay{0.0};
+    double taxable13thMonth{0.0};
+    double overtimePay{0.0};
+    double taxableDeMinimis{0.0};
+    double taxableTotal{0.0}; // computed
+
+    double taxDue{0.0};
+    double taxWithheld{0.0};
+    double taxVariance{0.0}; // computed
 };
