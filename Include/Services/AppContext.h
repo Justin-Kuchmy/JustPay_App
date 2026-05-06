@@ -12,6 +12,7 @@
 #include "Services/YearEndBenefitsService.h"
 #include "Services/LeaveBalanceService.h"
 #include "Services/BudgetUtilService.h"
+#include "Services/TaxReconciliationService.h"
 #include "Repositories/EmployeeRepository.h"
 #include "Repositories/DependentRepository.h"
 #include "Repositories/EmergencyContactRepository.h"
@@ -66,6 +67,7 @@ public:
     YearEndBenefitsService &yearEndBenefitsService() noexcept;
     LeaveBalanceService &leaveBalanceService() noexcept;
     BudgetUtilService &budgetUtilService() noexcept;
+    TaxReconciliationService &taxReconciliationService() noexcept;
 
 private:
     sqlite3 *m_db = nullptr;
@@ -92,6 +94,7 @@ private:
     LeaveBalanceService m_leaveBalanceService;
     YearEndBenefitsService m_yearEndBenefitsService;
     BudgetUtilService m_budgetUtilService;
+    TaxReconciliationService m_taxReconciliationService;
 
     explicit AppContext(const std::string &dbName);
     ~AppContext() noexcept;

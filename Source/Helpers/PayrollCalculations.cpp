@@ -88,4 +88,25 @@ namespace PayrollCalc
         return withholdingTax;
     }
 
+    double calcAnnualTaxDue(double annualTaxableIncome)
+    {
+        double annualTaxable = 0.0;
+        for (size_t i{NUM_BRACKETS}; i > 0; --i)
+        {
+            if (annualTaxableIncome < ANNUAL_TAX_BRACKETS[i - 1].lowerBound)
+            {
+                continue;
+            }
+            else
+            {
+                annualTaxable =
+                    ANNUAL_TAX_BRACKETS[i - 1].baseTax +
+                    ANNUAL_TAX_BRACKETS[i - 1].rate *
+                        (annualTaxableIncome - ANNUAL_TAX_BRACKETS[i - 1].lowerBound);
+                break;
+            }
+        }
+        return annualTaxable;
+    }
+
 }
