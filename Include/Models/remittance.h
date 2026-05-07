@@ -7,7 +7,7 @@ class GovernmentRemittance
 public:
     int id{};
 
-    int payrollCalculationResultsId{};
+    int payrollCalculationResultsId{0};
     std::string employeeId{""};
     std::string fullName{""};
     int employeeDepartment{0};
@@ -24,7 +24,7 @@ public:
     RemittanceStatus withHoldingTaxSubmissionStatus{RemittanceStatus::PENDING};
 
     Date lastSubmittedDate{Date(1970, 1, 1)};
-    int submittedByUserId{};
+    int submittedByUserId{0};
     Date dateCreated{Date(1970, 1, 1)};
     Date dateModified{Date(1970, 1, 1)};
 
@@ -48,7 +48,6 @@ public:
             << "\n submissionStatus: " << RemittanceStatus_to_string(submissionStatus)
             << "\n withHoldingTaxSubmissionStatus: " << RemittanceStatus_to_string(withHoldingTaxSubmissionStatus)
             << "\n lastSubmittedDate: " << lastSubmittedDate.to_string()
-            << "\n submittedByUserId: " << submittedByUserId
             << "\n dateCreated: " << dateCreated.to_string()
             << "\n dateModified: " << dateModified.to_string()
             << " }";
