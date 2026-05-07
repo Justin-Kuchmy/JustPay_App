@@ -90,6 +90,11 @@ std::vector<PayrollCalculationResults> PayrollService::getPayrollByPeriod(const 
     return this->repo.getPayrollByPeriod(payPeriodDate, employeeId, payPeriodHalf);
 }
 
+std::vector<PayrollCalculationResults> PayrollService::getPayrollByYear(const std::string &payPeriodYear, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
+{
+    return this->repo.getPayrollByYear(payPeriodYear, employeeId, payPeriodHalf);
+}
+
 std::vector<PayrollCalculationResults> PayrollService::getLatestPeriodPayrolls()
 {
     auto latestPeriod = repo.getLatestPeriod();
