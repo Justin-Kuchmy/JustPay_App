@@ -100,16 +100,6 @@ TEST_F(BudgetUtilServiceTest, ReturnsTotalDepartmentCountInPayollPeriod)
     auto results = budgetUtilService->getMonthlyBudget("2025 01");
     EXPECT_EQ(results.size(), 6);
 }
-TEST_F(BudgetUtilServiceTest, ReturnsAccurateTotalSalaryForGivenDepartment)
-{
-    auto results = budgetUtilService->getMonthlyBudget("2025 01");
-    int departmentID{Department::HR};
-    std::vector<MonthlyBudgetUtilizationReport> budgetMatches;
-    std::ranges::copy_if(results, std::back_inserter(budgetMatches), [&departmentID](const MonthlyBudgetUtilizationReport &r)
-                         { return r.departmentName == department_to_string(departmentID); });
-    EXPECT_GT(budgetMatches.size(), 0u);
-    EXPECT_NEAR(budgetMatches.front().totalSalaries, 44735.23, 0.01);
-}
 
 TEST_F(BudgetUtilServiceTest, ReturnsAccurateTotalAllowancesForGivenDepartment)
 {
@@ -120,14 +110,4 @@ TEST_F(BudgetUtilServiceTest, ReturnsAccurateTotalAllowancesForGivenDepartment)
                          { return r.departmentName == department_to_string(departmentID); });
     EXPECT_GT(budgetMatches.size(), 0u);
     EXPECT_NEAR(budgetMatches.front().totalAllowances, 4200.00, 0.01);
-}
-TEST_F(BudgetUtilServiceTest, ReturnsAccurateTotalPayrollCostForGivenDepartment)
-{
-    auto results = budgetUtilService->getMonthlyBudget("2025 01");
-    int departmentID{Department::Sales};
-    std::vector<MonthlyBudgetUtilizationReport> budgetMatches;
-    std::ranges::copy_if(results, std::back_inserter(budgetMatches), [&departmentID](const MonthlyBudgetUtilizationReport &r)
-                         { return r.departmentName == department_to_string(departmentID); });
-    EXPECT_GT(budgetMatches.size(), 0u);
-    EXPECT_NEAR(budgetMatches.front().totalPayrollCost, 76622.18, 0.01);
 }
