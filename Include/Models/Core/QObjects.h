@@ -9,8 +9,10 @@
 #include <QModelIndex>
 #include <QSortFilterProxyModel>
 #include "Services/AppContext.h"
-#include "Models/Core/DataObjects.h"
 #include "Services/EmployeeService.h"
+#include "Models/Core/DataObjects.h"
+#include "Models/payroll.h"
+#include "Models/reporting.h"
 #include <QLocale>
 
 struct MenuOption
@@ -95,6 +97,7 @@ public:
 private:
     std::vector<AttendanceLog> *m_model;
     const int m_columnCount = 8;
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
     QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
     {
         const auto &item = m_model->at(rowIndex);
@@ -255,9 +258,9 @@ private:
         case 1:
             return QString::fromStdString(item.fullName);
         case 2:
-            return QString::fromStdString(item.employeeDepartment);
+            return QString::fromStdString(department_to_string(item.employeeDepartment));
         case 3:
-            return QString::fromStdString(item.payPeriodText);
+            return QString::fromStdString(item.payPeriodDate);
         case 4:
             return item.payPeriodHalf == 1 ? QString::fromStdString("First Half") : QString::fromStdString("Second Half");
         case 5:
@@ -601,6 +604,7 @@ public:
 private:
     std::vector<GovernmentRemittance> *m_model;
     const int m_columnCount = 6;
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
     QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
     {
         const auto &item = m_model->at(rowIndex);
@@ -618,7 +622,7 @@ private:
         case 4:
             return QString::fromStdString(std::to_string(item.total_Contrib));
         case 5:
-            return QString::fromStdString(item.payPeriodText);
+            return QString::fromStdString(item.payPeriodDate);
         }
         return QVariant();
     }
@@ -660,5 +664,443 @@ protected:
 private:
     QString m_payPeriod;
     QString m_payPeriodHalf;
+};
+class YearEndBenefitsModel : public QAbstractTableModel
+{
+    Q_OBJECT
+public:
+    explicit YearEndBenefitsModel(QObject *parent = nullptr) : QAbstractTableModel(parent), m_model{} {}
+    YearEndBenefitsModel(QObject *parent, std::vector<YearEndBenefits> *data) : QAbstractTableModel(parent), m_model(data) {}
+    ~YearEndBenefitsModel() = default;
+    YearEndBenefitsModel(const YearEndBenefitsModel &) = delete;
+    YearEndBenefitsModel &operator=(const YearEndBenefitsModel &) = delete;
+
+    int rowCount(const QModelIndex & = QModelIndex()) const override { return m_model ? static_cast<int>(m_model->size()) : 0; }
+    int columnCount(const QModelIndex & = QModelIndex()) const override { return m_columnCount; }
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+
+        if (!index.isValid())
+        {
+            return QVariant();
+        }
+        if (role == Qt::DisplayRole)
+        {
+            return valueForColumn(index.row(), index.column());
+        }
+        if (role == Qt::TextAlignmentRole)
+        {
+            return Qt::AlignCenter;
+        }
+        if (role == Qt::UserRole)
+        {
+            return QVariant(QString::fromStdString(m_model->at(static_cast<size_t>(index.row())).employeeId));
+        }
+        return QVariant();
+    };
+
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {
+
+        if (role != Qt::DisplayRole)
+        {
+            return QVariant();
+        }
+        if (orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+            case 0:
+                return QString("Employee ID");
+            case 1:
+                return QString("Year");
+            case 2:
+                return QString("Total Basic Salary");
+            case 3:
+                return QString("13th Month Pay");
+            case 4:
+                return QString("Unused Leave Days");
+            case 5:
+                return QString("Daily Rate");
+            case 6:
+                return QString("Mometized Leave Value");
+            }
+        }
+        return QVariant();
+    }
+    void reloadData(std::vector<YearEndBenefits> *yearEndBenefits)
+    {
+        if (!m_model)
+            return;
+        beginResetModel();
+        m_model = yearEndBenefits;
+        endResetModel();
+    }
+
+private:
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
+    {
+        // use the row and column index to search m_model to get the data
+        auto &item = m_model->at(rowIndex);
+        switch (columnIndex)
+        {
+        case 0:
+            return QVariant(QString::fromStdString(item.employeeId));
+        case 1:
+            return QVariant(QString::fromStdString(std::to_string(item.year)));
+        case 2:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.totalBasicSalary, 'f', 2)));
+        case 3:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.thirteenthMonthPay, 'f', 2)));
+        case 4:
+            return QVariant(QString::fromStdString(std::format("{:.2f}", item.unusedLeaveDays)));
+        case 5:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.dailyRate, 'f', 2)));
+        case 6:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.monetizedLeaveValue, 'f', 2)));
+        }
+        return QVariant();
+    }
+
+    std::vector<YearEndBenefits> *m_model = nullptr;
+    static constexpr int m_columnCount = 7;
+};
+class YearEndBenefitsFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit YearEndBenefitsFilterProxyModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {}
+    ~YearEndBenefitsFilterProxyModel() = default;
+
+    void setYearFilter(const QString &year)
+    {
+        m_yearFilter = year;
+    };
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
+        QModelIndex yearIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 1, sourceParent);
+        QString year = QSortFilterProxyModel::sourceModel()->data(yearIndex).toString();
+
+        if (!m_yearFilter.isEmpty() && year != m_yearFilter)
+            return false;
+        return true;
+    };
+
+private:
+    QString m_yearFilter;
+};
+class TaxReconciliationReportModel : public QAbstractTableModel
+{
+    Q_OBJECT
+public:
+    explicit TaxReconciliationReportModel(QObject *parent = nullptr) : QAbstractTableModel(parent), m_model{} {}
+    TaxReconciliationReportModel(QObject *parent, std::vector<TaxReconciliationReport> *data) : QAbstractTableModel(parent), m_model(data) {}
+    ~TaxReconciliationReportModel() = default;
+    TaxReconciliationReportModel(const TaxReconciliationReportModel &) = delete;
+    TaxReconciliationReportModel &operator=(const TaxReconciliationReportModel &) = delete;
+
+    int rowCount(const QModelIndex & = QModelIndex()) const override { return m_model ? static_cast<int>(m_model->size()) : 0; }
+    int columnCount(const QModelIndex & = QModelIndex()) const override { return m_columnCount; }
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+
+        if (!index.isValid())
+        {
+            return QVariant();
+        }
+        if (role == Qt::DisplayRole)
+        {
+            return valueForColumn(index.row(), index.column());
+        }
+        if (role == Qt::TextAlignmentRole)
+        {
+            return Qt::AlignCenter;
+        }
+        if (role == Qt::UserRole)
+        {
+            return QVariant(QString::fromStdString(m_model->at(static_cast<size_t>(index.row())).employeeId));
+        }
+        return QVariant();
+    };
+
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {
+
+        if (role != Qt::DisplayRole)
+        {
+            return QVariant();
+        }
+        if (orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+            case 0:
+                return QString("Employee Name");
+            case 1:
+                return QString("TIN");
+            case 2:
+                return QString("Gross Income");
+            case 3:
+                return QString("13th Month & Leave");
+            case 4:
+                return QString("De Minimis");
+            case 5:
+                return QString("Gov't Contributions");
+            case 6:
+                return QString("Non-Taxable Total");
+            case 7:
+                return QString("Basic Pay");
+            case 8:
+                return QString("Taxable 13th Month");
+            case 9:
+                return QString("Overtime Pay");
+            case 10:
+                return QString("Taxable De Minimis");
+            case 11:
+                return QString("Taxable Total");
+            case 12:
+                return QString("Tax Due");
+            case 13:
+                return QString("Tax Withheld");
+            case 14:
+                return QString("Tax Variance");
+            }
+        }
+        return QVariant();
+    }
+    void reloadData(std::vector<TaxReconciliationReport> *taxReconciliationReport)
+    {
+        if (!m_model)
+            return;
+        beginResetModel();
+        m_model = taxReconciliationReport;
+        endResetModel();
+    }
+
+private:
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
+    {
+        // use the row and column index to search m_model to get the data
+        auto &item = m_model->at(rowIndex);
+
+        switch (columnIndex)
+        {
+        case 0:
+            return QVariant(QString::fromStdString(item.employeeName));
+        case 1:
+            return QVariant(QString::fromStdString(item.tin));
+        case 2:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.grossIncome, 'f', 2)));
+        case 3:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.thirteenthMonthAndLeave, 'f', 2)));
+        case 4:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.deMinimis, 'f', 2)));
+        case 5:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.govtContributions, 'f', 2)));
+        case 6:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.nonTaxableTotal, 'f', 2)));
+        case 7:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.basicPay, 'f', 2)));
+        case 8:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxable13thMonth, 'f', 2)));
+        case 9:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.overtimePay, 'f', 2)));
+        case 10:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxableDeMinimis, 'f', 2)));
+        case 11:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxableTotal, 'f', 2)));
+        case 12:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxDue, 'f', 2)));
+        case 13:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxWithheld, 'f', 2)));
+        case 14:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.taxVariance, 'f', 2)));
+        }
+        return QVariant();
+    }
+
+    std::vector<TaxReconciliationReport> *m_model = nullptr;
+    static constexpr int m_columnCount = 15;
+};
+class TaxReconciliationReportFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit TaxReconciliationReportFilterProxyModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {}
+    ~TaxReconciliationReportFilterProxyModel() = default;
+
+    void setEmployeeFilter(const QString &employee)
+    {
+        m_employeeFilter = employee;
+    };
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
+        QModelIndex employeeIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 0, sourceParent);
+
+        QString employee = QSortFilterProxyModel::sourceModel()->data(employeeIndex).toString();
+
+        if (!m_employeeFilter.isEmpty() && employee != m_employeeFilter)
+            return false;
+        return true;
+    };
+
+private:
+    QString m_employeeFilter;
+};
+class MonthlyBudgetUtilizationReportModel : public QAbstractTableModel
+{
+    Q_OBJECT
+public:
+    explicit MonthlyBudgetUtilizationReportModel(QObject *parent = nullptr) : QAbstractTableModel(parent), m_model{} {}
+    MonthlyBudgetUtilizationReportModel(QObject *parent, std::vector<MonthlyBudgetUtilizationReport> *data) : QAbstractTableModel(parent), m_model(data) {}
+    ~MonthlyBudgetUtilizationReportModel() = default;
+    MonthlyBudgetUtilizationReportModel(const MonthlyBudgetUtilizationReportModel &) = delete;
+    MonthlyBudgetUtilizationReportModel &operator=(const MonthlyBudgetUtilizationReportModel &) = delete;
+
+    int rowCount(const QModelIndex & = QModelIndex()) const override { return m_model ? static_cast<int>(m_model->size()) : 0; }
+    int columnCount(const QModelIndex & = QModelIndex()) const override { return m_columnCount; }
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+
+        if (!index.isValid())
+        {
+            return QVariant();
+        }
+        if (role == Qt::DisplayRole)
+        {
+            return valueForColumn(index.row(), index.column());
+        }
+        if (role == Qt::TextAlignmentRole)
+        {
+            return Qt::AlignCenter;
+        }
+        if (role == Qt::UserRole)
+        {
+            return QVariant(QString::number(m_model->at(static_cast<size_t>(index.row())).departmentId));
+        }
+        return QVariant();
+    };
+
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {
+
+        if (role != Qt::DisplayRole)
+        {
+            return QVariant();
+        }
+        if (orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+            case 0:
+                return QString("Department");
+            case 1:
+                return QString("Period");
+            case 2:
+                return QString("Basic Pay");
+            case 3:
+                return QString("13th Month Pay");
+            case 4:
+                return QString("Allowances");
+            case 5:
+                return QString("Adjustments");
+            case 6:
+                return QString("Employer SSS Premium");
+            case 7:
+                return QString("Employer PHIC Premium");
+            case 8:
+                return QString("Employer HDMF Premium");
+            case 9:
+                return QString("Grand Total");
+            }
+        }
+        return QVariant();
+    }
+    void reloadData(std::vector<MonthlyBudgetUtilizationReport> *monthlyBudgetUtilizationReport)
+    {
+        if (!m_model)
+            return;
+        beginResetModel();
+        m_model = monthlyBudgetUtilizationReport;
+        endResetModel();
+    }
+
+private:
+    QLocale phLocale{QLocale::English, QLocale::Philippines};
+    QVariant valueForColumn(size_t rowIndex, size_t columnIndex) const
+    {
+        // use the row and column index to search m_model to get the data
+        auto &item = m_model->at(rowIndex);
+
+        switch (columnIndex)
+        {
+        case 0:
+            return QVariant(QString::fromStdString(item.departmentName));
+        case 1:
+            return QVariant(QString::fromStdString(item.periodLabel));
+        case 2:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.totalBasicPay, 'f', 2)));
+        case 3:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.total13MonthPay, 'f', 2)));
+        case 4:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.totalAllowances, 'f', 2)));
+        case 5:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.totalAdjustments, 'f', 2)));
+        case 6:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.total_sssPremium_Employer, 'f', 2)));
+        case 7:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.total_phicPremium_Employer, 'f', 2)));
+        case 8:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.total_hdmfPremium_Employer, 'f', 2)));
+        case 9:
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.grandTotal, 'f', 2)));
+        }
+        return QVariant();
+    }
+
+    std::vector<MonthlyBudgetUtilizationReport> *m_model = nullptr;
+    static constexpr int m_columnCount = 12;
+};
+class MonthlyBudgetUtilizationReportFilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit MonthlyBudgetUtilizationReportFilterProxyModel(QObject *parent = nullptr) : QSortFilterProxyModel(parent) {}
+    ~MonthlyBudgetUtilizationReportFilterProxyModel() = default;
+
+    void setDepartmentFilter(const QString &department)
+    {
+        m_departmentFilter = department;
+    };
+    void setPeriodFilter(const QString &period)
+    {
+        m_periodFilter = period;
+    };
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
+    {
+        QModelIndex departmentIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 0, sourceParent);
+        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 2, sourceParent);
+
+        QString department = QSortFilterProxyModel::sourceModel()->data(departmentIndex).toString();
+        QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
+
+        if (!m_departmentFilter.isEmpty() && department != m_departmentFilter)
+            return false;
+        if (!m_periodFilter.isEmpty() && period != m_periodFilter)
+            return false;
+        return true;
+    };
+
+private:
+    QString m_departmentFilter;
+    QString m_periodFilter;
 };
 #endif
