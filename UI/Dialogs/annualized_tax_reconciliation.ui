@@ -28,7 +28,7 @@
      <item>
       <layout class="QHBoxLayout" name="TopLayout">
        <item>
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QComboBox" name="yearComboBox">
          <property name="placeholderText">
           <string>Year</string>
          </property>
