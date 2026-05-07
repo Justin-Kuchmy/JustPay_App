@@ -116,3 +116,40 @@ protected:
         TaxReconciliationDbTest::TearDown();
     }
 };
+
+TEST_F(TaxReconciliationServiceTest, ReturnsOneReportPerEmployee)
+{
+    auto results = svc->getReconciliation(2025);
+    LOG_DEBUG(results.front().to_string());
+    EXPECT_EQ(results.size(), 10); // 10 employees via tests.sql
+}
+
+TEST_F(TaxReconciliationServiceTest, NonTaxableTotalIsCorrect)
+{
+    auto results = svc->getReconciliation(2025);
+    auto &r = results[0];
+    EXPECT_TRUE(r.nonTaxableTotal > 0.0);
+    EXPECT_DOUBLE_EQ(r.nonTaxableTotal, r.thirteenthMonthAndLeave + r.deMinimis + r.govtContributions);
+}
+
+TEST_F(TaxReconciliationServiceTest, TaxableTotalIsCorrect)
+{
+    auto results = svc->getReconciliation(2025);
+    auto &r = results[0];
+    EXPECT_TRUE(r.nonTaxableTotal > 0.0);
+    EXPECT_DOUBLE_EQ(r.taxableTotal, r.basicPay + r.taxable13thMonth + r.overtimePay + r.taxableDeMinimis);
+}
+
+TEST_F(TaxReconciliationServiceTest, TaxVarianceIsCorrect)
+{
+    auto results = svc->getReconciliation(2025);
+    auto &r = results[0];
+    EXPECT_TRUE(r.nonTaxableTotal > 0.0);
+    EXPECT_DOUBLE_EQ(r.taxVariance, r.taxDue - r.taxWithheld);
+}
+
+TEST_F(TaxReconciliationServiceTest, NoReportsForYearWithNoData)
+{
+    auto results = svc->getReconciliation(1999);
+    EXPECT_TRUE(results.empty());
+}
