@@ -149,6 +149,44 @@ sqlite3_int64 PayrollRepository::insertPayroll(const PayrollCalculationResults &
 
     return sqlite3_last_insert_rowid(db);
 };
+std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByYear(const std::string &payPeriodYear, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
+{
+    // select * FROM payroll_records where pay_period_date like "2025%"
+    std::string sql = "SELECT * FROM payroll_records WHERE pay_period_date like ?";
+    if (employeeId.has_value())
+        sql += " AND employee_id = ?";
+    if (payPeriodHalf.has_value())
+        sql += " AND pay_period_half = ?";
+
+    sqlite3_stmt *stmt = nullptr;
+    std::vector<PayrollCalculationResults> results{};
+
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        LOG_DEBUG("Failed to prepare: " << sqlite3_errmsg(db));
+        return results;
+    }
+    int idx = 1;
+    std::string yearPattern = payPeriodYear + "%";
+    sqlite3_bind_text(stmt, idx++, yearPattern.c_str(), -1, SQLITE_TRANSIENT);
+    if (employeeId.has_value())
+    {
+        sqlite3_bind_text(stmt, idx++, employeeId.value().c_str(), -1, SQLITE_TRANSIENT);
+    }
+    if (payPeriodHalf.has_value())
+    {
+        sqlite3_bind_int(stmt, idx++, payPeriodHalf.value());
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        auto obj = mapPayroll(stmt);
+        results.push_back(obj);
+    }
+
+    sqlite3_finalize(stmt);
+    return results;
+}
 std::vector<PayrollCalculationResults> PayrollRepository::getPayrollByPeriod(const std::string &payPeriodDate, std::optional<std::string> employeeId, std::optional<int> payPeriodHalf)
 {
     std::string sql = "SELECT * FROM payroll_records WHERE pay_period_date = ?";
