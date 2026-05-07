@@ -15,11 +15,7 @@ protected:
     YearEndBenefitsService &yearEndService;
     GovernmentRemittanceService &govtRemittService;
 
-    TaxReconciliationReport buildDTO(const Employee &employee, const PayrollCalculationResults &payrolls, const YearEndBenefits &yearEnd, const GovernmentRemittance &remittance);
-
-    double computeNonTaxableTotal(const TaxReconciliationReport &dto);
-    double computeTaxableTotal(const TaxReconciliationReport &dto);
-    double computeTaxVariance(const TaxReconciliationReport &dto);
+    TaxReconciliationReport buildDTO(const Employee &employee, const std::vector<PayrollCalculationResults> &payrolls, const YearEndBenefits &yearEnd, const std::vector<GovernmentRemittance> &remittance);
 
 public:
     explicit TaxReconciliationService(EmployeeService &employeeService, PayrollService &payrollService, YearEndBenefitsService &yearEndService, GovernmentRemittanceService &govtRemittService);
