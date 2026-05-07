@@ -24,6 +24,7 @@ public:
     std::vector<PayrollCalculationResults> getAllById(std::string &id);
     std::string getLatestPeriod();
     std::vector<PayrollCalculationResults> getPayrollByPeriod(const std::string &payPeriodDate, std::optional<std::string> employeeId = std::nullopt, std::optional<int> payPeriodHalf = std::nullopt);
+    std::vector<PayrollCalculationResults> getPayrollByYear(const std::string &payPeriodYear, std::optional<std::string> employeeId = std::nullopt, std::optional<int> payPeriodHalf = std::nullopt);
     std::optional<PayrollConfig> loadConfig();
     bool saveConfig(const PayrollConfig &config);
     // update
