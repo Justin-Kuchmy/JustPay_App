@@ -9,9 +9,6 @@ double LeaveBalanceService::computeLeaveEntitlement(const std::string &employeeI
     constexpr double FULL_ENTITLEMENT = 10.0;
     Date cutOff{year, 11, 30};
 
-    LOG_DEBUG("computeLeaveEntitlement called for: " + employeeId);
-    LOG_DEBUG("empRepo address: " + std::to_string(reinterpret_cast<uintptr_t>(&empRepo)));
-
     auto empOpt = empRepo.getById(employeeId);
     if (!empOpt.has_value())
         return 0.0;
