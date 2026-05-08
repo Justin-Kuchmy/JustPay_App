@@ -55,6 +55,7 @@ class AppContext
 public:
     static AppContext &instance(const std::string &dbName = "payroll.db");
     static sqlite3 *openDb(const std::string &dbName);
+    sqlite3 *getDb() const { return m_db; }
 
     EmployeeService &employeeService() noexcept;
     DependentService &dependentService() noexcept;

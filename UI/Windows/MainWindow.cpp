@@ -5,8 +5,12 @@
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QFile>
+#include <QDir>
+#include <QFileInfo>
 #include <iostream>
 #include "Utils/Log.h"
+#include <QMessageBox>
+#include <QStandardPaths>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -41,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // Tools menu
     QMenu *toolsMenu = menuBar->addMenu("&Tools");
     toolsMenu->addAction("Settings");
+    QAction *backupAction = toolsMenu->addAction("Backup Database");
+    connect(backupAction, &QAction::triggered, this, &MainWindow::onBackupDatabase);
 
     // Help menu
     QMenu *helpMenu = menuBar->addMenu("&Help");
@@ -97,6 +103,48 @@ void MainWindow::applyTheme(const QString &path)
     {
         std::cerr << "Failed to open theme file: " << path.toStdString() << "\n";
     }
+}
+
+// https://sqlite.org/c3ref/backup_finish.html
+bool MainWindow::backupDatabase(sqlite3 *srcDb, const std::string &destPath)
+{
+    sqlite3 *destDb = nullptr;
+
+    if (sqlite3_open(destPath.c_str(), &destDb) != SQLITE_OK)
+    {
+        LOG_DEBUG("Failed to open backup destination: " << sqlite3_errmsg(destDb));
+        sqlite3_close(destDb);
+        return false;
+    }
+
+    sqlite3_backup *backup = sqlite3_backup_init(destDb, "main", srcDb, "main");
+    if (!backup)
+    {
+        LOG_DEBUG("Failed to init backup: " << sqlite3_errmsg(destDb));
+        sqlite3_close(destDb);
+        return false;
+    }
+
+    sqlite3_backup_step(backup, -1); // -1 = copy entire DB in one step
+    sqlite3_backup_finish(backup);
+
+    int rc = sqlite3_errcode(destDb);
+    sqlite3_close(destDb);
+
+    return rc == SQLITE_OK;
+}
+
+void MainWindow::onBackupDatabase()
+{
+    QString backupPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QString("/JustPay/Backups/JustPay_backup_%1.db").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss"));
+    const std::string &backupPathString = backupPath.toStdString();
+    QDir().mkpath(QFileInfo(backupPath).absolutePath());
+    LOG_DEBUG(backupPath.toStdString());
+    bool ok = backupDatabase(AppContext::instance().getDb(), backupPathString);
+    if (ok)
+        QMessageBox::information(this, "Backup", "Database backed up to:\n" + backupPath);
+    else
+        QMessageBox::critical(this, "Backup Failed", "Could not create backup.");
 }
 
 MainWindow::~MainWindow() {}

@@ -17,6 +17,8 @@ sqlite3 *AppContext::openDb(const std::string &dbName)
     return db;
 }
 
+
+
 AppContext &AppContext::instance(const std::string &dbName)
 {
     static AppContext ctx(dbName);
