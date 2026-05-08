@@ -42,7 +42,9 @@ struct Date
 
     std::string toMonthYearString() const
     {
-        return month_to_text_string(this->month) + " " + std::to_string(this->year);
+        std::ostringstream oss;
+        oss << this->year << " " << std::setw(2) << std::setfill('0') << this->month;
+        return oss.str();
     }
     std::string to_string() const
     {
