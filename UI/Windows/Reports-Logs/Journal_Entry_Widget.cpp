@@ -3,6 +3,7 @@
 JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::JournalEntryWidget)
 {
     ui->setupUi(this);
+    LOG_DEBUG("Loading JournalEntryWidget");
     entries = AppContext::instance().journalEntryService().getAll();
     entriesPtr = &entries;
 
@@ -31,6 +32,7 @@ JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(pare
     ui->creditTotalLabel->setText(QString("₱%1").arg(phLocale.toString(creditTotals, 'f', 2)));
 
     connect(ui->payPeriodFilter, &QComboBox::currentIndexChanged, this, &JournalEntryWidget::onPayrollPeriodChanged);
+    LOG_DEBUG("finished Loading JournalEntryWidget");
 }
 
 void JournalEntryWidget::onPayrollPeriodChanged()
@@ -38,12 +40,12 @@ void JournalEntryWidget::onPayrollPeriodChanged()
     debitTotals = 0;
     creditTotals = 0;
     QString selected = ui->payPeriodFilter->currentText();
-    // selected text for example could be 'March 2025 First Half'
+    LOG_DEBUG("selected: [" << selected.toStdString() << "]");
     QStringList parts = selected.split(' ');
     QString half = parts[2] + " " + parts[3];
     QString monthYear = parts[0] + " " + parts[1];
-    m_proxy->setPayPeriodFilter(monthYear); // Pass in 'March 2025'
-    m_proxy->setPayPeriodHalfFilter(half);  // Pass in 'First Half'
+    m_proxy->setPayPeriodFilter(monthYear);
+    m_proxy->setPayPeriodHalfFilter(half);
     for (int row = 0; row < m_proxy->rowCount(); ++row)
     {
         // int rows = m_proxy->rowCount();

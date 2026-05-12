@@ -3,14 +3,15 @@
 PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PayrollRegisterWidget), payrollByMonth{}, payrollByfortnight{}, departments{}
 {
     ui->setupUi(this);
+    LOG_DEBUG("Loading PayrollRegisterWidget");
     payrollVecMonthly = AppContext::instance().payrollService().getAllPayrollsAggregatedToMonthly();
     payrollFortNight = AppContext::instance().payrollService().getAllPayrolls();
     activePayroll = &payrollVecMonthly; // default
     for (const auto &v : *activePayroll)
     {
-        payrollByMonth << QString::fromStdString(v.payPeriodText);
-        payrollByfortnight << QString::fromStdString(v.payPeriodText);
-        departments << QString::fromStdString(v.employeeDepartment);
+        payrollByMonth << QString::fromStdString(v.payPeriodDate);
+        payrollByfortnight << QString::fromStdString(v.payPeriodDate);
+        departments << QString::fromStdString(department_to_string(v.employeeDepartment));
     }
 
     payrollByMonth.removeDuplicates();
@@ -36,6 +37,7 @@ PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidge
     ui->payrollTableView->hideColumn(4);
     ui->payrollTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->payrollTableView->setSortingEnabled(true);
+    LOG_DEBUG("finished Loading PayrollRegisterWidget");
 }
 
 void PayrollRegisterWidget::exportCSVClicked()
