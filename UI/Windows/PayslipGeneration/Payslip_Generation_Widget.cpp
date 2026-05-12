@@ -87,7 +87,7 @@ QString PayslipWidget::htmlFileToQString(const PayrollCalculationResults &paysli
         html = file.readAll();
         file.close();
 
-        std::string forPDF = payslip.payPeriodText;
+        std::string forPDF = payslip.payPeriodDate;
         auto updatedPayPeriod = payrollPeriod(QString::fromStdString(forPDF), payslip.payPeriodHalf == 1).toStdString();
 
         html.replace("{{PayPeriod}}", updatedPayPeriod.c_str());
@@ -250,7 +250,7 @@ QString PayslipWidget::generatePdfFromHtmlInMemory(QString &selectedEmployeeId)
 QString PayslipWidget::getSuggestedFileName(PayrollCalculationResults &payslip)
 {
     std::string payPeriodHalf = (payslip.payPeriodHalf == 1) ? "FirstHalf" : "SecondHalf";
-    std::string baseFileName = payslip.payPeriodText;
+    std::string baseFileName = payslip.payPeriodDate;
     std::replace(baseFileName.begin(), baseFileName.end(), ' ', '_');
     QString suggestedFileName = QString::fromStdString(baseFileName + "_" + payPeriodHalf + "_" + payslip.employeeId);
     return suggestedFileName;
