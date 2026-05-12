@@ -33,7 +33,7 @@ void EmployeeValidationWidget::loadDataBus()
 
             data.employeeId = ui->employeeTableWidget->item(i, 1)->text().toStdString();
             data.fullName = ui->employeeTableWidget->item(i, 2)->text().toStdString();
-            data.employeeDepartment = ui->employeeTableWidget->item(i, 3)->text().toStdString();
+            data.employeeDepartment = static_cast<int>(department_from_string(ui->employeeTableWidget->item(i, 3)->text().toStdString()));
 
             auto optEmp = AppContext::instance().employeeService().getEmployeeByID(data.employeeId);
             if (optEmp.has_value())
