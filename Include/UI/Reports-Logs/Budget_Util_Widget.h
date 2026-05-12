@@ -14,6 +14,11 @@ public:
     ~BudgetUtilWidget();
     BudgetUtilWidget(const BudgetUtilWidget &) = delete;
     BudgetUtilWidget &operator=(const BudgetUtilWidget &) = delete;
+public slots:
+    void onPayPeriodChanged();
+    void onDepartmentChanged();
+    void onResetClicked();
+    void onExportCSVClicked();
 
 private:
     Ui::BudgetUtilWidget *ui;
