@@ -14,7 +14,13 @@ public:
     ~GovernRemittanceWidget();
     GovernRemittanceWidget(const GovernRemittanceWidget &) = delete;
     GovernRemittanceWidget &operator=(const GovernRemittanceWidget &) = delete;
+
+public slots:
+    void onEmployeeSearchChanged(const QString &filter);
     void onRemittancePeriodChanged();
+    void onContributionChanged();
+    void onResetClicked();
+    void onExportCSVClicked();
 
 private:
     Ui::GovernRemittanceWidget *ui;
