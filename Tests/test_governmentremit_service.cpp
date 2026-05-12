@@ -124,8 +124,8 @@ TEST_F(GovRemitServiceTest, createFromPayroll_vector_returnsRemittancesForEachPa
 {
     // std::vector<GovernmentRemittance> createFromPayroll(const std::vector<PayrollCalculationResults> &payrolls);
 
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto result = service->createFromPayroll(payrolls);
     EXPECT_TRUE(payrolls.size() == result.size());
@@ -142,9 +142,9 @@ TEST_F(GovRemitServiceTest, createFromPayroll_single_returnsCorrectRemittanceFor
 {
     // std::vector<GovernmentRemittance> createFromPayroll(const std::vector<PayrollCalculationResults> &payrolls);
 
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = false, .phic = true, .hdmf = false}, 0.00, 0.00, 2);
-    PayrollCalculationResults payrollThree = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = true}, 0.00, 0.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = false, .phic = true, .hdmf = false}, 0.00, 0.00, 2);
+    PayrollCalculationResults payrollThree = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = true}, 0.00, 0.00, 2);
     GovernmentRemittance resultA = service->createFromPayroll(payrollOne, RemittanceType::SSS);
     GovernmentRemittance resultB = service->createFromPayroll(payrollTwo, RemittanceType::PHIC);
     GovernmentRemittance resultC = service->createFromPayroll(payrollThree, RemittanceType::HDMF);
@@ -160,10 +160,10 @@ TEST_F(GovRemitServiceTest, createFromPayroll_single_returnsCorrectRemittanceFor
 
 TEST_F(GovRemitServiceTest, addRemittanceReports_returnsIdsForValidReports)
 {
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
-    PayrollCalculationResults payrollThree = makeEmployeePayroll(22500, "June 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 1000.00, 500.00, 1);
-    PayrollCalculationResults payrollFour = makeEmployeePayroll(22500, "June 2025", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 500.00, 500.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
+    PayrollCalculationResults payrollThree = makeEmployeePayroll(22500, "2025 06", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 1000.00, 500.00, 1);
+    PayrollCalculationResults payrollFour = makeEmployeePayroll(22500, "2025 06", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 500.00, 500.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo, payrollThree, payrollFour};
     auto remits = service->createFromPayroll(payrolls);
     std::vector<sqlite3_int64> ids = service->addRemittanceReports(remits);
@@ -184,15 +184,15 @@ TEST_F(GovRemitServiceTest, getMonthlySummary_returnsCorrectSummaryForValidMonth
 {
     // MonthlySummary getMonthlySummary(const std::string &monthYear);
 
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
-    PayrollCalculationResults payrollThree = makeEmployeePayroll(22500, "June 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 1000.00, 500.00, 1);
-    PayrollCalculationResults payrollFour = makeEmployeePayroll(22500, "June 2025", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 500.00, 500.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
+    PayrollCalculationResults payrollThree = makeEmployeePayroll(22500, "2025 06", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 1000.00, 500.00, 1);
+    PayrollCalculationResults payrollFour = makeEmployeePayroll(22500, "2025 06", 2500, Contributions{.sss = false, .phic = true, .hdmf = true}, 500.00, 500.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo, payrollThree, payrollFour};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
 
-    std::string mthYearToFind{"May 2025"};
+    std::string mthYearToFind{"2025 05"};
     GovernmentRemittanceService::MonthlySummary result = service->getMonthlySummary(mthYearToFind);
     GovernmentRemittanceService::MonthlySummary expected{};
 
@@ -232,7 +232,7 @@ TEST_F(GovRemitServiceTest, getMonthlySummary_returnsCorrectSummaryForValidMonth
 TEST_F(GovRemitServiceTest, getMonthlySummary_returnsEmptySummaryForMonthWithNoData)
 {
     // MonthlySummary getMonthlySummary(const std::string &monthYear);
-    GovernmentRemittanceService::MonthlySummary result = service->getMonthlySummary("June 2025");
+    GovernmentRemittanceService::MonthlySummary result = service->getMonthlySummary("2025 06");
     EXPECT_EQ(result.totalSSSEE, 0.0);
     EXPECT_EQ(result.totalSSSER, 0.0);
     EXPECT_EQ(result.totalPHICEE, 0.0);
@@ -245,8 +245,8 @@ TEST_F(GovRemitServiceTest, getMonthlySummary_handlesInvalidMonthYearFormat)
 {
     // MonthlySummary getMonthlySummary(const std::string &monthYear);
 
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 2500, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 0.00, 0.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
@@ -266,8 +266,8 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForFirstHalf)
 {
     // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
 
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(32500, "May 2025", 2500.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 1235.00, 575.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(32500, "2025 05", 2500.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 1235.00, 575.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
@@ -279,7 +279,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForFirstHalf)
     auto exptectedSSSEE = sssOneEE + sssTwoEE;
     auto exptectedSSSER = sssOneER + sssTwoER;
 
-    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("May 2025", 1);
+    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("2025 05", 1);
     EXPECT_DOUBLE_EQ(exptectedSSSEE, totals.totalSSSEE);
     EXPECT_DOUBLE_EQ(exptectedSSSER, totals.totalSSSER);
 }
@@ -287,8 +287,8 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForFirstHalf)
 TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForSecondHalf)
 {
     // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(18000.00, "May 2025", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(18000.00, "2025 05", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
@@ -300,7 +300,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsCorrectTotalsForSecondHalf)
     auto exptectedSSSEE = sssOneEE + sssTwoEE;
     auto exptectedSSSER = sssOneER + sssTwoER;
 
-    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("May 2025", 1);
+    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("2025 05", 1);
     EXPECT_DOUBLE_EQ(exptectedSSSEE, totals.totalSSSEE);
     EXPECT_DOUBLE_EQ(exptectedSSSER, totals.totalSSSER);
 }
@@ -321,13 +321,13 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_returnsZeroTotalsForPeriodWithNoData
 TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPayPeriodHalf)
 {
     // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(22500, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
 
     // payPeriodHalf 99 matches nothing — expect zeros, no crash
-    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("May 2025", 99);
+    GovernmentRemittanceService::PeriodTotals totals = service->getPeriodTotals("2025 05", 99);
 
     EXPECT_EQ(totals.employeeCount, 0);
     EXPECT_DOUBLE_EQ(totals.totalSSSEE, 0.0);
@@ -336,7 +336,7 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPayPeriodHalf)
 TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPeriodText)
 {
     // PeriodTotals getPeriodTotals(const std::string &payPeriodDate, int payPeriodHalf);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
     service->addRemittanceReports(remits);
@@ -350,8 +350,8 @@ TEST_F(GovRemitServiceTest, getPeriodTotals_handlesInvalidPeriodText)
 TEST_F(GovRemitServiceTest, getTotalEmployerContribution_returnsSumOfAllEmployerContributions)
 {
     // double getTotalEmployerContribution(const std::vector<GovernmentRemittance> &remittances);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "May 2025", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "2025 05", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto remits = service->createFromPayroll(payrolls);
     auto expectedSum{1113.0 + 350.0 + 200.0};
@@ -373,7 +373,7 @@ TEST_F(GovRemitServiceTest, getTotalEmployerContribution_returnsZeroForEmptyRemi
 TEST_F(GovRemitServiceTest, getTotalEmployerContribution_returnsSingleValueWhenOneRemittance)
 {
     // double getTotalEmployerContribution(const std::vector<GovernmentRemittance> &remittances);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
     auto expectedSum{1113.0};
@@ -384,8 +384,8 @@ TEST_F(GovRemitServiceTest, getTotalEmployerContribution_returnsSingleValueWhenO
 TEST_F(GovRemitServiceTest, getTotalEmployeeContribution_returnsSumOfAllEmployeeContributions)
 {
     // double getTotalEmployeeContribution(const std::vector<GovernmentRemittance> &remittances);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
-    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "May 2025", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollTwo = makeEmployeePayroll(14000.00, "2025 05", 2500.00, Contributions{.sss = false, .phic = true, .hdmf = true}, 900.00, 575.00, 2);
     std::vector<PayrollCalculationResults> payrolls{payrollOne, payrollTwo};
     auto remits = service->createFromPayroll(payrolls);
     auto expectedSum{700.0 + 350.0 + 200.0};
@@ -406,7 +406,7 @@ TEST_F(GovRemitServiceTest, getTotalEmployeeContribution_returnsZeroForEmptyRemi
 TEST_F(GovRemitServiceTest, getTotalEmployeeContribution_returnsSingleValueWhenOneRemittance)
 {
     // double getTotalEmployeeContribution(const std::vector<GovernmentRemittance> &remittances);
-    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "May 2025", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
+    PayrollCalculationResults payrollOne = makeEmployeePayroll(14000.00, "2025 05", 1000.00, Contributions{.sss = true, .phic = false, .hdmf = false}, 0.00, 0.00, 1);
     std::vector<PayrollCalculationResults> payrolls{payrollOne};
     auto remits = service->createFromPayroll(payrolls);
     auto expectedSum{700.0};

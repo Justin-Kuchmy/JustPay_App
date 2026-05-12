@@ -64,7 +64,7 @@ protected:
 // Helper to build a fully populated GovernmentRemittance
 static GovernmentRemittance makeRemittance(
     const std::string &employeeId = "01-0099",
-    const std::string &period = "March 2026",
+    const std::string &period = "2026 03",
     int half = 1,
     int payrollId = 1)
 {
@@ -103,9 +103,9 @@ TEST_F(GovernmentRemittanceRepoTest, InsertRemittance_Succeeds)
 TEST_F(GovernmentRemittanceRepoTest, InsertRemittanceReports_Batch_ReturnsAllIds)
 {
     std::vector<GovernmentRemittance> batch = {
-        makeRemittance("01-0099", "March 2026", 1, 1),
-        makeRemittance("01-0100", "March 2026", 1, 2),
-        makeRemittance("02-0101", "March 2026", 1, 3)};
+        makeRemittance("01-0099", "2026 03", 1, 1),
+        makeRemittance("01-0100", "2026 03", 1, 2),
+        makeRemittance("02-0101", "2026 03", 1, 3)};
 
     auto ids = repo->insertRemittanceReports(batch);
     EXPECT_EQ(ids.size(), 3u);
@@ -123,7 +123,7 @@ TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsNulloptIfNotFound)
 
 TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsCorrectRecord)
 {
-    auto r = makeRemittance("01-0099", "March 2026", 1);
+    auto r = makeRemittance("01-0099", "2026 03", 1);
     auto id = repo->insertRemittance(r);
     ASSERT_GT(id, 0);
     LOG_DEBUG("id " << id);
@@ -139,7 +139,7 @@ TEST_F(GovernmentRemittanceRepoTest, GetById_ReturnsCorrectRecord)
 
 TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsCorrectRecord)
 {
-    auto r = makeRemittance("01-0099", "March 2026", 1, 42);
+    auto r = makeRemittance("01-0099", "2026 03", 1, 42);
     auto id = repo->insertRemittance(r);
     ASSERT_GT(id, 0);
 
@@ -158,24 +158,24 @@ TEST_F(GovernmentRemittanceRepoTest, GetByPayrollId_ReturnsNulloptIfNotFound)
 
 TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsAllForPeriod)
 {
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1));
-    repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1)); // different period
+    repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1));
+    repo->insertRemittance(makeRemittance("01-0100", "2026 03", 1));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 04", 1)); // different period
 
-    auto results = repo->getRemittancesByPeriod("March 2026");
+    auto results = repo->getRemittancesByPeriod("2026 03");
     EXPECT_EQ(results.size(), 2u);
     for (const auto &r : results)
-        EXPECT_EQ(r.payPeriodDate, "March 2026");
+        EXPECT_EQ(r.payPeriodDate, "2026 03");
 }
 
 TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_FilteredByHalf)
 {
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 2));
-    repo->insertRemittance(makeRemittance("02-0101", "March 2026", 2));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1));
+    repo->insertRemittance(makeRemittance("01-0100", "2026 03", 2));
+    repo->insertRemittance(makeRemittance("02-0101", "2026 03", 2));
 
-    auto firstHalf = repo->getRemittancesByPeriod("March 2026", 1);
-    auto secondHalf = repo->getRemittancesByPeriod("March 2026", 2);
+    auto firstHalf = repo->getRemittancesByPeriod("2026 03", 1);
+    auto secondHalf = repo->getRemittancesByPeriod("2026 03", 2);
 
     EXPECT_EQ(firstHalf.size(), 1u);
     EXPECT_EQ(secondHalf.size(), 2u);
@@ -183,7 +183,7 @@ TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_FilteredByHalf)
 
 TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsEmptyForUnknownPeriod)
 {
-    auto results = repo->getRemittancesByPeriod("January 2000");
+    auto results = repo->getRemittancesByPeriod("2000 01");
     EXPECT_TRUE(results.empty());
 }
 
@@ -191,9 +191,9 @@ TEST_F(GovernmentRemittanceRepoTest, GetByPeriod_ReturnsEmptyForUnknownPeriod)
 
 TEST_F(GovernmentRemittanceRepoTest, GetByEmployee_ReturnsAllForEmployee)
 {
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-    repo->insertRemittance(makeRemittance("01-0099", "April 2026", 1, 2));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 3));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 04", 1, 2));
+    repo->insertRemittance(makeRemittance("01-0100", "2026 03", 1, 3));
 
     auto results = repo->getRemittancesByEmployee("01-0099");
     EXPECT_EQ(results.size(), 2u);
@@ -205,8 +205,8 @@ TEST_F(GovernmentRemittanceRepoTest, GetByEmployee_ReturnsAllForEmployee)
 
 TEST_F(GovernmentRemittanceRepoTest, GetPending_ReturnsOnlyPendingRecords)
 {
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0100", "2026 03", 1, 2));
 
     auto pending = repo->getRemittancesByStatus(RemittanceStatus::PENDING);
     EXPECT_EQ(pending.size(), 2u);
@@ -216,9 +216,9 @@ TEST_F(GovernmentRemittanceRepoTest, GetPending_ReturnsOnlyPendingRecords)
 
 TEST_F(GovernmentRemittanceRepoTest, GetAll_ReturnsAllRecords)
 {
-    repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-    repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
-    repo->insertRemittance(makeRemittance("02-0101", "April 2026", 2, 3));
+    repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1, 1));
+    repo->insertRemittance(makeRemittance("01-0100", "2026 03", 1, 2));
+    repo->insertRemittance(makeRemittance("02-0101", "2026 04", 2, 3));
 
     auto all = repo->getAllRemittances();
     EXPECT_EQ(all.size(), 3u);
@@ -330,11 +330,11 @@ TEST_F(GovernmentRemittanceRepoTest, DeleteRemittance_RemovesRecord)
 // TODO will move to government remittance service tests
 //  TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_AggregatesCorrectly)
 //  {
-//      repo->insertRemittance(makeRemittance("01-0099", "March 2026", 1, 1));
-//      repo->insertRemittance(makeRemittance("01-0100", "March 2026", 1, 2));
+//      repo->insertRemittance(makeRemittance("01-0099", "2026 03", 1, 1));
+//      repo->insertRemittance(makeRemittance("01-0100", "2026 03", 1, 2));
 
-//     auto summary = repo->getMonthlySummary("March 2026");
-//     EXPECT_EQ(summary.monthYear, "March 2026");
+//     auto summary = repo->getMonthlySummary("2026 03");
+//     EXPECT_EQ(summary.monthYear, "2026 03");
 //     EXPECT_NEAR(summary.totalSSSEE, 581.30 * 2, 0.01);
 //     EXPECT_NEAR(summary.totalPHICEE, 450.00 * 2, 0.01);
 //     EXPECT_NEAR(summary.totalHDMFEE, 100.00 * 2, 0.01);
@@ -342,8 +342,8 @@ TEST_F(GovernmentRemittanceRepoTest, DeleteRemittance_RemovesRecord)
 
 // TEST_F(GovernmentRemittanceRepoTest, GetMonthlySummary_ReturnsEmptyForUnknownMonth)
 // {
-//     auto summary = repo->getMonthlySummary("January 2000");
-//     EXPECT_EQ(summary.monthYear, "January 2000");
+//     auto summary = repo->getMonthlySummary("2026 01");
+//     EXPECT_EQ(summary.monthYear, "2026 01");
 //     EXPECT_DOUBLE_EQ(summary.totalSSSEE, 0.0);
 //     EXPECT_DOUBLE_EQ(summary.totalPHICEE, 0.0);
 //     EXPECT_DOUBLE_EQ(summary.totalHDMFEE, 0.0);
