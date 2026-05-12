@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QMenu *themeMenu = viewMenu->addMenu("&Themes");
 
     QAction *win98Theme = themeMenu->addAction("Win98");
+    QAction *lightwblueTheme = themeMenu->addAction("LightBlue");
     QAction *darkTheme = themeMenu->addAction("Dark");
     QAction *lightTheme = themeMenu->addAction("Light");
     QAction *win7Theme = themeMenu->addAction("win7");
@@ -73,6 +74,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     connect(darkTheme, &QAction::triggered, this, [this]()
             { applyTheme(":/QtTheme/theme/dark.qss"); });
+
+    connect(lightwblueTheme, &QAction::triggered, this, [this]()
+            { applyTheme(":/QtTheme/theme/light_w_blue.qss"); });
 
     connect(lightTheme, &QAction::triggered, this, [this]()
             { applyTheme(":/QtTheme/theme/light.qss"); });

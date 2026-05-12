@@ -18,6 +18,7 @@
 
   <qresource prefix="/QtTheme/">
     <file>theme/dark.qss</file>
+    <file>theme/light_w_blue.qss</file>
     <file>theme/light.qss</file>
     <file>theme/win7.qss</file>
     <file>theme/win98.qss</file>
