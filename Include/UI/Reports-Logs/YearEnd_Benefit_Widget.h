@@ -15,6 +15,12 @@ public:
     YearEndBenefitWidget(const YearEndBenefitWidget &) = delete;
     YearEndBenefitWidget &operator=(const YearEndBenefitWidget &) = delete;
 
+public slots:
+    void onYearChanged();
+    void onEmployeeSearchChanged(const QString &filter);
+    void onResetClicked();
+    void onExportClicked();
+
 private:
     Ui::YearEndBenefitWidget *ui;
     QStringList yearStringList;
