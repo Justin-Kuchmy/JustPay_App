@@ -45,13 +45,13 @@ void ResultsWidget::loadTableData()
     LOG_DEBUG("loadTableData: " << obj.to_string());
     ui->table_results->setRowCount(dataBus->size());
     ui->table_results->setColumnCount(COL_COUNT);
-    ui->value_payPeriod->setText(QString::fromStdString(dataBus->at(0).payPeriodText));
+    ui->value_payPeriod->setText(QString::fromStdString(dataBus->at(0).payPeriodDate));
     ui->value_dateProcessed->setText(QString::fromStdString(dataBus->at(0).dateProcessed.to_string()));
     for (size_t i{}; i < dataBus->size(); i++)
     {
         QTableWidgetItem *EMPLOYEE_ID = new QTableWidgetItem(QString::fromStdString(dataBus->at(i).employeeId));
         QTableWidgetItem *FULL_NAME = new QTableWidgetItem(QString::fromStdString(dataBus->at(i).fullName));
-        QTableWidgetItem *DEPARTMENT = new QTableWidgetItem(QString::fromStdString(dataBus->at(i).employeeDepartment));
+        QTableWidgetItem *DEPARTMENT = new QTableWidgetItem(QString::fromStdString(department_to_string(dataBus->at(i).employeeDepartment)));
         QTableWidgetItem *BASIC_SALARY = new QTableWidgetItem(QString::number(dataBus->at(i).monthlyBasicSalary, 'f', 2));
         QTableWidgetItem *ALLOWANCES = new QTableWidgetItem(QString::number(dataBus->at(i).monthlyAllowances, 'f', 2));
         QTableWidgetItem *OVERTIME = new QTableWidgetItem(QString::number(dataBus->at(i).overTimePay, 'f', 2));
