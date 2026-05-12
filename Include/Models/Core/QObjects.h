@@ -616,13 +616,13 @@ private:
         case 1:
             return QString::fromStdString(RemittanceType_to_string(item.contrib_Type));
         case 2:
-            return QString::fromStdString(std::to_string(item.employee_Contrib));
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.employee_Contrib, 'f', 2)));
         case 3:
-            return QString::fromStdString(std::to_string(item.employer_Contrib));
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.employer_Contrib, 'f', 2)));
         case 4:
-            return QString::fromStdString(std::to_string(item.total_Contrib));
+            return QVariant(QString("₱%1").arg(phLocale.toString(item.total_Contrib, 'f', 2)));
         case 5:
-            return QString::fromStdString(item.payPeriodDate);
+            return QVariant(QString::fromStdString(item.payPeriodDate));
         }
         return QVariant();
     }
@@ -633,37 +633,48 @@ class GovernmentRemittanceFilterProxyModel : public QSortFilterProxyModel
 public:
     GovernmentRemittanceFilterProxyModel(QObject *parent) {};
     ~GovernmentRemittanceFilterProxyModel() {};
+
+    void setEmployeeFilter(const QString &filter)
+    {
+        m_employeeId = filter;
+        QSortFilterProxyModel::invalidateFilter();
+    }
     void setPayPeriodFilter(const QString &period)
     {
 
         m_payPeriod = period;
         QSortFilterProxyModel::invalidateFilter();
     }
-    void setPayPeriodHalfFilter(const QString &periodhalf)
-    {
 
-        m_payPeriodHalf = periodhalf;
+    void setcontributionTypeFilter(QString contrib)
+    {
+        m_contributionType = contrib;
         QSortFilterProxyModel::invalidateFilter();
     }
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
     {
-        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 4, sourceParent);
-        QModelIndex periodHalfIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 5, sourceParent);
+        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 5, sourceParent);
+        QModelIndex contribIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 1, sourceParent);
+        QModelIndex employeeIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 0, sourceParent);
         QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
-        QString periodHalf = QSortFilterProxyModel::sourceModel()->data(periodHalfIndex).toString();
+        QString contrib = QSortFilterProxyModel::sourceModel()->data(contribIndex).toString();
+        QString employee = QSortFilterProxyModel::sourceModel()->data(employeeIndex).toString();
 
         if (!m_payPeriod.isEmpty() && period != m_payPeriod)
             return false;
-        if (!m_payPeriodHalf.isEmpty() && periodHalf != m_payPeriodHalf)
+        if (!m_contributionType.isEmpty() && contrib != m_contributionType)
+            return false;
+        if (!m_employeeId.isEmpty() && !employee.contains(m_employeeId, Qt::CaseInsensitive))
             return false;
         return true;
     };
 
 private:
     QString m_payPeriod;
-    QString m_payPeriodHalf;
+    QString m_contributionType;
+    QString m_employeeId;
 };
 class YearEndBenefitsModel : public QAbstractTableModel
 {
@@ -776,6 +787,12 @@ public:
     void setYearFilter(const QString &year)
     {
         m_yearFilter = year;
+        QSortFilterProxyModel::invalidateFilter();
+    };
+    void setEmployeeFilter(const QString &empId)
+    {
+        m_employeeFilter = empId;
+        QSortFilterProxyModel::invalidateFilter();
     };
 
 protected:
@@ -784,6 +801,11 @@ protected:
         QModelIndex yearIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 1, sourceParent);
         QString year = QSortFilterProxyModel::sourceModel()->data(yearIndex).toString();
 
+        QModelIndex employeeIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 0, sourceParent);
+        QString employee = QSortFilterProxyModel::sourceModel()->data(employeeIndex).toString();
+        if (!m_employeeFilter.isEmpty() && !employee.contains(m_employeeFilter, Qt::CaseInsensitive))
+            return false;
+
         if (!m_yearFilter.isEmpty() && year != m_yearFilter)
             return false;
         return true;
@@ -791,6 +813,7 @@ protected:
 
 private:
     QString m_yearFilter;
+    QString m_employeeFilter;
 };
 class TaxReconciliationReportModel : public QAbstractTableModel
 {
@@ -838,7 +861,7 @@ public:
             switch (section)
             {
             case 0:
-                return QString("Employee Name");
+                return QString("Employee ID");
             case 1:
                 return QString("TIN");
             case 2:
@@ -890,7 +913,7 @@ private:
         switch (columnIndex)
         {
         case 0:
-            return QVariant(QString::fromStdString(item.employeeName));
+            return QVariant(QString::fromStdString(item.employeeId));
         case 1:
             return QVariant(QString::fromStdString(item.tin));
         case 2:
@@ -936,6 +959,7 @@ public:
     void setEmployeeFilter(const QString &employee)
     {
         m_employeeFilter = employee;
+        QSortFilterProxyModel::invalidateFilter();
     };
 
 protected:
@@ -945,12 +969,14 @@ protected:
 
         QString employee = QSortFilterProxyModel::sourceModel()->data(employeeIndex).toString();
 
-        if (!m_employeeFilter.isEmpty() && employee != m_employeeFilter)
+        if (!m_employeeFilter.isEmpty() && !employee.contains(m_employeeFilter))
             return false;
         return true;
     };
 
 private:
+    QString m_yearFilter;
+    QString m_departmentFilter;
     QString m_employeeFilter;
 };
 class MonthlyBudgetUtilizationReportModel : public QAbstractTableModel
@@ -1077,24 +1103,28 @@ public:
     void setDepartmentFilter(const QString &department)
     {
         m_departmentFilter = department;
+        QSortFilterProxyModel::invalidateFilter();
     };
     void setPeriodFilter(const QString &period)
     {
         m_periodFilter = period;
+        QSortFilterProxyModel::invalidateFilter();
     };
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
     {
         QModelIndex departmentIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 0, sourceParent);
-        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 2, sourceParent);
+        QModelIndex periodIndex = QSortFilterProxyModel::sourceModel()->index(sourceRow, 1, sourceParent);
 
         QString department = QSortFilterProxyModel::sourceModel()->data(departmentIndex).toString();
         QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
+        qDebug() << "period:" << period << "len:" << period.length();
+        qDebug() << "filter:" << m_periodFilter << "len:" << m_periodFilter.length();
 
         if (!m_departmentFilter.isEmpty() && department != m_departmentFilter)
             return false;
-        if (!m_periodFilter.isEmpty() && period != m_periodFilter)
+        if (!m_periodFilter.isEmpty() && !period.contains(m_periodFilter, Qt::CaseInsensitive))
             return false;
         return true;
     };
