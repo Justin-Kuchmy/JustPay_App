@@ -14,7 +14,9 @@ public:
     ~AnnualTaxWidget();
     AnnualTaxWidget(const AnnualTaxWidget &) = delete;
     AnnualTaxWidget &operator=(const AnnualTaxWidget &) = delete;
-    void onYearChanged();
+public slots:
+    void onEmployeeSearchChanged(const QString &filter);
+    void onExportCSVClicked();
 
 private:
     Ui::AnnualTaxWidget *ui;
