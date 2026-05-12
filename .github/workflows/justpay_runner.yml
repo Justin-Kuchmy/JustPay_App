@@ -1,0 +1,132 @@
+name: Build JustPay
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+
+  # ─────────────────────────────────────────
+  build-windows:
+  # ─────────────────────────────────────────
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Qt6
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtquick3d' # Quick/QML need this at runtime
+
+      - name: Install libcurl and sqlite3 (vcpkg)
+        run: |
+          vcpkg install curl:x64-windows sqlite3:x64-windows
+          echo "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
+
+      - name: Configure
+        run: >
+          cmake -B build -S .
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Deploy Qt DLLs
+        run: |
+          mkdir staging
+          copy build\Release\JustPay.exe staging\
+          windeployqt --release --qmldir . staging\JustPay.exe
+          # copy vcpkg runtime DLLs (curl, sqlite)
+          copy C:\vcpkg\installed\x64-windows\bin\libcurl.dll staging\
+          copy C:\vcpkg\installed\x64-windows\bin\sqlite3.dll  staging\
+
+      - name: Zip output
+        run: powershell Compress-Archive -Path staging -DestinationPath JustPay-windows.zip
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: JustPay-windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # ─────────────────────────────────────────
+  build-linux:
+  # ─────────────────────────────────────────
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake ninja-build \
+            libcurl4-openssl-dev \
+            libsqlite3-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libxkbcommon-dev \
+            libxkbcommon-x11-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libx11-dev libx11-xcb-dev \
+            libxext-dev libxfixes-dev \
+            libxi-dev libxrender-dev \
+            libxcb1-dev libxcb-glx0-dev \
+            libxcb-keysyms1-dev libxcb-image0-dev \
+            libxcb-shm0-dev libxcb-icccm4-dev \
+            libxcb-sync-dev libxcb-xfixes0-dev \
+            libxcb-shape0-dev libxcb-randr0-dev \
+            libxcb-render-util0-dev libxcb-util-dev \
+            libxcb-xinerama0-dev libxcb-xkb-dev
+
+      - name: Install Qt6
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.0'
+          host: 'linux'
+          target: 'desktop'
+          modules: 'qtquick3d'
+
+      - name: Configure
+        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G Ninja
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Package (linuxdeploy)
+        run: |
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy*.AppImage
+
+          mkdir -p AppDir/usr/bin
+          cp build/JustPay AppDir/usr/bin/
+
+          export QMAKE=$Qt6_DIR/bin/qmake
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --plugin qt \
+            --output appimage \
+            --desktop-file <(printf '[Desktop Entry]\nName=JustPay\nExec=JustPay\nType=Application\nCategories=Finance;\n')
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: JustPay-*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
