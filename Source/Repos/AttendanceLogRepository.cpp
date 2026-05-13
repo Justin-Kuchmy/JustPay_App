@@ -103,7 +103,7 @@ std::vector<AttendanceLog> AttendanceLogRepository::getAllById(std::string id)
 
 std::vector<AttendanceLog> AttendanceLogRepository::getAll()
 {
-    std::string sql = std::format("SELECT * from attendance_log");
+    const char *sql = "SELECT * from attendance_log";
     auto results = this->query<AttendanceLog>(sql, mapAttendanceLog);
 
     if (results.size() > 0)
@@ -120,9 +120,6 @@ std::vector<AttendanceLog> AttendanceLogRepository::getAll()
 // update
 bool AttendanceLogRepository::updateAttendanceLog(const AttendanceLog &al)
 {
-    LOG_DEBUG("logId: " << al.logId);
-    LOG_DEBUG("updateAttendanceLog: " << al.lateByMinute);
-    LOG_DEBUG("overTimeByMinute: " << al.overTimeByMinute);
     const char *sql = R"(update attendance_log set 
     employeeId= ?,
     log_date=?,
@@ -143,9 +140,10 @@ bool AttendanceLogRepository::updateAttendanceLog(const AttendanceLog &al)
 // delete
 bool AttendanceLogRepository::deleteAttendanceLog(int logId)
 {
-    std::string sql = std::format("DELETE from attendance_log where logId = '{}'", logId);
-    return AttendanceLogRepository::execute(sql);
-};
+    std::string sql = "DELETE FROM attendance_log WHERE logId = ?";
+    return AttendanceLogRepository::execute(sql, [&logId](sqlite3_stmt *stmt)
+                                            { sqlite3_bind_int(stmt, 1, logId); });
+}
 
 std::string AttendanceLogRepository::getLastAttendanceLogId()
 {

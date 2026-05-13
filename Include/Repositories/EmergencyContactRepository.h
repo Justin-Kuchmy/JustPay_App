@@ -7,6 +7,7 @@
 class EmergencyContactRepository : public BaseRepository
 {
     static Contact mapContact(sqlite3_stmt *stmt);
+    static void bindContact(sqlite3_stmt *stmt, const Contact &contact);
 
 public:
     explicit EmergencyContactRepository(sqlite3 *db);

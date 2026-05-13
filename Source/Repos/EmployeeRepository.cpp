@@ -19,11 +19,11 @@ bool EmployeeRepository::createTable() const
 
 std::string EmployeeRepository::insertEmployee(const Employee &employee)
 {
-    std::string sql = std::format("INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    const char *sql = "INSERT INTO employees (fullName,department,position,jobLevel,status,dateHired,dateSeparation,sssNumber,philHealthNumber,hdmfNumber,tin,bankAccountNumber,clockInTimeStr, clockOutTimeStr,monthlyBasicSalary,monthlyAllowances,personalEmail,personalMobileNumber,isActive, contactId, dependentId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     sqlite3_stmt *stmt = nullptr;
     std::string result = "";
     // database, sql_statement, max_length, out_statement, ptr to unused part of sql string
-    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
     {
         std::cerr << "SQLite insert failed: " << sqlite3_errmsg(db) << "\n";
         return ""; // Failed to prepare
@@ -67,49 +67,37 @@ std::string EmployeeRepository::getLastEmployeeId()
 // READ
 std::optional<Employee> EmployeeRepository::getById(std::string id)
 {
-    std::string sql = std::format("select * from employees where employeeId = '{}';", id);
-    auto results = EmployeeRepository::query<Employee>(sql, mapEmployee);
-
+    std::string sql = "SELECT * FROM employees WHERE employeeId = ?";
+    auto results = EmployeeRepository::query<Employee>(sql, mapEmployee, [&id](sqlite3_stmt *stmt)
+                                                       { sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_TRANSIENT); });
     if (results.empty())
     {
         LOG_DEBUG("No employee found for ID: " << id);
         return std::nullopt;
     }
-    Employee e = results.front();
-    return e;
-};
+    return results.front();
+}
 
 std::vector<Employee> EmployeeRepository::getAll()
 {
-    std::string sql = std::format("select * from employees;");
+    std::string sql = "SELECT * FROM employees";
     auto results = EmployeeRepository::query<Employee>(sql, mapEmployee);
-
-    if (results.size() > 0)
-    {
+    if (!results.empty())
         return results;
-    }
-    else
-    {
-        LOG_DEBUG("failed to get anything from the db");
-        return {};
-    }
-};
+    LOG_DEBUG("failed to get anything from the db");
+    return {};
+}
 
 std::vector<Employee> EmployeeRepository::findByName(const std::string &name)
 {
-    std::string sql = std::format("select * from employees where fullName = '{}';", name);
-    auto results = EmployeeRepository::query<Employee>(sql, mapEmployee);
-
-    if (results.size() > 0)
-    {
+    std::string sql = "SELECT * FROM employees WHERE fullName = ?";
+    auto results = EmployeeRepository::query<Employee>(sql, mapEmployee, [&name](sqlite3_stmt *stmt)
+                                                       { sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT); });
+    if (!results.empty())
         return results;
-    }
-    else
-    {
-        LOG_DEBUG("failed to get anything from the db");
-        return {};
-    }
-};
+    LOG_DEBUG("failed to get anything from the db");
+    return {};
+}
 
 // UPDATE
 bool EmployeeRepository::updateEmployee(const Employee &e)

@@ -269,70 +269,34 @@ std::optional<PayrollCalculationResults> PayrollRepository::getById(int id)
 
 std::vector<PayrollCalculationResults> PayrollRepository::getAllById(std::string &id)
 {
-    std::string sql = std::format(
-        "SELECT * FROM payroll_records WHERE employee_id = '{}'",
-        id);
-
-    auto results = this->query<PayrollCalculationResults>(sql, mapPayroll);
-
+    std::string sql = "SELECT * FROM payroll_records WHERE employee_id = ?";
+    auto results = this->query<PayrollCalculationResults>(sql, mapPayroll, [&id](sqlite3_stmt *stmt)
+                                                          { sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_TRANSIENT); });
     if (!results.empty())
-    {
         return results;
-    }
-    else
-    {
-        LOG_DEBUG("Results for getAllById() is empty for employee_id: " << id);
-        return {};
-    }
-};
+    LOG_DEBUG("Results for getAllById() is empty for employee_id: " << id);
+    return {};
+}
 
 std::vector<PayrollCalculationResults> PayrollRepository::getAll()
 {
-    std::string sql = std::format("SELECT * FROM payroll_records");
-
+    std::string sql = "SELECT * FROM payroll_records";
     auto results = this->query<PayrollCalculationResults>(sql, mapPayroll);
-
     if (!results.empty())
-    {
         return results;
-    }
-    else
-    {
-        LOG_DEBUG("result set from getAll() is empty");
-        return {};
-    }
-};
+    LOG_DEBUG("result set from getAll() is empty");
+    return {};
+}
 
 // update
 bool PayrollRepository::updatePayroll(const PayrollCalculationResults &prRecord)
 {
-    std::string sql = std::format(
-        "UPDATE payroll_records SET employee_id = '{}', full_name = '{}', department={}, pay_period_date = '{}', pay_period_half = {}, basic_salary = {}, allowances = {}, overtime_pay = {}, adjustments = {}, gross_income = {}, sss_premium_ee = {}, philhealth_premium_ee = {}, hdmf_premium_ee = {}, loan_deductions = {}, withholding_tax = {}, total_deductions = {}, net_pay = {}, sss_premium_er = {}, philhealth_premium_er = {}, hdmf_premium_er = {} WHERE id = {}",
-        prRecord.employeeId,
-        prRecord.fullName,
-        prRecord.employeeDepartment,
-        prRecord.payPeriodDate,
-        prRecord.payPeriodHalf,
-        prRecord.monthlyBasicSalary,
-        prRecord.monthlyAllowances,
-        prRecord.overTimePay,
-        prRecord.adjustments,
-        prRecord.grossIncome,
-        prRecord.sssPremium_EE,
-        prRecord.philHealthPremium_EE,
-        prRecord.hdmfPremium_EE,
-        prRecord.loanDeductionsPerPayroll,
-        prRecord.withHoldingTax,
-        prRecord.totalDeductions,
-        prRecord.netPay,
-        prRecord.sssPremium_ER,
-        prRecord.philHealthPremium_ER,
-        prRecord.hdmfPremium_ER,
-        prRecord.id);
-
-    LOG_DEBUG(sql);
-    return execute(sql);
-};
+    std::string sql = "UPDATE payroll_records SET employee_id = ?, full_name = ?, department = ?, pay_period_date = ?, pay_period_half = ?, basic_salary = ?, allowances = ?, overtime_pay = ?, adjustments = ?, gross_income = ?, sss_premium_ee = ?, philhealth_premium_ee = ?, hdmf_premium_ee = ?, loan_deductions = ?, withholding_tax = ?, total_deductions = ?, net_pay = ?, sss_premium_er = ?, philhealth_premium_er = ?, hdmf_premium_er = ? WHERE id = ?";
+    return execute(sql, [&prRecord](sqlite3_stmt *stmt)
+                   {
+        bindPayroll(stmt, prRecord);
+        sqlite3_bind_int(stmt, 21, prRecord.id); });
+}
 
 // delete
 bool PayrollRepository::deletePayroll(int id)

@@ -12,8 +12,11 @@ bool DependentRepository::createTable() const
 
 bool DependentRepository::exists(const std::string &name, const Date &birthday)
 {
-    std::string sql = std::format("select * from dependents where name = '{}' and birthday = '{}';", name, birthday.to_string());
-    std::vector<Dependent> results = this->query<Dependent>(sql, mapDependent);
+    std::string sql = "SELECT * FROM dependents WHERE name = ? AND birthday = ?";
+    auto results = this->query<Dependent>(sql, mapDependent, [&name, &birthday](sqlite3_stmt *stmt)
+                                          {
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, birthday.to_string().c_str(), -1, SQLITE_TRANSIENT); });
     return !results.empty();
 }
 
@@ -34,6 +37,14 @@ Dependent DependentRepository::mapDependent(sqlite3_stmt *stmt)
     }
     return d;
 };
+
+void DependentRepository::bindDependent(sqlite3_stmt *stmt, const Dependent &d)
+{
+    int column{1};
+    sqlite3_bind_text(stmt, column++, d.name.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, d.relation.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, d.birthday.to_string().c_str(), -1, SQLITE_TRANSIENT);
+}
 
 // CREATE
 sqlite3_int64 DependentRepository::insertDependent(const Dependent &dependent)
@@ -88,20 +99,20 @@ std::optional<Dependent> DependentRepository::getById(int dependentId)
 // UPDATE
 bool DependentRepository::updateDependent(const Dependent &d)
 {
-    std::string sql = std::format("update Dependents set name='{}', relation='{}', birthday='{}' where dependentId = '{}'",
-                                  d.name,
-                                  d.relation,
-                                  d.birthday.to_string(),
-                                  d.dependentId);
-    return DependentRepository::execute(sql);
-};
+    std::string sql = "UPDATE dependents SET name=?, relation=?, birthday=? WHERE dependentId = ?";
+    return DependentRepository::execute(sql, [&d](sqlite3_stmt *stmt)
+                                        {
+        bindDependent(stmt, d);
+        sqlite3_bind_int(stmt, 4, d.dependentId); });
+}
 
 // DELETE
 bool DependentRepository::deleteDependent(int id)
 {
-    std::string sql = std::format("DELETE from dependents where dependentId = '{}'", id);
-    return DependentRepository::execute(sql);
-};
+    std::string sql = "DELETE FROM dependents WHERE dependentId = ?";
+    return DependentRepository::execute(sql, [&id](sqlite3_stmt *stmt)
+                                        { sqlite3_bind_int(stmt, 1, id); });
+}
 
 std::string DependentRepository::getLastDependentId()
 {

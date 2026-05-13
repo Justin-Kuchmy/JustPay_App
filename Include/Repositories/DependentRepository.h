@@ -8,6 +8,7 @@
 class DependentRepository : public BaseRepository
 {
     static Dependent mapDependent(sqlite3_stmt *stmt);
+    static void bindDependent(sqlite3_stmt *stmt, const Dependent &dependent);
 
 public:
     explicit DependentRepository(sqlite3 *db);

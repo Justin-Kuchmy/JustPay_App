@@ -77,18 +77,12 @@ sqlite3_int64 JournalEntryRepository::insertJournalEntry(const JournalEntry &jou
 // read
 std::vector<JournalEntry> JournalEntryRepository::getAll()
 {
-    std::string sql = std::format("SELECT * FROM journal_entries");
-
+    std::string sql = "SELECT * FROM journal_entries";
     auto results = this->query<JournalEntry>(sql, mapJournalEntry);
     if (!results.empty())
-    {
         return results;
-    }
-    else
-    {
-        LOG_DEBUG("Failed to get journal entries from the db");
-        return {};
-    }
+    LOG_DEBUG("Failed to get journal entries from the db");
+    return {};
 }
 std::optional<JournalEntry> JournalEntryRepository::getById(int id)
 {

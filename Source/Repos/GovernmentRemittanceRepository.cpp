@@ -90,37 +90,31 @@ std::vector<sqlite3_int64> GovernmentRemittanceRepository::insertRemittanceRepor
 
 std::optional<GovernmentRemittance> GovernmentRemittanceRepository::getRemittanceById(int id)
 {
-    std::string sql = std::format("select * from government_remittances where id = {};", id);
-    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance);
-    if (results.size() > 0)
-    {
+    std::string sql = "SELECT * FROM government_remittances WHERE id = ?";
+    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance, [&id](sqlite3_stmt *stmt)
+                                                               { sqlite3_bind_int(stmt, 1, id); });
+    if (!results.empty())
         return results.front();
-    }
-    else
-        return std::nullopt;
+    return std::nullopt;
 }
+
 std::optional<GovernmentRemittance> GovernmentRemittanceRepository::getRemittanceByPayrollId(int payrollId)
 {
-    std::string sql = std::format("select * from government_remittances where payroll_calculation_results_id = {};", payrollId);
-    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance);
-    if (results.size() > 0)
-    {
+    std::string sql = "SELECT * FROM government_remittances WHERE payroll_calculation_results_id = ?";
+    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance, [&payrollId](sqlite3_stmt *stmt)
+                                                               { sqlite3_bind_int(stmt, 1, payrollId); });
+    if (!results.empty())
         return results.front();
-    }
-    else
-        return std::nullopt;
-};
+    return std::nullopt;
+}
+
 std::vector<GovernmentRemittance> GovernmentRemittanceRepository::getRemittancesByEmployee(const std::string &employeeId)
 {
-    std::string sql = std::format("select * from government_remittances where employee_id = '{}';", employeeId);
-    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance);
-    if (results.size() > 0)
-    {
-        return results;
-    }
-    else
-        return {};
-};
+    std::string sql = "SELECT * FROM government_remittances WHERE employee_id = ?";
+    auto results = BaseRepository::query<GovernmentRemittance>(sql, mapRemittance, [&employeeId](sqlite3_stmt *stmt)
+                                                               { sqlite3_bind_text(stmt, 1, employeeId.c_str(), -1, SQLITE_TRANSIENT); });
+    return results;
+}
 std::vector<GovernmentRemittance> GovernmentRemittanceRepository::getRemittancesByStatus(RemittanceStatus status)
 {
     const char *sql = "select * from government_remittances where submission_status = ?";

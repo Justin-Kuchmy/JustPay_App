@@ -23,6 +23,15 @@ Contact EmergencyContactRepository::mapContact(sqlite3_stmt *stmt)
     return c;
 };
 
+void EmergencyContactRepository::bindContact(sqlite3_stmt *stmt, const Contact &c)
+{
+    int column{1};
+    sqlite3_bind_text(stmt, column++, c.name.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, c.relation.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, c.address.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, column++, c.contactNo.c_str(), -1, SQLITE_TRANSIENT);
+}
+
 // CREATE
 sqlite3_int64 EmergencyContactRepository::insertContact(const Contact &contact)
 {
@@ -77,21 +86,20 @@ std::optional<Contact> EmergencyContactRepository::getById(int contactId)
 // UPDATE
 bool EmergencyContactRepository::updateContact(const Contact &c)
 {
-    std::string sql = std::format("update emergency_contacts set name='{}', relation='{}', address='{}', contactNo='{}' where contactId = '{}'",
-                                  c.name,
-                                  c.relation,
-                                  c.address,
-                                  c.contactNo,
-                                  c.contactId);
-    return EmergencyContactRepository::execute(sql);
-};
+    std::string sql = "UPDATE emergency_contacts SET name=?, relation=?, address=?, contactNo=? WHERE contactId = ?";
+    return EmergencyContactRepository::execute(sql, [&c](sqlite3_stmt *stmt)
+                                               {
+        bindContact(stmt, c);
+        sqlite3_bind_int(stmt, 5, c.contactId); });
+}
 
 // DELETE
 bool EmergencyContactRepository::deleteContact(int id)
 {
-    std::string sql = std::format("DELETE from emergency_contacts where contactId = '{}'", id);
-    return EmergencyContactRepository::execute(sql);
-};
+    std::string sql = "DELETE FROM emergency_contacts WHERE contactId = ?";
+    return EmergencyContactRepository::execute(sql, [&id](sqlite3_stmt *stmt)
+                                               { sqlite3_bind_int(stmt, 1, id); });
+}
 
 int EmergencyContactRepository::getLastContactId()
 {

@@ -111,20 +111,11 @@ std::optional<LoanLedger> LoanLedgerRepository::getById(int id)
 
 std::vector<LoanLedger> LoanLedgerRepository::getAllById(std::string id)
 {
-    std::string sql = std::format("SELECT * from loan_ledgers where employeeId = '{}'", id);
-
-    auto results = this->query<LoanLedger>(sql, mapLoanLedger);
-
-    if (results.size() > 0)
-    {
-        return results;
-    }
-    else
-    {
-        // no loans for this employee
-        return {};
-    }
-};
+    std::string sql = "SELECT * FROM loan_ledgers WHERE employeeId = ?";
+    auto results = this->query<LoanLedger>(sql, mapLoanLedger, [&id](sqlite3_stmt *stmt)
+                                           { sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_TRANSIENT); });
+    return results;
+}
 
 // update
 bool LoanLedgerRepository::updateLoanLedger(const LoanLedger &lled)
