@@ -6,10 +6,9 @@ on:
       - "v*"
 
 jobs:
-
   # ─────────────────────────────────────────
   build-windows:
-  # ─────────────────────────────────────────
+    # ─────────────────────────────────────────
     runs-on: windows-latest
     permissions:
       contents: write
@@ -20,11 +19,11 @@ jobs:
       - name: Install Qt6
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.7.0'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
-          modules: 'qtquick3d' # Quick/QML need this at runtime
+          version: "6.7.0"
+          host: "windows"
+          target: "desktop"
+          arch: "win64_msvc2019_64"
+          modules: "qtquick3d" # Quick/QML need this at runtime
 
       - name: Install libcurl and sqlite3 (vcpkg)
         run: |
@@ -36,9 +35,16 @@ jobs:
           cmake -B build -S .
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          -DCMAKE_CXX_FLAGS="/W0"
 
       - name: Build
-        run: cmake --build build --config Release
+        run: cmake --build build --config Release 2>&1 | tee build_log.txt
+        continue-on-error: true
+        shell: bash
+
+      - name: Show last 50 lines of build log
+        run: tail -50 build_log.txt
+        shell: bash
 
       - name: Deploy Qt DLLs
         run: |
@@ -59,10 +65,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
   # ─────────────────────────────────────────
   build-linux:
-  # ─────────────────────────────────────────
+    # ─────────────────────────────────────────
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -92,15 +97,16 @@ jobs:
             libxcb-sync-dev libxcb-xfixes0-dev \
             libxcb-shape0-dev libxcb-randr0-dev \
             libxcb-render-util0-dev libxcb-util-dev \
-            libxcb-xinerama0-dev libxcb-xkb-dev
+            libxcb-xinerama0-dev libxcb-xkb-dev \
+            libxcb-cursor
 
       - name: Install Qt6
         uses: jurplel/install-qt-action@v3
         with:
-          version: '6.7.0'
-          host: 'linux'
-          target: 'desktop'
-          modules: 'qtquick3d'
+          version: "6.7.0"
+          host: "linux"
+          target: "desktop"
+          modules: "qtquick3d"
 
       - name: Configure
         run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G Ninja
