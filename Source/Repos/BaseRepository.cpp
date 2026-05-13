@@ -43,7 +43,7 @@ bool BaseRepository::executeFile(const QString &filePath) const
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         LOG_DEBUG("Failed to open file");
-        return "";
+        return false;
     }
     QTextStream in(&file);
     const std::string sql = in.readAll().toStdString();
