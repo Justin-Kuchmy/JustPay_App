@@ -41,7 +41,7 @@
 *.dwo
 
 # data files
-*.sql
+inserts.sql
 *.db
 *.db-journal
 
