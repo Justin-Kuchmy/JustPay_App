@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE  IF NOT EXISTS payroll_config (
     id integer PRIMARY KEY AUTOINCREMENT,
     sss_schedule INTEGER NOT NULL DEFAULT 1,
@@ -10,7 +9,7 @@ CREATE TABLE  IF NOT EXISTS payroll_config (
     CHECK (hdmf_schedule       IN (1, 2, 3))
 );
 
-CREATE TABLE payroll_records (
+CREATE TABLE IF NOT EXISTS payroll_records (
 id INTEGER PRIMARY KEY AUTOINCREMENT, 
 
 employee_id        VARCHAR(50)  NOT NULL,
@@ -42,4 +41,3 @@ philhealth_premium_er DECIMAL(12, 2) NOT NULL,
 hdmf_premium_er       DECIMAL(12, 2) NOT NULL
 );
 
-COMMIT;

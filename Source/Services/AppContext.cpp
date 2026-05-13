@@ -17,8 +17,6 @@ sqlite3 *AppContext::openDb(const std::string &dbName)
     return db;
 }
 
-
-
 AppContext &AppContext::instance(const std::string &dbName)
 {
     static AppContext ctx(dbName);
@@ -52,6 +50,8 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
 
 {
 
+    sqlite3_exec(m_db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
+
     m_employeeRepo.createTable();
     m_dependentRepo.createTable();
     m_emergencyContactRepo.createTable();
@@ -63,6 +63,7 @@ AppContext::AppContext(const std::string &dbName) : m_db(openDb(dbName)),
     m_leaveRepo.createTable();
     m_budgetPeriodRepo.createTable();
     m_departmentBudgetRepo.createTable();
+    sqlite3_exec(m_db, "COMMIT;", nullptr, nullptr, nullptr);
 };
 
 AppContext::~AppContext()

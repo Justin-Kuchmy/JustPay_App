@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS emergency_contacts (
     contactId INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -8,4 +7,3 @@ CREATE TABLE IF NOT EXISTS emergency_contacts (
     
 );
 
-COMMIT;

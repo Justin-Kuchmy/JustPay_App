@@ -1,4 +1,4 @@
-BEGIN TRANSACTION;
+
 CREATE TABLE IF NOT EXISTS budget_periods (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     label       TEXT    NOT NULL,         
@@ -7,5 +7,3 @@ CREATE TABLE IF NOT EXISTS budget_periods (
     start_date  TEXT    NOT NULL,          
     end_date    TEXT    NOT NULL
 );
-
-COMMIT;

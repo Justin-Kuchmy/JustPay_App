@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS attendance_log (
     logId INTEGER PRIMARY KEY AUTOINCREMENT,
     employeeId TEXT,
@@ -11,4 +10,3 @@ CREATE TABLE IF NOT EXISTS attendance_log (
     overtime_json TEXT,
     FOREIGN KEY (employeeId) REFERENCES employees(employeeId) ON DELETE SET NULL ON UPDATE CASCADE
 );
-COMMIT;

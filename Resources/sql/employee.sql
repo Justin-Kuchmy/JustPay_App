@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS employees (
 tableId INTEGER PRIMARY KEY AUTOINCREMENT,
 employeeId TEXT UNIQUE,
@@ -29,7 +28,7 @@ FOREIGN KEY (dependentId) REFERENCES dependents(dependentId) ON DELETE SET NULL 
 );
 
 
-CREATE TRIGGER set_employeeId
+CREATE TRIGGER IF NOT EXISTS set_employeeId
 AFTER INSERT ON employees
 FOR EACH ROW
 BEGIN
@@ -37,5 +36,3 @@ UPDATE employees
 SET employeeId = printf('%02d', NEW.department) || '-' || printf('%04d', NEW.tableId)
 WHERE tableId = NEW.tableId;
 END;
-
-COMMIT;

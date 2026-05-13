@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS journal_entries (
     entryId INTEGER PRIMARY KEY AUTOINCREMENT,
     accountType TEXT NOT NULL,     
@@ -9,7 +8,3 @@ CREATE TABLE IF NOT EXISTS journal_entries (
     pay_period_half  INTEGER      NOT NULL CHECK (pay_period_half IN (1, 2))
 );
 
-
-
-
-COMMIT;

@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS government_remittances (
 	id	INTEGER,
 	payroll_calculation_results_id	INTEGER NOT NULL,
@@ -26,7 +25,7 @@ CREATE INDEX IF NOT EXISTS idx_gov_rem_employee_id ON government_remittances (
 	employee_id
 );
 CREATE INDEX IF NOT EXISTS idx_gov_rem_pay_period ON government_remittances (
-	pay_period_text,
+	pay_period_date,
 	pay_period_half
 );
-COMMIT;
+
