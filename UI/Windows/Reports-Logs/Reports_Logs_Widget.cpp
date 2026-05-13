@@ -11,7 +11,6 @@ ReportsLogsWidget::ReportsLogsWidget(QWidget *parent) : BaseContentWidget(parent
 {
     ui->setupUi(this);
     connect(ui->backButton, &QPushButton::clicked, this, &BaseContentWidget::backRequested);
-    LOG_DEBUG("Loading ReportsLogsWidget");
 
     annualTaxWidget = new AnnualTaxWidget(ui->annualTaxTab);
     budgetUtilWidget = new BudgetUtilWidget(ui->budgetTab);
