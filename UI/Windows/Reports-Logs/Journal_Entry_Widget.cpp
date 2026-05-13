@@ -3,7 +3,6 @@
 JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::JournalEntryWidget)
 {
     ui->setupUi(this);
-    LOG_DEBUG("Loading JournalEntryWidget");
     entries = AppContext::instance().journalEntryService().getAll();
     entriesPtr = &entries;
 
@@ -32,7 +31,6 @@ JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(pare
     ui->creditTotalLabel->setText(QString("₱%1").arg(phLocale.toString(creditTotals, 'f', 2)));
 
     connect(ui->payPeriodFilter, &QComboBox::currentIndexChanged, this, &JournalEntryWidget::onPayrollPeriodChanged);
-    LOG_DEBUG("finished Loading JournalEntryWidget");
 }
 
 void JournalEntryWidget::onPayrollPeriodChanged()
