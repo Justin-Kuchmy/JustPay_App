@@ -281,7 +281,7 @@ std::vector<PayrollCalculationResults> PayrollRepository::getAllById(std::string
     }
     else
     {
-        LOG_DEBUG("Failed to get payroll records from the db for employee_id: " << id);
+        LOG_DEBUG("Results for getAllById() is empty for employee_id: " << id);
         return {};
     }
 };
@@ -298,7 +298,7 @@ std::vector<PayrollCalculationResults> PayrollRepository::getAll()
     }
     else
     {
-        LOG_DEBUG("Failed to get payroll records from the db");
+        LOG_DEBUG("result set from getAll() is empty");
         return {};
     }
 };

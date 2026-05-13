@@ -3,7 +3,6 @@
 YearEndBenefitWidget::YearEndBenefitWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::YearEndBenefitWidget)
 {
     ui->setupUi(this);
-    LOG_DEBUG("Loading YearEndBenefitWidget");
     yearEndBenefits = AppContext::instance().yearEndBenefitsService().compute();
     yearEndBenefitsPtr = &yearEndBenefits;
     for (const auto &y : *yearEndBenefitsPtr)

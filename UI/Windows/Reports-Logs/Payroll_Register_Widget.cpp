@@ -3,7 +3,6 @@
 PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::PayrollRegisterWidget), payrollByMonth{}, payrollByfortnight{}, departments{}
 {
     ui->setupUi(this);
-    LOG_DEBUG("Loading PayrollRegisterWidget");
     payrollVecMonthly = AppContext::instance().payrollService().getAllPayrollsAggregatedToMonthly();
     payrollFortNight = AppContext::instance().payrollService().getAllPayrolls();
     activePayroll = &payrollVecMonthly; // default
@@ -37,7 +36,6 @@ PayrollRegisterWidget::PayrollRegisterWidget(QWidget *parent) : BaseContentWidge
     ui->payrollTableView->hideColumn(4);
     ui->payrollTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->payrollTableView->setSortingEnabled(true);
-    LOG_DEBUG("finished Loading PayrollRegisterWidget");
 }
 
 void PayrollRegisterWidget::exportCSVClicked()

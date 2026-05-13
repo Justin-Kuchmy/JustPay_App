@@ -20,12 +20,6 @@ SqlQueryWidget::SqlQueryWidget(QWidget *parent) : BaseContentWidget(parent),
     ui->sqlSplitter->setSizes({300, 900});
 
     m_db = AppContext::openDb("payroll.db");
-    // QString exeDir = QCoreApplication::applicationDirPath();
-    // QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString("payroll.db"));
-    // const char *cpath = dbPath.toStdString().c_str();
-
-    // if (sqlite3_open(cpath, &m_db) != SQLITE_OK)
-    //     throw std::runtime_error("Failed to open database");
 
     QFile historyPath(":/resources/history.txt");
     if (!historyPath.open(QIODevice::ReadOnly | QIODevice::Text))

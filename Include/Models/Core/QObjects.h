@@ -1119,8 +1119,6 @@ protected:
 
         QString department = QSortFilterProxyModel::sourceModel()->data(departmentIndex).toString();
         QString period = QSortFilterProxyModel::sourceModel()->data(periodIndex).toString();
-        qDebug() << "period:" << period << "len:" << period.length();
-        qDebug() << "filter:" << m_periodFilter << "len:" << m_periodFilter.length();
 
         if (!m_departmentFilter.isEmpty() && department != m_departmentFilter)
             return false;
