@@ -1,5 +1,6 @@
 #include "include/Generated/ui_journal_entries.h"
 #include "UI/Reports-Logs/Journal_Entry_Widget.h"
+#include "Helpers/CsvExporter.h"
 JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::JournalEntryWidget)
 {
     ui->setupUi(this);
@@ -31,6 +32,7 @@ JournalEntryWidget::JournalEntryWidget(QWidget *parent) : BaseContentWidget(pare
     ui->creditTotalLabel->setText(QString("₱%1").arg(phLocale.toString(creditTotals, 'f', 2)));
 
     connect(ui->payPeriodFilter, &QComboBox::currentIndexChanged, this, &JournalEntryWidget::onPayrollPeriodChanged);
+    connect(ui->exportCSVButton, &QPushButton::clicked, this, &JournalEntryWidget::onExportCSVClicked);
 }
 
 void JournalEntryWidget::onPayrollPeriodChanged()
@@ -57,4 +59,10 @@ void JournalEntryWidget::onPayrollPeriodChanged()
     ui->debitTotalLabel->setText(QString("₱%1").arg(phLocale.toString(debitTotals, 'f', 2)));
     ui->creditTotalLabel->setText(QString("₱%1").arg(phLocale.toString(creditTotals, 'f', 2)));
 }
+
+void JournalEntryWidget::onExportCSVClicked()
+{
+    CsvExporter::exportModel(this->m_proxy, this);
+}
+
 JournalEntryWidget::~JournalEntryWidget() { delete ui; }

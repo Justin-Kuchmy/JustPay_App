@@ -16,6 +16,7 @@ public:
     JournalEntryWidget(const JournalEntryWidget &) = delete;
     JournalEntryWidget &operator=(const JournalEntryWidget &) = delete;
     void onPayrollPeriodChanged();
+    void onExportCSVClicked();
 
 private:
     Ui::JournalEntryWidget *ui;

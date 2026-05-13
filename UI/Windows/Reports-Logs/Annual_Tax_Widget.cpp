@@ -1,5 +1,6 @@
 #include "include/Generated/ui_annualized_tax_reconciliation.h"
 #include "UI/Reports-Logs/Annualized_Tax_Reconciliation.h"
+#include "Helpers/CsvExporter.h"
 
 AnnualTaxWidget::AnnualTaxWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::AnnualTaxWidget)
 {
@@ -27,4 +28,5 @@ void AnnualTaxWidget::onEmployeeSearchChanged(const QString &filter)
 
 void AnnualTaxWidget::onExportCSVClicked()
 {
+    CsvExporter::exportModel(m_proxy, this);
 }

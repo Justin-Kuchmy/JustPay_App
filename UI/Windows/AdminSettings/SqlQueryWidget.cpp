@@ -3,6 +3,7 @@
 #include <QApplication>
 #include "UI/AdminSettings/Add_Sql_Description.h"
 #include "Utils/DialogFactory.h"
+#include "Helpers/CsvExporter.h"
 
 SqlQueryWidget::SqlQueryWidget(QWidget *parent) : BaseContentWidget(parent),
                                                   ui(new Ui::SqlQueryWidget),
@@ -81,7 +82,6 @@ void SqlQueryWidget::onExecuteClicked()
     }
     else
     {
-
         int colCount = sqlite3_column_count(stmt);
 
         QStringList columnNames;
@@ -224,50 +224,5 @@ void SqlQueryWidget::onQueryDoubleClicked(const QModelIndex &i)
 
 void SqlQueryWidget::onExportCSVClicked()
 {
-    if (!this->model)
-        return;
-    QString fileName = QFileDialog::getSaveFileName(
-        this,
-        "Save CSV",
-        "",
-        "CSV files (*.csv);;All files (*)");
-    if (fileName.isEmpty())
-        return;
-    if (!fileName.endsWith(".csv", Qt::CaseInsensitive))
-    {
-        fileName += ".csv";
-    }
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QMessageBox::warning(this, "Error", "Failed to open file for writing");
-        return;
-    }
-
-    QTextStream out(&file);
-    int columns = this->model->columnCount();
-    int rows = this->model->rowCount();
-
-    for (int j = 0; j < columns; ++j)
-    {
-        QString header = this->model->headerData(j, Qt::Horizontal).toString();
-        out << "\"" << header << "\"";
-        if (j < columns - 1)
-            out << ",";
-    }
-    out << "\n";
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < columns; j++)
-        {
-            QStandardItem *item = this->model->item(i, j);
-            QString text = item ? item->text() : "";
-            out << "\"" << text << "\"";
-            if (j < columns - 1)
-                out << ",";
-        }
-        out << "\n";
-    }
-    file.close();
-    QMessageBox::information(this, "Export CSV", "CSV file saved successfully!");
+    CsvExporter::exportModel(model.get(), this);
 }

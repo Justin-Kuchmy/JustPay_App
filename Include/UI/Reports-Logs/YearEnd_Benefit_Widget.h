@@ -19,7 +19,7 @@ public slots:
     void onYearChanged();
     void onEmployeeSearchChanged(const QString &filter);
     void onResetClicked();
-    void onExportClicked();
+    void onExportCSVClicked();
 
 private:
     Ui::YearEndBenefitWidget *ui;

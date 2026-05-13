@@ -1,5 +1,6 @@
 #include "include/Generated/ui_gov_remittance.h"
 #include "UI/Reports-Logs/Govern_Remittance_Widget.h"
+#include "Helpers/CsvExporter.h"
 GovernRemittanceWidget::GovernRemittanceWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::GovernRemittanceWidget)
 {
     ui->setupUi(this);
@@ -34,7 +35,6 @@ GovernRemittanceWidget::~GovernRemittanceWidget() { delete ui; }
 void GovernRemittanceWidget::onEmployeeSearchChanged(const QString &filter)
 {
     m_proxy->setEmployeeFilter(filter);
-    
 }
 void GovernRemittanceWidget::onRemittancePeriodChanged()
 {
@@ -66,4 +66,5 @@ void GovernRemittanceWidget::onResetClicked()
 }
 void GovernRemittanceWidget::onExportCSVClicked()
 {
+    CsvExporter::exportModel(this->m_proxy, this);
 }

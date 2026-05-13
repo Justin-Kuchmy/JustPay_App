@@ -1,5 +1,6 @@
 #include "include/Generated/ui_year-end_benefits.h"
 #include "UI/Reports-Logs/YearEnd_Benefit_Widget.h"
+#include "Helpers/CsvExporter.h"
 YearEndBenefitWidget::YearEndBenefitWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::YearEndBenefitWidget)
 {
     ui->setupUi(this);
@@ -22,7 +23,7 @@ YearEndBenefitWidget::YearEndBenefitWidget(QWidget *parent) : BaseContentWidget(
     connect(ui->yearComboBox, &QComboBox::currentIndexChanged, this, &YearEndBenefitWidget::onYearChanged);
     connect(ui->employeeSearchFilter, &QLineEdit::textChanged, this, &YearEndBenefitWidget::onEmployeeSearchChanged);
     connect(ui->resetButton, &QPushButton::clicked, this, &YearEndBenefitWidget::onResetClicked);
-    connect(ui->resetButton, &QPushButton::clicked, this, &YearEndBenefitWidget::onExportClicked);
+    connect(ui->exportCSVButton, &QPushButton::clicked, this, &YearEndBenefitWidget::onExportCSVClicked);
     // employeeSearchFilter
 }
 YearEndBenefitWidget::~YearEndBenefitWidget()
@@ -50,6 +51,7 @@ void YearEndBenefitWidget::onResetClicked()
     m_proxy->setEmployeeFilter("");
     m_proxy->setYearFilter("");
 }
-void YearEndBenefitWidget::onExportClicked()
+void YearEndBenefitWidget::onExportCSVClicked()
 {
+    CsvExporter::exportModel(this->m_proxy, this);
 }

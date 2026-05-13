@@ -1,5 +1,6 @@
 #include "include/Generated/ui_budget_utilization.h"
 #include "UI/Reports-Logs/Budget_Util_Widget.h"
+#include "Helpers/CsvExporter.h"
 
 BudgetUtilWidget::BudgetUtilWidget(QWidget *parent) : BaseContentWidget(parent), ui(new Ui::BudgetUtilWidget)
 {
@@ -58,4 +59,5 @@ void BudgetUtilWidget::onResetClicked()
 }
 void BudgetUtilWidget::onExportCSVClicked()
 {
+    CsvExporter::exportModel(this->m_proxy, this);
 }
