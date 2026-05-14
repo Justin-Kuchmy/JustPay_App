@@ -50,12 +50,6 @@ jobs:
         run: |
           cmake --build build/release --parallel 4
 
-      - name: Debug Qt paths
-        run: |
-          echo "IQTA_QT_ROOT_DIR=$IQTA_QT_ROOT_DIR"
-          find ~/Qt -name "qmake" 2>/dev/null
-          find /home/runner -name "qmake" 2>/dev/null
-
       - name: Install linuxdeploy
         run: |
           wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -79,7 +73,7 @@ jobs:
           wget -q -O AppDir/usr/share/icons/hicolor/256x256/apps/JustPay.png \
             https://raw.githubusercontent.com/linuxdeploy/linuxdeploy/master/resources/linuxdeploy.png
 
-          export QMAKE=$IQTA_QT_ROOT_DIR/bin/qmake
+          export QMAKE=$QT_ROOT_DIR/bin/qmake
           export OUTPUT=JustPay-x86_64.AppImage
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
