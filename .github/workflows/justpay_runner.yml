@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - name: Clean Qt cache
+        run: |
+          rm -rf ~/.cache/aqtinstall || true
+          rm -rf ~/Qt || true
+
       - name: Checkout
         uses: actions/checkout@v4
 
