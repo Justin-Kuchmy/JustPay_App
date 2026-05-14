@@ -18,18 +18,19 @@ AddOvertimeHoursDialog::~AddOvertimeHoursDialog()
 
 void AddOvertimeHoursDialog::onOkayClicked()
 {
-    std::string result = std::format("{{'regular':{},'rest_day':{},'rest_day_plus':{},'legal_holiday':{},'legal_holiday_plus':{},'special_holiday':{},'special_holiday_plus':{},'rest_plus_legal':{},'rest_plus_special':{},'night_shift_diff':{} }}",
-                                     ui->regularSpinBox->value(),
-                                     ui->restDaySpinBox->value(),
-                                     ui->restDay8HrSpinBox->value(),
-                                     ui->legalHolidaySpinBox->value(),
-                                     ui->legalHoliday8hrSpinBox->value(),
-                                     ui->specialHolidaySpinBox->value(),
-                                     ui->specialHoliday8hrSpinBox->value(),
-                                     ui->restDayAndLegalSpinBox->value(),
-                                     ui->restDayAndSpecialSpinBox->value(),
-                                     ui->nightShiftSpinBox->value());
-    this->jsonString = result;
+    std::ostringstream oss;
+    oss << "{'regular':" << ui->regularSpinBox->value()
+        << ",'rest_day':" << ui->restDaySpinBox->value()
+        << ",'rest_day_plus':" << ui->restDay8HrSpinBox->value()
+        << ",'legal_holiday':" << ui->legalHolidaySpinBox->value()
+        << ",'legal_holiday_plus':" << ui->legalHoliday8hrSpinBox->value()
+        << ",'special_holiday':" << ui->specialHolidaySpinBox->value()
+        << ",'special_holiday_plus':" << ui->specialHoliday8hrSpinBox->value()
+        << ",'rest_plus_legal':" << ui->restDayAndLegalSpinBox->value()
+        << ",'rest_plus_special':" << ui->restDayAndSpecialSpinBox->value()
+        << ",'night_shift_diff':" << ui->nightShiftSpinBox->value()
+        << "}";
+    this->jsonString = oss.str();
     accept();
 };
 

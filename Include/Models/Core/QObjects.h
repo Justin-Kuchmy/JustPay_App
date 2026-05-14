@@ -765,7 +765,7 @@ private:
         case 3:
             return QVariant(QString("₱%1").arg(phLocale.toString(item.thirteenthMonthPay, 'f', 2)));
         case 4:
-            return QVariant(QString::fromStdString(std::format("{:.2f}", item.unusedLeaveDays)));
+            return QVariant(QString::number(item.unusedLeaveDays, 'f', 2));
         case 5:
             return QVariant(QString("₱%1").arg(phLocale.toString(item.dailyRate, 'f', 2)));
         case 6:

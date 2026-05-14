@@ -102,37 +102,38 @@ struct Overtime
             << "}";
         return oss.str();
     }
+};
 
-    struct AttendanceLog
+struct AttendanceLog
+{
+    int logId{};
+    std::string employeeId{};
+    Date logDate{};
+    int lateByMinute{};
+    int underTimeByMinute{};
+    int overTimeByMinute{};
+    bool isAbsent{};
+    std::string overtimeJson{};
+    Overtime overtimeObj{};
+    std::string notes{};
+
+    double getRateMultiplier() const
     {
-        int logId{};
-        std::string employeeId{};
-        Date logDate{};
-        int lateByMinute{};
-        int underTimeByMinute{};
-        int overTimeByMinute{};
-        bool isAbsent{};
-        std::string overtimeJson{};
-        Overtime overtimeObj{};
-        std::string notes{};
+        return overtimeObj.rateMultiplier();
+    }
 
-        double getRateMultiplier() const
-        {
-            return overtimeObj.rateMultiplier();
-        }
+    std::string to_string() const
+    {
+        std::ostringstream oss;
+        oss << "logId: " << logId
+            << "\n employeeId: " << employeeId
+            << "\n logDate: " << logDate.to_string()
+            << "\n lateByMinute: " << lateByMinute
+            << "\n underTimeByMinute: " << underTimeByMinute
+            << "\n overTimeByMinute: " << overTimeByMinute
+            << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
+            << "\n Notes: " << notes;
 
-        std::string to_string() const
-        {
-            std::ostringstream oss;
-            oss << "logId: " << logId
-                << "\n employeeId: " << employeeId
-                << "\n logDate: " << logDate.to_string()
-                << "\n lateByMinute: " << lateByMinute
-                << "\n underTimeByMinute: " << underTimeByMinute
-                << "\n overTimeByMinute: " << overTimeByMinute
-                << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
-                << "\n Notes: " << notes;
-
-            return oss.str();
-        }
-    };
+        return oss.str();
+    }
+};

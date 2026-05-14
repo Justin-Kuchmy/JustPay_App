@@ -13,7 +13,6 @@
 #include <QSqlQueryModel>
 #include <QStandardItemModel>
 #include <sqlite3.h>
-#include <format>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Utils/BaseContentWidget.h"

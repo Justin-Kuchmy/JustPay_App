@@ -1,5 +1,4 @@
 #include "Repositories/EmergencyContactRepository.h"
-#include <format>
 
 EmergencyContactRepository::EmergencyContactRepository(sqlite3 *db) : BaseRepository(db)
 {

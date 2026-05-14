@@ -1,5 +1,4 @@
 #include "Repositories/DependentRepository.h"
-#include <format>
 
 DependentRepository::DependentRepository(sqlite3 *db) : BaseRepository(db)
 {

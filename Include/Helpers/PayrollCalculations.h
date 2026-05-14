@@ -63,7 +63,9 @@ namespace PayrollCalc
 
     inline float truncateForCurrency(double v)
     {
-        return std::stof(std::format("{:.2f}", v));
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(2) << v;
+        return std::stof(oss.str());
     }
 }
 #endif
