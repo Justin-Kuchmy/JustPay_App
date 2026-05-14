@@ -7,66 +7,66 @@ on:
 
 jobs:
   # ─────────────────────────────────────────
-  build-windows:
-    # ─────────────────────────────────────────
-    runs-on: windows-latest
-    permissions:
-      contents: write
+  # build-windows:
+  #   # ─────────────────────────────────────────
+  #   runs-on: windows-latest
+  #   permissions:
+  #     contents: write
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Install Qt6
-        uses: jurplel/install-qt-action@v3
-        with:
-          version: "6.7.0"
-          host: "windows"
-          target: "desktop"
-          arch: "win64_msvc2019_64"
-          modules: "qtquick3d" # Quick/QML need this at runtime
+  #     - name: Install Qt6
+  #       uses: jurplel/install-qt-action@v3
+  #       with:
+  #         version: "6.7.0"
+  #         host: "windows"
+  #         target: "desktop"
+  #         arch: "win64_msvc2019_64"
+  #         modules: "qtquick3d" # Quick/QML need this at runtime
 
-      - name: Install libcurl and sqlite3 (vcpkg)
-        run: |
-          vcpkg install curl:x64-windows sqlite3:x64-windows
-          echo "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
+  #     - name: Install libcurl and sqlite3 (vcpkg)
+  #       run: |
+  #         vcpkg install curl:x64-windows sqlite3:x64-windows
+  #         echo "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
 
-      - name: Configure
-        run: >
-          cmake -B build -S .
-          -DCMAKE_BUILD_TYPE=Release
-          -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-          -DCMAKE_CXX_FLAGS="/W0"
+  #     - name: Configure
+  #       run: >
+  #         cmake -B build -S .
+  #         -DCMAKE_BUILD_TYPE=Release
+  #         -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+  #         -DCMAKE_CXX_FLAGS="/W0"
 
-      - name: Build
-        run: cmake --build build --config Release 2>&1 | tee build_log.txt
-        continue-on-error: true
-        shell: bash
+  #     - name: Build
+  #       run: cmake --build build --config Release 2>&1 | tee build_log.txt
+  #       continue-on-error: true
+  #       shell: bash
 
-      - name: Show last 50 lines of build log
-        run: tail -50 build_log.txt
-        shell: bash
+  #     - name: Show last 50 lines of build log
+  #       run: tail -50 build_log.txt
+  #       shell: bash
 
-      - name: Find exe
-        run: Get-ChildItem -Recurse -Filter "JustPay.exe" | Select-Object FullName
-        shell: powershell
+  #     - name: Find exe
+  #       run: Get-ChildItem -Recurse -Filter "JustPay.exe" | Select-Object FullName
+  #       shell: powershell
 
-      - name: Deploy Qt DLLs
-        run: |
-          mkdir staging
-          copy build\Release\JustPay.exe staging\
-          windeployqt --release --qmldir . staging\JustPay.exe
-          copy C:\vcpkg\installed\x64-windows\bin\libcurl.dll staging\
-          copy C:\vcpkg\installed\x64-windows\bin\sqlite3.dll  staging\
+  #     - name: Deploy Qt DLLs
+  #       run: |
+  #         mkdir staging
+  #         copy build\Release\JustPay.exe staging\
+  #         windeployqt --release --qmldir . staging\JustPay.exe
+  #         copy C:\vcpkg\installed\x64-windows\bin\libcurl.dll staging\
+  #         copy C:\vcpkg\installed\x64-windows\bin\sqlite3.dll  staging\
 
-      - name: Zip output
-        run: powershell Compress-Archive -Path staging -DestinationPath JustPay-windows.zip
+  #     - name: Zip output
+  #       run: powershell Compress-Archive -Path staging -DestinationPath JustPay-windows.zip
 
-      - name: Upload to release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: JustPay-windows.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Upload to release
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         files: JustPay-windows.zip
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # ─────────────────────────────────────────
   build-linux:
@@ -131,7 +131,7 @@ jobs:
             --appdir AppDir \
             --plugin qt \
             --output appimage \
-            --desktop-file <(printf '[Desktop Entry]\nName=JustPay\nExec=JustPay\nType=Application\nCategories=Finance;\n')
+            --desktop-file JustPay.desktop
 
       - name: Upload to release
         uses: softprops/action-gh-release@v1
