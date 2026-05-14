@@ -40,15 +40,16 @@ jobs:
 
       - name: Configure (Release)
         run: |
-          cmake -S . -B build -G "Unix Makefiles" \
+          cmake -S . -B build/release -G Ninja \
             -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: |
-          cmake --build build --parallel 4
+          cmake --build build/release --parallel 4
 
-      - name: Upload binary
-        uses: actions/upload-artifact@v4
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
         with:
-          name: JustPay-linux
-          path: build/JustPay
+          files: build/release/JustPay
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
