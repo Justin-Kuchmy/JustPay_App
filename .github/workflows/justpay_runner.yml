@@ -46,12 +46,15 @@ jobs:
         run: tail -50 build_log.txt
         shell: bash
 
+      - name: Find exe
+              run: Get-ChildItem -Recurse -Filter "JustPay.exe" | Select-Object FullName
+              shell: powershell
+
       - name: Deploy Qt DLLs
         run: |
           mkdir staging
           copy build\Release\JustPay.exe staging\
           windeployqt --release --qmldir . staging\JustPay.exe
-          # copy vcpkg runtime DLLs (curl, sqlite)
           copy C:\vcpkg\installed\x64-windows\bin\libcurl.dll staging\
           copy C:\vcpkg\installed\x64-windows\bin\sqlite3.dll  staging\
 
@@ -98,7 +101,7 @@ jobs:
             libxcb-shape0-dev libxcb-randr0-dev \
             libxcb-render-util0-dev libxcb-util-dev \
             libxcb-xinerama0-dev libxcb-xkb-dev \
-            libxcb-cursor
+            libxcb-cursor0
 
       - name: Install Qt6
         uses: jurplel/install-qt-action@v3
