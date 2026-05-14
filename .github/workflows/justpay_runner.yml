@@ -33,10 +33,10 @@ jobs:
       - name: Install Qt6
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.7.2
+          version: "6.5.3"
           host: linux
           target: desktop
-          arch: "linux_gcc_64"
+          arch: "gcc_64"
           aqtversion: "==3.1.7"
 
       - name: Configure (Release)
