@@ -73,7 +73,7 @@ jobs:
           wget -q -O AppDir/usr/share/icons/hicolor/256x256/apps/JustPay.png \
             https://raw.githubusercontent.com/linuxdeploy/linuxdeploy/master/resources/linuxdeploy.png
 
-          export QMAKE=$Qt6_DIR/bin/qmake
+          export QMAKE=$IQTA_QT_ROOT_DIR/bin/qmake
           export OUTPUT=JustPay-x86_64.AppImage
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
