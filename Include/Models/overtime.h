@@ -88,55 +88,51 @@ struct Overtime
 
     std::string to_string() const
     {
-        return std::format(
-            "{{'regular':{},'rest_day':{},'rest_day_plus':{},"
-            "'legal_holiday':{},'legal_holiday_plus':{},"
-            "'special_holiday':{},'special_holiday_plus':{},"
-            "'rest_plus_legal':{},'rest_plus_special':{},"
-            "'night_shift_diff':{}}}",
-            regular,
-            rest_day,
-            rest_day_plus,
-            legal_holiday,
-            legal_holiday_plus,
-            special_holiday,
-            special_holiday_plus,
-            rest_plus_legal,
-            rest_plus_special,
-            night_shift_diff);
-    }
-};
-
-struct AttendanceLog
-{
-    int logId{};
-    std::string employeeId{};
-    Date logDate{};
-    int lateByMinute{};
-    int underTimeByMinute{};
-    int overTimeByMinute{};
-    bool isAbsent{};
-    std::string overtimeJson{};
-    Overtime overtimeObj{};
-    std::string notes{};
-
-    double getRateMultiplier() const
-    {
-        return overtimeObj.rateMultiplier();
-    }
-
-    std::string to_string() const
-    {
         std::ostringstream oss;
-        oss << "logId: " << logId
-            << "\n employeeId: " << employeeId
-            << "\n logDate: " << logDate.to_string()
-            << "\n lateByMinute: " << lateByMinute
-            << "\n underTimeByMinute: " << underTimeByMinute
-            << "\n overTimeByMinute: " << overTimeByMinute
-            << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
-            << "\n Notes: " << notes;
-
+        oss << "{'regular':" << regular
+            << ",'rest_day':" << rest_day
+            << ",'rest_day_plus':" << rest_day_plus
+            << ",'legal_holiday':" << legal_holiday
+            << ",'legal_holiday_plus':" << legal_holiday_plus
+            << ",'special_holiday':" << special_holiday
+            << ",'special_holiday_plus':" << special_holiday_plus
+            << ",'rest_plus_legal':" << rest_plus_legal
+            << ",'rest_plus_special':" << rest_plus_special
+            << ",'night_shift_diff':" << night_shift_diff
+            << "}";
         return oss.str();
     }
-};
+
+    struct AttendanceLog
+    {
+        int logId{};
+        std::string employeeId{};
+        Date logDate{};
+        int lateByMinute{};
+        int underTimeByMinute{};
+        int overTimeByMinute{};
+        bool isAbsent{};
+        std::string overtimeJson{};
+        Overtime overtimeObj{};
+        std::string notes{};
+
+        double getRateMultiplier() const
+        {
+            return overtimeObj.rateMultiplier();
+        }
+
+        std::string to_string() const
+        {
+            std::ostringstream oss;
+            oss << "logId: " << logId
+                << "\n employeeId: " << employeeId
+                << "\n logDate: " << logDate.to_string()
+                << "\n lateByMinute: " << lateByMinute
+                << "\n underTimeByMinute: " << underTimeByMinute
+                << "\n overTimeByMinute: " << overTimeByMinute
+                << "\n isAbsent: " << ((isAbsent == 1) ? "True" : "False")
+                << "\n Notes: " << notes;
+
+            return oss.str();
+        }
+    };
