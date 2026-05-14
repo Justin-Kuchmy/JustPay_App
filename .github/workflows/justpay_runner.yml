@@ -126,6 +126,13 @@ jobs:
           mkdir -p AppDir/usr/bin
           cp build/JustPay AppDir/usr/bin/
 
+          echo "[Desktop Entry]" > JustPay.desktop
+          echo "Name=JustPay" >> JustPay.desktop
+          echo "Exec=JustPay" >> JustPay.desktop
+          echo "Type=Application" >> JustPay.desktop
+          echo "Categories=Finance;" >> JustPay.desktop
+          cat JustPay.desktop
+
           export QMAKE=$Qt6_DIR/bin/qmake
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
