@@ -2,13 +2,20 @@
 #include "./Services/AppContext.h"
 #include <QApplication>
 #include <QDir>
+#include <QStandardPaths>
 
 sqlite3 *AppContext::openDb(const std::string &dbName)
 {
     sqlite3 *db = nullptr;
-    QString exeDir = QCoreApplication::applicationDirPath();
-    QString dbPath = QDir(exeDir).filePath("../Resources/" + QString::fromStdString(dbName));
+    QString baseDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+    QDir dir(baseDir);
+    dir.mkpath(".");
+
+    QString dbPath = dir.filePath(QString::fromStdString(dbName));
     std::string dbPathStr = dbPath.toStdString();
+    LOG_DEBUG("Database file directory: " << dbPathStr);
+
     const char *cpath = dbPathStr.c_str();
 
     if (sqlite3_open(cpath, &db) != SQLITE_OK)

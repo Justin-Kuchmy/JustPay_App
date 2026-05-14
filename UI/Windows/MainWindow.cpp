@@ -140,7 +140,7 @@ bool MainWindow::backupDatabase(sqlite3 *srcDb, const std::string &destPath)
 
 void MainWindow::onBackupDatabase()
 {
-    QString backupPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QString("/JustPay/Backups/JustPay_backup_%1.db").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss"));
+    QString backupPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QString("/Backups/JustPay_backup_%1.db").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm-ss"));
     const std::string &backupPathString = backupPath.toStdString();
     QDir().mkpath(QFileInfo(backupPath).absolutePath());
     LOG_DEBUG(backupPath.toStdString());
