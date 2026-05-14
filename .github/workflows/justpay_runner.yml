@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
 
     steps:
       - name: Clean Qt cache
@@ -33,7 +35,7 @@ jobs:
       - name: Install Qt6
         uses: jurplel/install-qt-action@v4
         with:
-          version: "6.5.3"
+          version: "6.7.0"
           host: linux
           target: desktop
           arch: "gcc_64"
