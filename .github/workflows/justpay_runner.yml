@@ -47,8 +47,8 @@ jobs:
         shell: bash
 
       - name: Find exe
-              run: Get-ChildItem -Recurse -Filter "JustPay.exe" | Select-Object FullName
-              shell: powershell
+        run: Get-ChildItem -Recurse -Filter "JustPay.exe" | Select-Object FullName
+        shell: powershell
 
       - name: Deploy Qt DLLs
         run: |
