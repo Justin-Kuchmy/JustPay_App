@@ -4,6 +4,7 @@
 #include <ctime>
 #include <sstream>
 #include <QDate>
+#include <iomanip>
 #define DEBUG_LOGS
 #include "Utils/Log.h"
 #include "Models/Primitives/enums.h"
