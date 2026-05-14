@@ -2,11 +2,12 @@ name: JustPay Linux Build
 
 on:
   push:
-    branches: [main]
+  tags:
+    - "v*"
   pull_request:
 
 jobs:
-  build-linux:
+  build:
     runs-on: ubuntu-22.04
 
     steps:
@@ -32,7 +33,7 @@ jobs:
           host: linux
           target: desktop
           arch: gcc_64
-          modules: qtquickcontrols2 qtsvg qt5compat
+          modules: qtquickcontrols2 qtsvg
 
       - name: Configure (Release)
         run: |
